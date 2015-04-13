@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage{graphicx}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+\usepackage{etoolbox}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{minted}
+
+
+\title{Thesis proposal\\Late transmuxing in caching environments: a better
+experience through lower latency}
+\author{Jelte Fennema\\10183159}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Context}
+Streaming video reliably isn't an easy job. A significant problem is that video
+formats are not supported equally by all browsers. This means a good
+video host should have its videos in a lot of different formats to make sure
+they can be viewed in every browser.
+
+In large streaming setups, caching is central to the user experience. A simple
+content distribution network (CDN) might just employ reverse proxy caching nodes
+and fetch all content from the origin layer. This works quite good, since a
+small percentage of the videos account for a large percentage of the views. For
+live streaming this also works fantastic since it's not even a whole video that
+is downloaded a lot, it is only the last part of that video.
+
+However, like in most cases this simple setup has some downsides. One of the
+downsides of this setup stems from the problem of supporting multiple formats.
+In this setup a popular video needs to be cached in every supported format on
+the caching nodes. Because of this, the internal traffic used for to request a
+video for caching is multiplied. Also the space required for caching a video is
+multiplied. What worsens matters even more is that edges and origins may be
+geographically separated thus introducing latency. When an edge has to wait for
+the origin the viewer also waits.
+
+\section{Research question}
+A possible improvement to this setup is the use of ``Late transmuxing''. This
+leverages the edge’s resources (cpu, ram) to multiplex all formats from a single
+mezzanine format. This way wait times can be reduced to a single fetch and cache
+hit ratios go up (as content can generated when it is not there). The second
+assumption is lower internal bandwidth and better resource utilization.
+
+It is unknown how much better this setup will perform. Although unlikely, it
+might even perform worse than the traditional setup if the format conversion
+takes longer than the network latency. The is why this project has two goals.
+First a late transmuxing setup should be built. After this is done, the setup
+should be tested and compared against a normal setup. Based on the testing the
+setup could possibly be improved.
+
+\section{Planning}
+
+\begin{itemize}
+    \item Week 14: Get the normal setup working
+    \item Week 15-19: Change the normal setup to a late transmuxing setup
+    \item Week 20-22: Test and compare performance of the setup
+    \item Week 23-25: Write thesis
+\end{itemize}
+
+
+\end{document}
