@@ -34,5 +34,16 @@ encoutered
 ### Achievements
 - Get the prefetch script working.
 - Get a basic late muxing setup working. Lua wasn't needed for this.
+- Set up a proxy from nginx to apache to nginx, all on the same server. Let the
+    last nginx request the raw files from the origin.
+- Make a couple of aditions to the late muxing setups.
+
+    - Use the prefetching script.
+    - Add caching of the local request to Apache.
 
 ### Issues
+- Nginx would block waiting for itself to return something to ism_proxy_pass,
+    since that is a blocking operation. This was fixed by using ismProxyPass on
+    Apache on the same server, so nginx would use a non blocking proxy to Apache
+    and get a request back from apache that would cause a non blocking proxy to
+    the origin server.
