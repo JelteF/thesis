@@ -1,0 +1,1 @@
+LoadModule smooth_streaming_module /usr/lib/apache2/modules/mod_smooth_streaming.so
