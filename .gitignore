@@ -1,5 +1,7 @@
 *.pdf
 
+nginx/conf.d/usp_license.conf
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
