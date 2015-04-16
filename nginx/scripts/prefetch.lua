@@ -27,7 +27,7 @@ end
 -- ngx.say(ngx.var.uri)
 
 -- fetch response for original request
-local original = "/cache" .. ngx.var.uri
+local original = "/generate_content" .. ngx.var.uri
 local res = ngx.location.capture(original)
 -- local res = ngx.location.capture("/test_index.html")
 -- TODO: Check for res.truncated
@@ -45,14 +45,7 @@ for k, v in pairs(res.header) do
         ngx.header[k] = v
     end
 end
-
--- Test if a prefix is going to take place after the request is returned
-ngx.header.Found_Link = 'False'
-
-local link = ngx.header["Link"]
-if(link) then
-    ngx.header.Found_Link = 'True'
-end
+ngx.header['Original-Url'] = original
 
 function sleep(n)
     os.execute("sleep " .. tonumber(n))
@@ -66,22 +59,19 @@ else
     ngx.exit(res.status)
 end
 
-if(ngx.header["X-Cache-Status"] == "MISS") then
-    local link = ngx.header["Link"]
-    if(link) then
-        local dontcare, first = string.find(link, "<")
-        local last, dontcare  = string.find(link, ">")
-        local path = string.sub(link, first + 1, last - 1);
-        path = absolute_path(ngx.var.uri, path);
-        --  ngx.say("Path=", path)
+local link = ngx.header["Link"]
+if(link) then
+    local dontcare, first = string.find(link, "<")
+    local last, dontcare  = string.find(link, ">")
+    local path = string.sub(link, first + 1, last - 1);
+    path = absolute_path(ngx.var.uri, path);
+    --  ngx.say("Path=", path)
 
-        -- prefetch
+    -- prefetch
 
-        --    local prefetch = "/cache" .. ngx.unescape_uri(path) .. "?prefetch"
-        local prefetch = "/cache" .. ngx.unescape_uri(path)
-        --  ngx.say("prefetch=", prefetch)
-        local res2 = ngx.location.capture(prefetch)
-        --  ngx.say("res.headers=", res2.header["Link"])
-    end
+    --    local prefetch = "/cache" .. ngx.unescape_uri(path) .. "?prefetch"
+    local prefetch = "/generate_content" .. ngx.unescape_uri(path)
+    --  ngx.say("prefetch=", prefetch)
+    local res2 = ngx.location.capture(prefetch)
+    --  ngx.say("res.headers=", res2.header["Link"])
 end
-
