@@ -1,0 +1,66 @@
+\documentclass[twoside,openright]{uva-bachelor-thesis}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[british]{babel}
+
+%\usepackage[dutch]{babel}  % uncomment if you write in dutch
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{biblatex}
+\addbibresource{thesis.bib}
+\usepackage{lmodern}
+%Enable for final compilation
+%\usepackage[stretch=10]{microtype}
+
+
+
+% Title Page
+\title{Late Transmuxing:\\Improving caching in videostreaming}
+\author{Jelte Fennema}
+\supervisors{Dirk Griffioen (Unified Streaming), Robert Belleman (UvA)}
+\signedby{Robert Belleman (UvA)}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\end{abstract}
+
+
+\tableofcontents
+
+\chapter{Introduction}
+\section{Traditional setup}
+\section{Proposed setup}
+\subsection{Theoretical improvements over the traditional setup}
+
+\chapter{Background}
+\section{Different streaming protocols}
+\section{HTTP Range Requests}
+Range requests have been added to HTTP to serve parts of a file and not full
+files.~\autocite{rangerequests}
+\section{Caching}
+\subsection{Caching range requests}
+To cache range requests of any size, ranger \autocite{ranger} can be used.
+
+
+
+\chapter{Implementation}
+\section{The storage server}
+\section{The caching server} \section{Variations}
+
+\chapter{Experiments}
+\section{Setup}
+\section{Results}
+
+\chapter{Discussion}
+\section{Future Work}
+\chapter{Conclusions}
+
+
+\printbibliography{}
+
+
+\end{document}
