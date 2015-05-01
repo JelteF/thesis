@@ -47,3 +47,25 @@ encoutered
     Apache on the same server, so nginx would use a non blocking proxy to Apache
     and get a request back from apache that would cause a non blocking proxy to
     the origin server.
+
+## 4th week (Week 17)
+### Achievements
+- Fix logging of cache status for lua requests
+
+### Issues
+- The variable specifying the cache status wasn't accessible from the lua
+    request since it was set in the subrequest.
+
+
+## 5th week (Week 18)
+### Achievemnts
+- Get Comcast to work.
+- Get supplied test script working
+
+## 6t week (Week 19)
+### Achievemnts
+- Changing the test script so it does tests for something useful for this setup
+
+### Issues
+- Getting useful information out of the cache
+- Audio is not requested in the same range for all formats
