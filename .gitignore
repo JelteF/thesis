@@ -1,7 +1,7 @@
 *.pdf
 
-nginx/conf.d/usp_license.conf
-apache2/conf-*/usp-license.conf
+cache/nginx/conf.d/usp_license.conf
+cache/apache2/conf-*/usp-license.conf
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
