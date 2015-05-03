@@ -2,6 +2,7 @@
 
 cache/nginx/conf.d/usp_license.conf
 cache/apache2/conf-*/usp-license.conf
+storage/apache2/conf-*/usp-license.conf
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
