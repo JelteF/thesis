@@ -1,6 +1,6 @@
 
 local json = require 'dkjson'
---[[
+--[[ 
 --Needs content from 'pack'
 --backend_f4m -> ../../pack/video.ref/backend_f4m
 --baseline -> ../../pack/video.ref/baseline
@@ -35,7 +35,7 @@ local urls = {}
 urls['mp4'] = mp4_urls
 urls['smil'] = smil_urls
 urls['fmp4'] = fmp4_urls
-]]--
+]]-- 
 
 function create_urls(requests, base_url, paths)
   for k,v in ipairs(paths) do
@@ -44,7 +44,7 @@ function create_urls(requests, base_url, paths)
 end
 
 function replay(requests, base_url, file)
-  for path in io.lines(file) do
+  for path in io.lines(file) do 
     table.insert(requests, wrk.format(nil, base_url..path))
   end
 end
@@ -66,15 +66,11 @@ init = function(args)
 
 --  io.write(json.encode(r))
   req = table.concat(requests)
-  req_table = requests
 end
 
-count = -1
 request = function()
 --  io.write(req)
-  count = count + 1
-  count = count % table.getn(req_table)
-  return req_table[count + 1] -- Starting an index at one is stupid
+  return req
 end
 
 function round(val, decimal)
@@ -83,7 +79,7 @@ function round(val, decimal)
 end
 
 done = function(summary, latency, requests)
-  summary["total_errors"] =
+  summary["total_errors"] = 
     summary.errors.write
       + summary.errors.read
       + summary.errors.status
@@ -97,26 +93,26 @@ done = function(summary, latency, requests)
      mean=latency.mean,
      stdev=latency.stdev}
 
-  distribution = {}
+  distribution = {} 
   for _, p in pairs({ 50, 90, 99, 99.999 }) do
       n = latency:percentile(p)
       distribution[string.format("%g%%", p)]= n
   end
   summary["distribution"] = distribution
 ]]--
-
+  
   sec = summary.duration * 0.000001
 
-  summary["requests_sec"] =
+  summary["requests_sec"] = 
    round(summary.requests / sec, 2)
 
-  summary["bytes_sec"] =
+  summary["bytes_sec"] = 
     round(summary.bytes / sec, 2)
 
-  summary["kbytes_sec"] =
+  summary["kbytes_sec"] = 
     round(summary.bytes_sec / 1000, 2)
-
-  summary["mbytes_sec"] =
+ 
+  summary["mbytes_sec"] = 
     round(summary.kbytes_sec / 1000, 2)
 
   s = json.encode(summary)

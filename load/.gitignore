@@ -1,4 +1,5 @@
-data
+data*
 files/wrk
+files_bak/wrk
 video.ref
 conf

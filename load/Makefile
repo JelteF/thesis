@@ -7,18 +7,18 @@ PORT=80
 else ifeq ($(SERVER), nginx)
 PORT=82
 endif
-URL=http://edge.usp.local:$(PORT)/video/tears-of-steel
+URL=http://single.edge.usp.local:$(PORT)/video/tears-of-steel
 
-WRK=files/wrk/wrk
+WRK=wrk
 SCRIPT=files/report.lua
 
 # expansion works in bash, not in sh
 SHELL=bash
 CONNECTIONS=1
-CONNECTION_STEPS:=$(shell eval echo {1..10})
+CONNECTION_STEPS:=$(shell eval echo {1..1})
 THREADS=1
-THREAD_STEPS:=$(shell eval echo {1..2})
-DURATION=1s
+THREAD_STEPS:=$(shell eval echo {1..1})
+DURATION=20s
 
 OBJECTS=
 #OBJECTS+=mp4
@@ -52,9 +52,11 @@ DATA=data
 # wrk -d1 -c1 -t1 -s files/report.lua --latency http://usp-pack:80/video.ref -- mp4
 define run-wrk
 	for n in $(THREAD_STEPS); do \
-		for i in $(CONNECTION_STEPS); do \
+		for i in $(CONNECTION_STEPS) $(CONNECTION_STEPS); do \
 			date -u +"%Y-%m-%dT%T.%3N" | tr -d '\n' >> $(2); \
 			echo -n " $(SERVER)-$(PLATFORM)" $(notdir $(2)) "$$n $$i " >> $(2); \
+			echo running $$n $$i; \
+			echo $(WRK) -t $(THREADS) -d $(DURATION) -s $(SCRIPT) -c $$(($(CONNECTIONS) * $$i * $$n)) $(URL) -- $(1) ; \
 			$(WRK) -t $(THREADS) -d $(DURATION) -s $(SCRIPT) -c $$(($(CONNECTIONS) * $$i * $$n)) $(URL) -- $(1) \
 			| grep {.*} >> $(2); \
 		done; \
@@ -73,10 +75,10 @@ all: $(OBJECTS) \
 #fmp4:
 #	$(call run-wrk, $@, $(DATA)/test-$@.wsv)
 
-fmp4-iss-log:
+fmp4-hls-log:
 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
 
-fmp4-hls-log:
+fmp4-iss-log:
 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
 
 fmp4-hds-log:
@@ -85,32 +87,32 @@ fmp4-hds-log:
 fmp4-dash-log:
 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
 
-mp4-iss-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
-
-mp4-hds-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
-
-mp4-hls-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
-
-mp4-dash-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
-
-drm-iss-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
-
-drm-hds-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
-
-drm-hls-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
-
-drm-dash-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
-
-s3-fmp4-iss-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# mp4-iss-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+#
+# mp4-hds-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+#
+# mp4-hls-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+#
+# mp4-dash-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+#
+# drm-iss-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+#
+# drm-hds-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+#
+# drm-hls-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+#
+# drm-dash-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+#
+# s3-fmp4-iss-log:
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
 
 link:
 	cd data && ln -sf ../files/index.html && ln -sf ../files/render.html
