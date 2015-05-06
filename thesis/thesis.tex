@@ -32,9 +32,58 @@
 \tableofcontents
 
 \chapter{Introduction}
+Streaming video reliably isn't an easy job. There are a couple of aspects that
+can cause some problems. A significant problem is that there are different video
+streaming protocols and not all of them are supported equally by all browsers.
+This means a good video host should have its videos in a lot of different
+formats to make sure they can be viewed in every browser. The video streaming
+protocols have one thing in common, they all stream little video sections
+instead of the whole file, because you can do that easiliy with
+HTTP\autocite{http}. All this means that at some point the original video file
+should be cut in smaller sections and those should be converted to the formats
+that are needed.
+
+
 \section{Traditional setups}
+The most obvious setup is ofcourse generating these files once and then setting
+up a file server that serves all these little files. This works but takes up
+quite a bit of space since you're essentially storing the same video multiple
+times. This issue can be solved by storing the raw video and converting it on
+the fly to the format needed when a request comes in. This is what the Unified
+Streaming software does.
+
+However, in large streaming setups this is not enough for two reasons. The first
+one is that the storage server might be far away from the viewer, which means
+more time waiting before watching a video. The second one is that the storage
+server can be easily overwhelmed with requests, because its just one server. A
+simple solution to these problems is using a Content Distribution
+Network\autocite{cdns} with reverse proxy caching\autocite{revproxy} nodes.
+Those nodes forward the request to the storage server and cache the response. If
+another request comes for the same content a node will just respond with the
+response in its cache. This works quite good, since a small percentage of the
+videos account for a large percentage of the views.
+% For live streaming this also works fantastic since it's not even a whole
+% video that is downloaded a lot, it is only the last part of that video.
+
+The big problem of this setup is that, just like with the very first setup, it
+stores the converted files instead of the raw files, only now in the cache
+instead of the storage server. This has two downsides in this case. Again, the
+server will contain the same content multiple times, only in this case the cache
+server. The other downside, specific to this setup, is that the cache will also
+request basically the same content from the storage. Those requests mean more
+internal traffic and more waiting time for the viewer.
+
 \section{Proposed setup}
+The proposed improvement to this setup is the use of ``Late transmuxing''.
+Instead of requesting the converted segments from the storage server, the cache
+requests the raw content needed to create a segment. That raw content is then
+cached and it can be used to generate responses for all the different formats.
+
 \subsection{Theoretical improvements over the traditional setup}
+This way wait times can be reduced to a single fetch and cache
+hit ratios go up (as content can generated when it is not there). The second
+assumption is lower internal bandwidth and better resource utilization.
+
 
 \chapter{Background}
 \section{Different streaming protocols}
