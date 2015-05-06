@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>render.html</title>
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript">
+      function gup( name )
+      {
+        name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+        var regexS = "[\\?&]"+name+"=([^&#]*)";
+        var regex = new RegExp( regexS );
+        var results = regex.exec( window.location.href );
+        if( results == null )
+          return "";
+        else
+          return unescape(results[1]);
+      }
+      document.title = "USP " + gup('file');
+
+$(function () {
+    var chart;
+    $(document).ready(function() {
+    
+        // define the options
+        var options = {
+    
+            chart: {
+                renderTo: 'container-' + gup('file'),
+                zoomType: 'xy'
+            },
+    
+//            title: {
+//                text: 'Unified Streaming Platform: ' + gup('file')
+//            },
+    
+            subtitle: {
+                text: 'Source: ' + gup('file')
+            },
+    
+            xAxis: {
+                type: 'datetime',
+                tickInterval: 3600 * 1000,
+                tickWidth: 0,
+                gridLineWidth: 1,
+                labels: {
+                    align: 'left',
+                    x: 3,
+                    y: -3
+                }
+            },
+    
+            yAxis: [{ // left y axis
+                title: {
+                    text: 'Requests per second'
+                },
+                labels: {
+                    align: 'left',
+                    x: 3,
+                    y: 16,
+                    formatter: function() {
+                        return Highcharts.numberFormat(this.value, 0, ",", ".");
+                    }
+                },
+                showFirstLabel: false
+            }, { // right y axis
+//                linkedTo: 0,
+//                gridLineWidth: 0,
+                opposite: true,
+                title: {
+                    text: 'Transfer rate (Mbytes/second)'
+                },
+                labels: {
+                    align: 'right',
+                    x: -3,
+                    y: 16,
+                    formatter: function() {
+                        return Highcharts.numberFormat(this.value, 2, ",", ".");
+                    }
+                },
+                showFirstLabel: false
+            }],
+    
+            legend: {
+                align: 'right',
+                verticalAlign: 'top',
+                y: 20,
+                floating: true,
+                borderWidth: 0
+            },
+    
+            tooltip: {
+                shared: true,
+                crosshairs: true
+            },
+    
+            plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function() {
+                                hs.htmlExpand(null, {
+                                    pageOrigin: {
+                                        x: this.pageX,
+                                        y: this.pageY
+                                    },
+//                                    headingText: 'lalala', //this.series.name,
+//                                    maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) +':<br/> '+
+//                                        this.y +' visits',
+                                    width: 200
+                                });
+                            }
+                        }
+                    },
+                    marker: {
+                        lineWidth: 1
+                    }
+                }
+            },
+    
+            series: [{
+                name: 'Requests per second',
+                type: 'spline',
+                lineWidth: 4,
+                yAxis: 0,
+                marker: {
+                    radius: 4
+                }
+            }, {
+                name: 'Transferrate',
+                type: 'spline',
+                yAxis: 1
+            }, {
+                name: 'Failed ',
+                type: 'spline',
+                yAxis: 0
+            }, {
+                name: 'Request',
+                type: 'spline',
+                yAxis: 0
+            } ]
+        };
+    
+        jQuery.get(gup('file'), null, function(tsv, state, xhr) {
+            var lines = [],
+                listen = false,
+                date,
+                requestsPerSecond = [],
+                transferRate = [],
+                nrRequests = [],
+                nrFailed = [];
+            var report =  threads = connections = null;
+
+            // inconsistency
+            if (typeof tsv !== 'string') {
+                tsv = xhr.responseText;
+            }
+    
+            tsv = tsv.split(/\n/g);
+            jQuery.each(tsv, function(i, line) {
+    
+                if (line == '' || line.charAt(0) == '#') {
+                    listen = false;
+                }
+                else {
+                    listen = true;
+                }
+   
+                if (listen) {
+                    line = line.split(/ /);
+                    //date = new Date(Date.parse(line[0])).toISOString();
+                    date = Date.parse(line[0]);
+                    threads = parseInt(line[3]);
+                    connections = parseInt(line[4]);
+                    report = jQuery.parseJSON(line[5]);
+                    
+                    requestsPerSecond.push([
+                        date, 
+                        parseInt(report.requests_sec, 10) 
+                    ]);
+
+                    transferRate.push([
+                        date,
+                        parseInt(report.mbytes_sec, 10)
+                    ]);
+
+                    nrRequests.push([
+                        date,
+                        parseInt(report.requests, 10)
+                    ]);
+
+                    nrFailed.push([
+                        date,
+                        parseInt(report.total_errors, 10) 
+                    ]);
+                }
+            });
+
+            date = new Date(); 
+
+            var title = "Unified Origin: ";
+            if (/apache/.test(tsv)) {
+                title += "Apache";
+            }
+            options.title = { text: title };
+    
+            options.series[0].data = requestsPerSecond;
+            options.series[1].data = transferRate;
+            options.series[2].data = nrFailed;
+            options.series[3].data = nrRequests;
+    
+            chart = new Highcharts.Chart(options);
+        });
+    });
+    
+});
+		</script>
+	</head>
+	<body>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+<!-- Additional files for the Highslide popup effect -->
+<script type="text/javascript" src="http://www.highcharts.com/highslide/highslide-full.min.js"></script>
+<script type="text/javascript" src="http://www.highcharts.com/highslide/highslide.config.js" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" href="http://www.highcharts.com/highslide/highslide.css" />
+
+<script type="text/javascript">
+  document.write('<div id="container-' + gup('file') + '"');
+  document.write(' style="min-width: 400px; height: 400px; margin: 0 auto">');
+  document.write('</div>');
+</script>
+
+	</body>
+</html>
