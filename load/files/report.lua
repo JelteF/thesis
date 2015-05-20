@@ -1,41 +1,5 @@
-
 local json = require 'dkjson'
---[[
---Needs content from 'pack'
---backend_f4m -> ../../pack/video.ref/backend_f4m
---baseline -> ../../pack/video.ref/baseline
---pseudo_streaming -> ../../pack/video.ref/pseudo_streaming/
---smil_mp4 -> ../../pack/video.ref/smil_mp4/
---srt -> ../../pack/video.ref/srt
---srt_vod -> ../../pack/video.ref/srt_vod/
-
-local mp4 = "/srt/w2g-band_a.mp4"
-local mp4_urls = {}
-mp4_urls[1] = mp4.."/Manifest"
-mp4_urls[2] = mp4.."/QualityLevels(510000)/Fragments(video=32000000000)"
-
-local smil = "/smil_mp4/bigbuckbunny.smil"
-local smil_urls = {}
-smil_urls[1] = smil.."/Manifest"
-smil_urls[2] = smil.."/QualityLevels(1500000)/Fragments(video=5940000000)"
-
-local ism = "/srt_vod/srt_vod.ism"
-local fmp4_urls = {}
-fmp4_urls[1] = ism.."/srt_vod.mpd"
-fmp4_urls[2] = ism.."/srt_vod-audio=63000-video=255000-168000.dash"
-fmp4_urls[3] = ism.."/srt_vod.f4m"
-fmp4_urls[4] = ism.."/srt_vod-audio=63000-video=255000-Seg1-Frag50"
-fmp4_urls[5] = ism.."/srt_vod-audio=63000-video=255000.m3u8"
-fmp4_urls[6] = ism.."/srt_vod-audio=63000-video=255000-1.ts"
-fmp4_urls[7] = ism.."/Manifest"
-fmp4_urls[8] = ism.."/QualityLevels(63000)/Fragments(audio=1680000000)"
-fmp4_urls[9] = ism.."/QualityLevels(510000)/Fragments(video=1680000000)"
-
-local urls = {}
-urls['mp4'] = mp4_urls
-urls['smil'] = smil_urls
-urls['fmp4'] = fmp4_urls
-]]--
+local socket = require 'socket'
 
 function create_urls(requests, base_url, paths)
   for k,v in ipairs(paths) do
@@ -49,37 +13,61 @@ function replay(requests, base_url, file)
   end
 end
 
+
+
 init = function(args)
-  wrk.init(args)
 --  h = json.encode(args)
 --  io.write(h)
 
-  base_url = wrk.scheme.."://"..wrk.host..wrk.path
+  base_url = wrk.path
   target = args[1]
---  io.write(target)
+  run_once = args[2] == 'initial'
   local requests = {}
-  if string.find(target, "log") then
-    replay(requests, base_url, target)
-  else
-    create_urls(requests, base_url, urls[target])
-  end
+  replay(requests, base_url, target)
 
---  io.write(json.encode(r))
   req = table.concat(requests)
   req_table = requests
+  max_requests = table.getn(req_table)
+  -- max_requests = 4
+  start_time = socket.gettime()
 end
 
-count = -1
-request = function()
---  io.write(req)
-  count = count + 1
-  count = count % table.getn(req_table)
-  return req_table[count + 1] -- Starting an index at one is stupid
+request_count = -1
+function request()
+  if request_count == max_requests then
+      -- Once the last request has been sent stop or start over depending on
+      -- the way the command was invoked
+      request_count = 0
+  end
+  request_count = request_count + 1
+
+  if request_count == 0 then
+      -- stupid bug in wrk, the first requets is not actually fired
+      return req_table[1]
+  end
+
+  return req_table[request_count]
 end
 
 function round(val, decimal)
   local exp = decimal and 10^decimal or 1
   return math.ceil(val * exp - 0.5) / exp
+end
+
+finished_count = 0
+
+function delay()
+    return 10000
+end
+
+stopped = false
+
+response = function()
+    finished_count = finished_count + 1
+    if finished_count == max_requests and run_once then
+        io.write('elapsed time: ' .. socket.gettime() - start_time .. '\n')
+        wrk.thread:stop()
+    end
 end
 
 done = function(summary, latency, requests)
@@ -104,21 +92,7 @@ done = function(summary, latency, requests)
   end
   summary["distribution"] = distribution
 ]]--
-
-  sec = summary.duration * 0.000001
-
-  summary["requests_sec"] =
-   round(summary.requests / sec, 2)
-
-  summary["bytes_sec"] =
-    round(summary.bytes / sec, 2)
-
-  summary["kbytes_sec"] =
-    round(summary.bytes_sec / 1000, 2)
-
-  summary["mbytes_sec"] =
-    round(summary.kbytes_sec / 1000, 2)
-
   s = json.encode(summary)
+  io.write('summary: ')
   io.write(s .. "\n")
 end

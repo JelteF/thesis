@@ -7,9 +7,11 @@ PORT=80
 else ifeq ($(SERVER), nginx)
 PORT=82
 endif
-URL=http://single.edge.usp.local:$(PORT)/video/tears-of-steel
 
-WRK=wrk
+URL_PREFIX?=basic
+URL=http://$(URL_PREFIX).edge.usp.local/video/tears-of-steel
+
+WRK=wrk/wrk
 SCRIPT=files/report.lua
 
 # expansion works in bash, not in sh
@@ -41,7 +43,7 @@ OBJECTS+=s3-fmp4-iss-log
 .PHONY: clean all link
 
 TIMESTAMP:=$(shell date -u +"%Y-%m-%dT%T.%3N")
-DATA=data
+DATA=data/$(URL_PREFIX)
 
 #	$(foreach i, $(THREAD_STEPS), \
 #		$(foreach n, $(CONNECTION_STEPS), \
@@ -51,15 +53,13 @@ DATA=data
 
 # wrk -d1 -c1 -t1 -s files/report.lua --latency http://usp-pack:80/video.ref -- mp4
 define run-wrk
-	for n in $(THREAD_STEPS); do \
-		for i in $(CONNECTION_STEPS) $(CONNECTION_STEPS); do \
-			date -u +"%Y-%m-%dT%T.%3N" | tr -d '\n' >> $(2); \
-			echo -n " $(SERVER)-$(PLATFORM)" $(notdir $(2)) "$$n $$i " >> $(2); \
-			echo running $$n $$i; \
-			echo $(WRK) -t $(THREADS) -d $(DURATION) -s $(SCRIPT) -c $$(($(CONNECTIONS) * $$i * $$n)) $(URL) -- $(1) ; \
-			$(WRK) -t $(THREADS) -d $(DURATION) -s $(SCRIPT) -c $$(($(CONNECTIONS) * $$i * $$n)) $(URL) -- $(1) \
-			| grep {.*} >> $(2); \
-		done; \
+	for run_type in initial next; do \
+		echo $$run_type >> $(2); \
+		date -u +"%Y-%m-%dT%T.%3N" >> $(2); \
+		echo running $$run_type; \
+		echo $(WRK) -t 1 -d $(DURATION) -s $(SCRIPT) -c $$(($(CONNECTIONS))) $(URL) -- $(1) $$run_type; \
+		$(WRK) -t 1 -d $(DURATION) -s $(SCRIPT) -c $$(($(CONNECTIONS))) $(URL) -- $(1) $$run_type \
+		| grep 'elapsed time\|{.*}' >> $(2); \
 	done;
 endef
 
@@ -115,9 +115,10 @@ fmp4-dash-log:
 # 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
 
 link:
-	cd data && ln -sf ../files/index.html && ln -sf ../files/render.html
+	mkdir -p $(DATA)
+	cd $(DATA) && ln -sf ../../files/index.html && ln -sf ../../files/render.html
 	#cp -r data data-$(SERVER)-$(TIMESTAMP)
 
 clean:
-	rm -rf data/*
+	rm -rf $(DATA)/*
 
