@@ -67,52 +67,52 @@ all: $(OBJECTS) \
 	link
 
 #mp4:
-#	$(call run-wrk, $@, $(DATA)/test-$@.wsv)
+#	$(call run-wrk, $@, $(DATA)/test-$@.log)
 
 #smil:
-#	$(call run-wrk, $@, $(DATA)/test-$@.wsv)
+#	$(call run-wrk, $@, $(DATA)/test-$@.log)
 
 #fmp4:
-#	$(call run-wrk, $@, $(DATA)/test-$@.wsv)
+#	$(call run-wrk, $@, $(DATA)/test-$@.log)
 
 fmp4-hls-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 
 fmp4-iss-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 
 fmp4-hds-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 
 fmp4-dash-log:
-	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 
 # mp4-iss-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 #
 # mp4-hds-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 #
 # mp4-hls-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 #
 # mp4-dash-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 #
 # drm-iss-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 #
 # drm-hds-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 #
 # drm-hls-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 #
 # drm-dash-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 #
 # s3-fmp4-iss-log:
-# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).wsv)
+# 	$(call run-wrk, files/$@, $(DATA)/test-$(notdir $@).log)
 
 link:
 	mkdir -p $(DATA)
