@@ -8,7 +8,7 @@ echo "cd $log_dir;" rm cache.log | cat - purge_cache.sh \
 
 tests='nocache.basic ismproxy basic single double'
 
-for prefix in basic; do
+for prefix in $tests; do
     export URL_PREFIX=$prefix
     make clean
     make link
