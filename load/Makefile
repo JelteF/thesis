@@ -20,7 +20,7 @@ CONNECTIONS=1
 CONNECTION_STEPS:=$(shell eval echo {1..1})
 THREADS=1
 THREAD_STEPS:=$(shell eval echo {1..1})
-DURATION=20s
+DURATION=60s
 
 OBJECTS=
 #OBJECTS+=mp4
