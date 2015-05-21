@@ -47,16 +47,18 @@ for server_type, server_data in data.items():
     for video_type, video_data in server_data.items():
         for test_type, test_data in video_data.items():
             for k, v in test_data.items():
-                l.append([server_type, test_type + '_' + video_type[5:], k, v])
+                l.append([server_type, video_type[5:], test_type, k, v])
 
 
-df = pd.DataFrame.from_records(l, columns=['server', 'test',
+df = pd.DataFrame.from_records(l, columns=['server', 'video', 'test',
                                            'property', 'value'])
 print(df)
 for name, g in df.groupby('property'):
     if name in ['requests_per_sec', 'mbps']:
-        sns.factorplot('test', 'value', 'server', kind='bar', data=g)
-        plt.title(name)
+        name = name.replace('_', ' ')
+        g = g.rename(columns={'value': name})
+        sns.factorplot('video', name, 'server', row='test', kind='bar',
+                       data=g, sharey=False)
         plt.show()
 
 #

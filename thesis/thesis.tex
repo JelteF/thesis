@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
-\usepackage{biblatex}
+\usepackage[style=ieee]{biblatex}
 \addbibresource{thesis.bib}
 \usepackage{lmodern}
 %Enable for final compilation
@@ -80,13 +80,27 @@ requests the raw content needed to create a segment. That raw content is then
 cached and it can be used to generate responses for all the different formats.
 
 \subsection{Theoretical improvements over the traditional setup}
-This way wait times can be reduced to a single fetch and cache
-hit ratios go up (as content can generated when it is not there). The second
-assumption is lower internal bandwidth and better resource utilization.
+In theory this has a couple of advantages over the traditional setup. The first
+time a specific segment is request it should perform the same, but once that has
+happened the same segment can be requested in another format and no network
+traffic is generated. This is an advantage in itself, since network traffic can
+be expensive at a large scale. However, it also means that there is no extra
+latency caused by a request to the storage server and that latency can be
+significant. Especially if the storage and the cache server are far located far
+away from eachother geographically.
 
+Another theoretical improvement is lowering the storage required on the cache
+server to cache a segment. Instead of storing the same segment multiple times it
+is now only stored in the raw format. This means that the cache gets filled up
+less easily, which means it can cache more different segments.
 
 \chapter{Background}
 \section{Different streaming protocols}
+At the moment there are four different streaming protocols in widespread use,
+DASH (Dynamic Adaptive Streaming over HTTP) \autocite{dash}, ISS Smooth
+Streaming \autocite{smooth}, HLS (HTTP Live Streaming) \autocite{hls} and HDS
+(HTTP Dynamic Streaming) \autocite{hds}.
+
 \section{HTTP Range Requests}
 Range requests have been added to HTTP to serve parts of a file and not full
 files.~\autocite{rangerequests}
