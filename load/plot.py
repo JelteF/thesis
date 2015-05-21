@@ -1,9 +1,13 @@
 from pprint import pprint  # noqa
+import numpy as np
 import matplotlib.pyplot as plt  # noqa
 import seaborn as sns  # noqa
 import os
 import json
 from collections import defaultdict
+import pandas as pd
+
+sns.set_context("poster")
 
 BASE_PATH = os.path.abspath('data')
 dirs = os.listdir(BASE_PATH)
@@ -36,3 +40,47 @@ for d in dirs:
                 cur_d[k]['bytes'] = bytes_
                 cur_d[k]['mbps'] = summary['bytes'] / 10**6 / sec
 
+
+l = []
+for server_type, server_data in data.items():
+    new_server_data = {}
+    for video_type, video_data in server_data.items():
+        for test_type, test_data in video_data.items():
+            for k, v in test_data.items():
+                l.append([server_type, test_type + '_' + video_type[5:], k, v])
+
+
+df = pd.DataFrame.from_records(l, columns=['server', 'test',
+                                           'property', 'value'])
+print(df)
+for name, g in df.groupby('property'):
+    if name in ['requests_per_sec', 'mbps']:
+        sns.factorplot('test', 'value', 'server', kind='bar', data=g)
+        plt.title(name)
+        plt.show()
+
+#
+# pprint(new_data)
+#
+# order = sorted(new_data['basic'].keys())
+# pprint(order)
+#
+# request_ps_data = {}
+#
+# for server_type, server_data in new_data.items():
+#     l = []
+#     request_ps_data[server_type] = l
+#     for test_type in order:
+#         l.append(server_data[test_type]['requests_per_sec'])
+#
+# pprint(request_ps_data)
+#
+# bar_width = 0.25
+# fig = plt.figure()
+# ax = fig.gca()
+# bargroup_starts = np.arange(len(order)) * 2
+# for i, (server_type, server_data) in enumerate(request_ps_data.items()):
+#     print(i, l)
+#     rects = ax.bar(bargroup_starts + i*bar_width, server_data)
+#
+# plt.show()
