@@ -1,0 +1,73 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{graphdrawing,graphs,arrows.meta,shapes.misc,chains,positioning,shapes,quotes,automata,bending,fit}
+\usepackage{tkz-graph}
+
+\newcommand{\rf}{"Request for segment"}
+\newcommand{\labelpos}[1]{($(#1.north east) - (0.2, 0)$) }
+\newcommand{\rectlabel}[2]{\node[label] at \labelpos{#1} {#2}}
+\newcommand{\container}[4]{\draw[container] ($(#1.north west)+(#3)$) rectangle ($(#1.south east)+(#4)$) node[fitting node] (#2) {}}
+\newcommand{\contwithlabel}[5]{
+    \container{#1}{#2}{#4}{#5};
+    \rectlabel{#2}{#3};
+}
+
+\begin{document}
+\makeatletter
+\tikzset{
+  fitting node/.style={
+    inner sep=0pt,
+    fill=none,
+    draw=none,
+    reset transform,
+    fit={(\pgf@pathminx,\pgf@pathminy) (\pgf@pathmaxx,\pgf@pathmaxy)}
+  },
+  reset transform/.code={\pgftransformreset}
+}
+\makeatother
+\begin{tikzpicture}[
+        block/.style={
+            rectangle,
+            draw=blue,
+            thick,
+            text width=5em,
+            align=center,
+            rounded corners,
+            minimum height=2em
+        },
+        container/.style={
+            draw=red,
+            thick,
+            rounded corners,
+        },
+        label/.style={
+            rectangle,
+            draw=red,
+            fill=white,
+            rounded corners,
+            anchor=east,
+        },
+    ]
+
+    \node[block] (cl) {Client};
+
+    \node[block, below=3cm of cl] (ng) {Nginx};
+    \node[right=3cm of ng] (ng_desc) {Caches response};
+    \node[block, below=3cm of ng] (ap) {Apache};
+    %\draw[container] ($(ng.north west)+(-0.3,0.6)$) rectangle ($(ng.south east)+(1.5,-0.6)$) node[fitting node] (c_server) {};
+    \contwithlabel{ng}{cache}{Cache server}{-0.3,0.6}{1.5,-0.6}
+    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}
+
+    \graph [use existing nodes] {
+        cl ->[\rf] ng ->[\rf] ap;
+        ng --[dotted] ng_desc
+    };
+
+
+
+  \end{tikzpicture}
+  \begin{tikzpicture}[
+  ]
+  \end{tikzpicture}
+\end{document}
