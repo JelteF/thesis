@@ -115,25 +115,79 @@ To cache range requests of any size, ranger \autocite{ranger} can be used.
 The server setup used consists of two servers, in this case virtual machines.
 One that has the video files on disk, this will be called the storage server,
 and one that serves as a reverse proxy, this will be called the proxy server.
-These servers contain a couple of different server application configurations.
-A common characteristic in all these configurations is that the client connects
-with the proxy server and that server will then request content the content it
-needs to fulfill this request from the storage server.
+The proxy server can also be called the cache server in the cases where it
+caches proxied requests.
+
+The client requests a specific segment of the video in a specific format, say
+ISS. The storage server only contains the mp4 file of the video. At some point
+in the server chain the segment needs to be generated from (part of) that mp4.
+
+\section{Different configurations}
+The servers contain a couple of different server application configurations and
+do this segment generation at different stages. A common characteristic in all
+these configurations is that the client connects with the proxy server and that
+server will then request content the content it needs to fulfill this request
+from the storage server.
 
 
-\section{The CDN setup}
-A setup that is currently in use is the CDN setup. In this setup the storage has
-some special code running that...
+\subsection{The CDN configuration}
+A configuration that is currently heavily in use is the CDN configuration. In
+this configuration the proxy server will receive the request for the segment
+from the client and passes that exact reqest along to the storage server. The
+storage server will then generate the segment from the mp4 and send the segment
+back to the proxy server.  The proxy server will then send the response back to
+the client, but it will also cache the response. That way, when a client
+requests the same segment it will be able to serve it from its cache directly,
+instead of requesting it from the storage server.
+
+
 \includegraphics{cdn_diagram.pdf}
 
-\section{The IsmProxy setup}
+\subsection{The IsmProxyPass configuration}
+Another configuration that is currently being used is the IsmProxyPass
+configuration. This configuration does one thing quite different than the
+CDN configuration. When the proxy server receives a request for a segment,
+instead of passing it to the storage directly, it will send a series of range
+requests to the storage server. Upon receiving one of those range requests, the
+storage server will return the bytes from the mp4 file that are in the request
+range. When the proxy server receives those bytes it will then use them to
+generate the segment requested by the client. After this is done the segment
+will be returned to the client. Another difference between this configuration
+and the CDN configuration is that there is no caching involved
+
+
 \includegraphics{ismproxy_diagram.pdf}
 
-\section{The Late Transmuxing setup}
+\subsection{The Late Transmuxing configuration}
+The last configuration is the one this thesis is about. The late transmuxing
+configuration. This configuration is a mix of the previous two configurations.
+Stating it very simply, it is a version of the IsmProxyPass configuration with
+caching built in. This is accomplished by running two different server
+applications on the proxy server. A request of the client is initially handled
+on the proxy server by Nginx. Nginx then passes the request along to Apache,
+running on the same server. Apache then uses IsmProxyPass from the Unified
+Streaming module to send the range requests mentioned in the previous
+configuration.  However, instead of sending those requests to the storage server
+directly, it sends them back to Nginx. Nginx then passes those requests along to
+the storage server. The storage server will again respond with the byte ranges
+requested.
+
+When Nginx receives a response to one of its range requests we will want it to
+cache that response. This can be done quite easily by using the range as part of
+the cache key,~\autocite{nginxforum} which used to identify different items in
+the cache. Normally this key only contains the URL that is requested. This way
+of caching range requests can be very inefficient, because ranges that are not
+the same, but do overlap will both be cached. For video streaming however, this
+isn't a problem because the because the fragments are fixed, so the same ranges
+will always be requested and overlaps in those ranges should be minimal.
+
+Apart from caching the response Nginx will also return it to Apache. Apache will
+then generate the originally requested segment and return that back to Nginx.
+Nginx will then cache the segment and return it to the client.
 
 \includegraphics{latetrans_diagram.pdf}
-\subsection{The storage server}
-\subsection{The caching server}
+\subsubsection{The storage server}
+\subsubsection{The caching server}
 \section{Variations}
 
 \chapter{Experiments}
