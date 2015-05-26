@@ -1,0 +1,36 @@
+\documentclass{standalone}
+\input{tikz_preamble.tex}
+
+\begin{document}
+\begin{tikzpicture}[ ]
+
+    \clientnode
+
+    \nodewithdesc{sp}{below=4cm of cl}{right=7cm of}{Segment proxy}{Caches
+    segments}
+
+    \nodewithdesc{ismp}{below right=2cm and 2cm of sp}{right=3cm
+    of}{IsmProxy}{Creates segment from range requests}
+    \nodewithdesc{rp}{below left=2cm and 2cm of ismp}{right=7cm of}{Range request
+    proxy}{Caches byte range responses};
+
+    \nodewithdesc{ap}{below=4cm of rp}{right=3cm of}{Apache}{Returns the requested bytes of the mp4};
+
+    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}
+    \contwithlabel{ismp}{ap_cont}{Apache}{-0.3,0.6}{1,-0.6}
+    \contwithlabelmore{sp}{rp}{ng_cont}{Nginx}{-0.3,0.6}{1,-0.6}
+
+    \contwithlabel{ng_cont}{cache}{Cache server}{-0.3,0.6}{5.4,-0.6}
+
+    \graph [use existing nodes] {
+        cl ->[\reqseg] sp ->[\reqseg] ismp ->[align=left, "\reqrangeone \\\reqrangetwo"] rp ->[\reqrange] ap;
+    };
+
+
+
+  \end{tikzpicture}
+  \begin{tikzpicture}[
+  ]
+  \end{tikzpicture}
+\end{document}
+

@@ -1,0 +1,78 @@
+\usepackage{tikz}
+\usepackage{xparse}
+\usetikzlibrary{calc}
+\usetikzlibrary{graphdrawing,graphs,arrows.meta,shapes.misc,chains,positioning,shapes,quotes,automata,bending,fit}
+\usepackage{tkz-graph}
+
+\newcommand{\reqseg}{"Request for segment"}
+\newcommand{\reqrange}{"Requests for byte ranges needed to generate segment"}
+\newcommand{\reqrangeone}{Requests for byte ranges}
+\newcommand{\reqrangetwo}{needed to generate segment}
+
+\newcommand{\clientnode}{
+    \node[block] (cl) {Client};
+    \node[right=3cm of cl] (cl_desc) {Wants to play segment with a video player};
+    \graph [use existing nodes] {
+        cl --[dotted] cl_desc;
+    };
+}
+\newcommand{\labelpos}[1]{($(#1.north east) - (0.2, 0)$) }
+\newcommand{\rectlabel}[3]{\node[#3] at \labelpos{#1} {#2}}
+\newcommand{\container}[6]{\draw[#6] ($(#1.north west)+(#4)$) rectangle ($(#2.south east)+(#5)$) node[fitting node] (#3) {}}
+\DeclareDocumentCommand{\contwithlabelmore}{m m m m m m O{container} O{label}}{
+    \container{#1}{#2}{#3}{#5}{#6}{#7};
+    \rectlabel{#3}{#4}{#8};
+}
+\newcommand{\contwithlabel}[5]{
+    \container{#1}{#1}{#2}{#4}{#5}{container};
+    \rectlabel{#2}{#3}{label};
+}
+
+\newcommand{\nodewithdesc}[5]{
+    \node[block, #2] (#1) {#4};
+    \node[#3 #1] (#1_desc) {#5};
+
+    \graph [use existing nodes] {
+        #1 --[dotted] #1_desc;
+    };
+}
+
+\newcommand{\containercolor}{red}
+\newcommand{\nodecolor}{blue}
+\makeatletter
+\tikzset{
+  fitting node/.style={
+    inner sep=0pt,
+    fill=none,
+    draw=none,
+    reset transform,
+    fit={(\pgf@pathminx,\pgf@pathminy) (\pgf@pathmaxx,\pgf@pathmaxy)}
+  },
+  reset transform/.code={\pgftransformreset}
+}
+\makeatother
+
+\tikzset{
+    block/.style={
+        rectangle,
+        draw=\nodecolor,
+        thick,
+        text width=5em,
+        align=center,
+        rounded corners,
+        minimum height=2em
+    },
+    container/.style={
+        draw=\containercolor,
+        thick,
+        rounded corners,
+    },
+    label/.style={
+        rectangle,
+        draw=\containercolor,
+        fill=white,
+        rounded corners,
+        anchor=east,
+    },
+}
+
