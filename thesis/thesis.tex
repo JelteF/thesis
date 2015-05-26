@@ -12,6 +12,7 @@
 \usepackage{lmodern}
 %Enable for final compilation
 %\usepackage[stretch=10]{microtype}
+\usepackage{graphicx}
 
 
 
@@ -111,8 +112,26 @@ To cache range requests of any size, ranger \autocite{ranger} can be used.
 
 
 \chapter{Implementation}
+The server setup used consists of two servers, in this case virtual machines.
+One that has the video files on disk, this will be called the storage server,
+and one that serves as a reverse proxy, this will be called the proxy server.
+These servers contain a couple of different server application configurations.
+A common characteristic in all these configurations is that the client connects
+with the proxy server and that server will then request content the content it
+needs to fulfill this request from the storage server.
 
-\section{Basic setup}
+
+\section{The CDN setup}
+A setup that is currently in use is the CDN setup. In this setup the storage has
+some special code running that...
+\includegraphics{cdn_diagram.pdf}
+
+\section{The IsmProxy setup}
+\includegraphics{ismproxy_diagram.pdf}
+
+\section{The Late Transmuxing setup}
+
+\includegraphics{latetrans_diagram.pdf}
 \subsection{The storage server}
 \subsection{The caching server}
 \section{Variations}
