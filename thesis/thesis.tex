@@ -101,7 +101,12 @@ less easily, which means it can cache more different segments.
 
 
 
+
 \chapter{Background}
+To build the setup proposed in the introduction, existing technology can used
+heavily. This chapter will describe those technologies and explain why they are
+needed.
+
 \section{Unified Streaming}
 This thesis is written in collaboration with Unified Streaming Platform, this
 will be called USP in the future. Unified Streaming is a company that provides an easy to use
@@ -138,15 +143,81 @@ supplying a URL in the server config. This URL should point to the server that
 stores the actual video files. The smart server then requests the part of the
 video file that it needs to generate the fragment that is requested by the
 client. This is accomplished using HTTP range requests\autocite{rangerequests},
-which are a type of HTTP request that isn't meant to request a whole file, but
-instead it requests a specific byte range from that file.
+which are a type of HTTP request that doesn't request an entire file, but
+it requests a specific byte range from that file instead.
 
 
-\section{Caching}
+\section{Nginx as a reverse proxy}
+As a webserver application for the reverse proxy in the proposed setup Nginx is
+chosen. Apache could also be used, however Nginx has some features that
+probably make it a better choice for the proposed setup.
 
-\subsection{Caching range requests}
-To cache range requests of any size, ranger \autocite{ranger} can be used.
+\subsection{Caching}
+Since the proposed setup depends heavily on caching capabilities of the reverse
+proxy it is important that the server application has this built in. This is the
+case for Nginx. Apache also has support this, but one key difference is that
+cache locking is supported better in Nginx. Cache locking means that the same
+content will not be cached multiple times when multiple requests request the
+same content at the same time. Instead only one request will be proxied through
+to the storage server and the others wait until the response for that one is
+cached. This can significantly reduce the load on the storage server.
 
+
+
+\subsubsection{Caching range requests}
+Since IsmProxyPss uses range requests it is also important that we are able to
+cache those. This is not directly supported in any webserver. The reason for
+this is that it is not exactly trivial to do. Most caches work by supplying it
+some data to cache it, together with a key with which you can retrieve it.
+Ideally one would cache the content at the key of the full file with info about
+what the range is. Then when another request for a range comes in it would
+check in the cache if some of the requested bytes are in there. If not all of
+them are there it would request just those bytes from the upstream server and
+then add those to the same cache for future use. This hasn't been implemented
+anywhere yet. However, the proposed setup is not the first that would benefit
+from being caching range requests. So some suboptimal solutions have been
+proposed for different use cases.
+
+The most simple one, which is employed by Nginx by default,
+is removing the range request header from the request when sending it to
+upstream. This will request the whole file instead of just the requesting byte
+range. Nginx will then cache this and return the whole file everytime a range is
+requested. According to the RFC this behaviour is allowed, but this it is
+clearly not behaviour that one would want, since the whole point of range
+requests is that requesting the full file is not necessary.
+
+A simple solution proposed on the Nginx forums\autocite{nginxcacheforum} is to
+force Nginx to request the range from upstream and then using the requested
+range in the cache key. This basically means that a range request is handled by
+the cache as if it is a seperate URL. The main downside of this solution is that
+when overlapping byte ranges are requested they will both be cached in full. So
+this solution works fine when the ranges that get requested are always the same.
+However if the requested ranges are different almost every time this solution is
+not good since a lot of the cache wil contain the same bytes.
+
+% Check wat proxy_force_ranges doet en of het te gebruiken is in mijn versie van
+
+Ranger\autocite{ranger} is another solution that tries to solve this exact
+problem. Everytime a range request comes instead of sending it directly to the
+upstream server, it generates other range requests that together contain all the
+bytes requested. These new range requests are always from the same block size
+and they also start at the same byte position. These requests will then be
+sent to upstream and after a response comes back they will be cached as well.
+This way, even though the initial range request can be any range and can overlap
+with others, the requests sent to upstream will always match previously sent
+requests, which makes the caching work. There's only two small issues with this
+approach. The first one is that more data is requested from the upstream server
+than is actually needed to fulfill the request. The second that if large
+ranges are requested, a lot of requests need to be send to the upstream server,
+because the large request gets split into a lot of smaller ones.
+
+
+
+\subsection{Scripting}
+Another reason for choosing Nginx are its extensive scripting capabilities. It
+is possible to enable Lua scripting in the server itself by installing a special
+module\autocite{nginxlua}. This can be very usefull if advanced logic is needed
+to create the proposed setup.
 
 
 
@@ -181,8 +252,9 @@ the client, but it will also cache the response. That way, when a client
 requests the same segment it will be able to serve it from its cache directly,
 instead of requesting it from the storage server.
 
-
 \includegraphics{cdn_diagram.pdf}
+
+
 
 \subsection{The IsmProxyPass configuration}
 Another configuration that is currently being used is the IsmProxyPass
@@ -198,6 +270,8 @@ and the CDN configuration is that there is no caching involved
 
 
 \includegraphics{ismproxy_diagram.pdf}
+
+
 
 \subsection{The Late Transmuxing configuration}
 The last configuration is the one this thesis is about. The late transmuxing
@@ -215,7 +289,7 @@ requested.
 
 When Nginx receives a response to one of its range requests we will want it to
 cache that response. This can be done quite easily by using the range as part of
-the cache key,~\autocite{nginxforum} which used to identify different items in
+the cache key,~\autocite{nginxcacheforum} which used to identify different items in
 the cache. Normally this key only contains the URL that is requested. This way
 of caching range requests can be very inefficient, because ranges that are not
 the same, but do overlap will both be cached. For video streaming however, this
@@ -227,9 +301,14 @@ then generate the originally requested segment and return that back to Nginx.
 Nginx will then cache the segment and return it to the client.
 
 \includegraphics{latetrans_diagram.pdf}
-\subsubsection{The storage server}
-\subsubsection{The caching server}
+
+
+
 \section{Variations}
+
+
+
+
 
 \chapter{Experiments}
 \section{Setup}
