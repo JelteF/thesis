@@ -17,7 +17,7 @@
 
 
 % Title Page
-\title{Late Transmuxing:\\Improving caching in videostreaming}
+\title{Late Transmuxing:\\Improving caching \\in video streaming}
 \author{Jelte Fennema}
 \supervisors{Dirk Griffioen (Unified Streaming), Robert Belleman (UvA)}
 \signedby{Robert Belleman (UvA)}
@@ -95,19 +95,60 @@ server to cache a segment. Instead of storing the same segment multiple times it
 is now only stored in the raw format. This means that the cache gets filled up
 less easily, which means it can cache more different segments.
 
-\chapter{Background}
-\section{Different streaming protocols}
-At the moment there are four different streaming protocols in widespread use,
-DASH (Dynamic Adaptive Streaming over HTTP) \autocite{dash}, ISS Smooth
-Streaming \autocite{smooth}, HLS (HTTP Live Streaming) \autocite{hls} and HDS
-(HTTP Dynamic Streaming) \autocite{hds}.
 
-\section{HTTP Range Requests}
-Range requests have been added to HTTP to serve parts of a file and not full
-files.~\autocite{rangerequests}
+
+
+
+
+
+\chapter{Background}
+\section{Unified Streaming}
+This thesis is written in collaboration with Unified Streaming Platform, this
+will be called USP in the future. Unified Streaming is a company that provides an easy to use
+solution for streaming video. They have modules for a couple of popular web
+webserver applications, Apache, Nginx and some of the smaller ones.
+
+
+\subsection{Different streaming protocols}
+One of the things the USP software tries to make easy is supporting the
+different streaming protocols that are used by the different types of players
+that exist. All these protocols require that the video is sent in a (slightly)
+different format.
+
+At the moment streaming in four different formats is supported by the USP
+software. IIs Smooth Streaming (ISS) \autocite{smooth}, wich is developed by
+Microsoft, is used in Silverlight based players. HTTP Dynamic Streaming (HDS)
+\autocite{hds} is developed by Adobe and is used in Flash based players. HTTP Live
+Streaming (HLS) \autocite{hls} is developed by Apple and used on the iPhone, iPad
+and Apple TVs. The last format is Dynamic Adaptive Streaming over HTTP (DASH),
+which is developed as an ISO standard and is used in HTML5 video players.
+
+
+\subsection{IsmProxyPass}
+Hosting large files on dedicated servers or VPS's can be expensive. This is why
+there are services that that specialize in this area, like Amazon S3.
+Dumb storage, like Amazon S3, is quite popular for hosting large files, like
+videos, because it is relatively cheap. However, since the USP software requires
+you to install a module in the webserver application it can't simply be
+installed when using dumb storage.
+
+To solve this issue the USP conversion software can also be run on a different
+server than the server that actually stores the files. This is accomplished by
+supplying a URL in the server config. This URL should point to the server that
+stores the actual video files. The smart server then requests the part of the
+video file that it needs to generate the fragment that is requested by the
+client. This is accomplished using HTTP range requests\autocite{rangerequests},
+which are a type of HTTP request that isn't meant to request a whole file, but
+instead it requests a specific byte range from that file.
+
+
 \section{Caching}
+
 \subsection{Caching range requests}
 To cache range requests of any size, ranger \autocite{ranger} can be used.
+
+
+
 
 
 
@@ -123,7 +164,7 @@ ISS. The storage server only contains the mp4 file of the video. At some point
 in the server chain the segment needs to be generated from (part of) that mp4.
 
 \section{Different configurations}
-The servers contain a couple of different server application configurations and
+The servers contain a couple of different webserver application configurations and
 do this segment generation at different stages. A common characteristic in all
 these configurations is that the client connects with the proxy server and that
 server will then request content the content it needs to fulfill this request
