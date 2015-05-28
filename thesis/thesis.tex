@@ -50,25 +50,24 @@ The most obvious setup is ofcourse generating these files once and then setting
 up a file server that serves all these little files. This works but takes up
 quite a bit of space since you're essentially storing the same video multiple
 times. This issue can be solved by storing the raw video and converting it on
-the fly to the format needed when a request comes in. This is what the Unified
-Streaming software does.
+the fly to the format needed when a request comes in.
 
 However, in large streaming setups this is not enough for two reasons. The first
 one is that the storage server might be far away from the viewer, which means
-more time waiting before watching a video. The second one is that the storage
-server can be easily overwhelmed with requests, because its just one server. A
-simple solution to these problems is using a Content Distribution
-Network\autocite{cdns} with reverse proxy caching\autocite{revproxy} nodes.
+more time is spent waiting before watching a video. The second one is that the
+storage server can be easily overwhelmed with requests, because its just one
+server. Using a Content Distribution
+Network\autocite{cdns} with reverse proxy caching\autocite{revproxy} nodes is a simple solution to these problems.
 Those nodes forward the request to the storage server and cache the response. If
 another request comes for the same content a node will just respond with the
 response in its cache. This works quite good, since a small percentage of the
 videos account for a large percentage of the views.
-% For live streaming this also works fantastic since it's not even a whole
-% video that is downloaded a lot, it is only the last part of that video.
+% For live streaming this also works fantastic since it's not even a whole video
+% that is downloaded a lot, it is only the last part of that video.
 
 The big problem of this setup is that, just like with the very first setup, it
 stores the converted files instead of the raw files, only now in the cache
-instead of the storage server. This has two downsides in this case. Again, the
+instead of the storage server, which has two downsides in this case. Again, the
 server will contain the same content multiple times, only in this case the cache
 server. The other downside, specific to this setup, is that the cache will also
 request basically the same content from the storage. Those requests mean more
@@ -78,17 +77,18 @@ internal traffic and more waiting time for the viewer.
 The proposed improvement to this setup is the use of ``Late transmuxing''.
 Instead of requesting the converted segments from the storage server, the cache
 requests the raw content needed to create a segment. That raw content is then
-cached and it can be used to generate responses for all the different formats.
+cached and that cache can be used to generate responses for all the different
+formats.
 
 \subsection{Theoretical improvements over the traditional setup}
 In theory this has a couple of advantages over the traditional setup. The first
-time a specific segment is request it should perform the same, but once that has
-happened the same segment can be requested in another format and no network
+time a specific segment is requested it should perform the same, but once that
+has happened the same segment can be requested in another format and no network
 traffic is generated. This is an advantage in itself, since network traffic can
-be expensive at a large scale. However, it also means that there is no extra
-latency caused by a request to the storage server and that latency can be
-significant. Especially if the storage and the cache server are far located far
-away from eachother geographically.
+be expensive at a large scale. However, it also has the side effect that no
+extra latency is caused by a request to the storage server and that latency can
+be significant. Especially if the storage and the cache server are located
+far away from eachother geographically.
 
 Another theoretical improvement is lowering the storage required on the cache
 server to cache a segment. Instead of storing the same segment multiple times it
@@ -104,14 +104,14 @@ less easily, which means it can cache more different segments.
 
 \chapter{Background}
 To build the setup proposed in the introduction, existing technology can used
-heavily. This chapter will describe those technologies and explain why they are
-needed.
+heavily. This chapter will describe those technologies and explain how they can
+be utilized.
 
 \section{Unified Streaming}
-This thesis is written in collaboration with Unified Streaming Platform, this
+This thesis is written in collaboration with Unified Streaming Platform, which
 will be called USP in the future. Unified Streaming is a company that provides an easy to use
-solution for streaming video. They have modules for a couple of popular web
-webserver applications, Apache, Nginx and some of the smaller ones.
+solution for streaming video. They have modules for a set of popular
+webserver applications, Apache, Nginx, IIS and Lighttpd.
 
 
 \subsection{Different streaming protocols}
@@ -121,8 +121,8 @@ that exist. All these protocols require that the video is sent in a (slightly)
 different format.
 
 At the moment streaming in four different formats is supported by the USP
-software. IIs Smooth Streaming (ISS) \autocite{smooth}, wich is developed by
-Microsoft, is used in Silverlight based players. HTTP Dynamic Streaming (HDS)
+software. IIS Smooth Streaming (ISS) \autocite{smooth} is developed by
+Microsoft and is used in Silverlight based players. HTTP Dynamic Streaming (HDS)
 \autocite{hds} is developed by Adobe and is used in Flash based players. HTTP Live
 Streaming (HLS) \autocite{hls} is developed by Apple and used on the iPhone, iPad
 and Apple TVs. The last format is Dynamic Adaptive Streaming over HTTP (DASH),
@@ -131,11 +131,12 @@ which is developed as an ISO standard and is used in HTML5 video players.
 
 \subsection{IsmProxyPass}
 Hosting large files on dedicated servers or VPS's can be expensive. This is why
-there are services that that specialize in this area, like Amazon S3.
-Dumb storage, like Amazon S3, is quite popular for hosting large files, like
-videos, because it is relatively cheap. However, since the USP software requires
-you to install a module in the webserver application it can't simply be
-installed when using dumb storage.
+there are services that specialize just in hosting files, like Amazon S3.
+Services like this, which we'll call dumb storage from now, are quite popular
+for hosting large files, like videos, because it is relatively cheap. However,
+since the USP software requires you to install a module in the webserver
+application it can't simply be installed when using dumb storage, since you have
+no access to the actual webserver application.
 
 To solve this issue the USP conversion software can also be run on a different
 server than the server that actually stores the files. This is accomplished by
@@ -144,39 +145,41 @@ stores the actual video files. The smart server then requests the part of the
 video file that it needs to generate the fragment that is requested by the
 client. This is accomplished using HTTP range requests\autocite{rangerequests},
 which are a type of HTTP request that doesn't request an entire file, but
-it requests a specific byte range from that file instead.
+instead requests a specific byte range from that file.
+
 
 
 \section{Nginx as a reverse proxy}
-As a webserver application for the reverse proxy in the proposed setup Nginx is
-chosen. Apache could also be used, however Nginx has some features that
+Nginx is chosen as the webserver application for the reverse proxy in the
+proposed setup. Apache could also be used, however Nginx has some features that
 probably make it a better choice for the proposed setup.
 
-\subsection{Caching}
-Since the proposed setup depends heavily on caching capabilities of the reverse
-proxy it is important that the server application has this built in. This is the
-case for Nginx. Apache also has support this, but one key difference is that
-cache locking is supported better in Nginx. Cache locking means that the same
-content will not be cached multiple times when multiple requests request the
-same content at the same time. Instead only one request will be proxied through
-to the storage server and the others wait until the response for that one is
-cached. This can significantly reduce the load on the storage server.
+\subsection{Caching} \label{sec:caching}
+Since the proposed setup depends heavily on caching in the reverse proxy, it is
+important that the server application does this wel. This is the case for Nginx.
+Apache also does a good job at it, but one key difference is that cache locking is
+supported better in Nginx. Cache locking means that the same content will not be
+requested multiple times from the upstream server when multiple requests request
+the same content at the same time and there there isn't a cache entry for that
+request. Instead only one request will be proxied through to the storage server
+and the others wait until the response for that one is cached. This can
+significantly reduce the load on the storage server.
 
 
 
 \subsubsection{Caching range requests}
-Since IsmProxyPss uses range requests it is also important that we are able to
+Since IsmProxyPass uses range requests it is also important that we are able to
 cache those. This is not directly supported in any webserver. The reason for
 this is that it is not exactly trivial to do. Most caches work by supplying it
 some data to cache it, together with a key with which you can retrieve it.
-Ideally one would cache the content at the key of the full file with info about
-what the range is. Then when another request for a range comes in it would
-check in the cache if some of the requested bytes are in there. If not all of
-them are there it would request just those bytes from the upstream server and
-then add those to the same cache for future use. This hasn't been implemented
-anywhere yet. However, the proposed setup is not the first that would benefit
-from being caching range requests. So some suboptimal solutions have been
-proposed for different use cases.
+Ideally one would cache the content using the key of the full file and add some
+info about what range is actually cached. Then when another request for a range
+comes in it would check in the cache if some of the requested bytes are in
+there. If not all of them are there it should request just the bytes that are
+not cached from the upstream server and then add those to the same cache for
+future use. This hasn't been implemented anywhere yet. However, our proposed
+setup is not the first that would benefit from caching range requests. So some
+suboptimal solutions have been proposed for different use cases.
 
 The most simple one, which is employed by Nginx by default,
 is removing the range request header from the request when sending it to
@@ -187,29 +190,34 @@ clearly not behaviour that one would want, since the whole point of range
 requests is that requesting the full file is not necessary.
 
 A simple solution proposed on the Nginx forums\autocite{nginxcacheforum} is to
-force Nginx to request the range from upstream and then using the requested
-range in the cache key. This basically means that a range request is handled by
-the cache as if it is a seperate URL. The main downside of this solution is that
-when overlapping byte ranges are requested they will both be cached in full. So
-this solution works fine when the ranges that get requested are always the same.
-However if the requested ranges are different almost every time this solution is
-not good since a lot of the cache wil contain the same bytes.
+force Nginx to request the range from upstream and then adding the requested
+range to the cache key. This basically means that a range request is handled by
+the cache as if it were a seperate URL. The main downside of this solution is that
+when overlapping byte ranges are requested they will both be cached in full.
+This means this  solution works fine when the ranges that get requested are
+always the same. However if the requested ranges are different almost every
+time this solution is not acceptable since a lot of the cache wil contain the
+same bytes, because of the overlap in the byte ranges.
 
 % Check wat proxy_force_ranges doet en of het te gebruiken is in mijn versie van
 
-Ranger\autocite{ranger} is another solution that tries to solve this exact
-problem. Everytime a range request comes instead of sending it directly to the
-upstream server, it generates other range requests that together contain all the
-bytes requested. These new range requests are always from the same block size
-and they also start at the same byte position. These requests will then be
-sent to upstream and after a response comes back they will be cached as well.
-This way, even though the initial range request can be any range and can overlap
-with others, the requests sent to upstream will always match previously sent
-requests, which makes the caching work. There's only two small issues with this
-approach. The first one is that more data is requested from the upstream server
-than is actually needed to fulfill the request. The second that if large
-ranges are requested, a lot of requests need to be send to the upstream server,
-because the large request gets split into a lot of smaller ones.
+Ranger\autocite{ranger} is another solution to the problem that tries to solve
+the overlap problem. Everytime a range request comes in, instead of sending it
+directly to the upstream server, it generates other range requests that together
+contain all the bytes requested. These new range requests are always from the
+same block size and they also start at the same byte position. These requests
+will then be sent to upstream and after a response comes back they will be
+cached as well.  This way, even though the initial range request can be any
+range and can overlap with others, the requests sent to upstream will always
+match previously sent requests, which makes sure that cache hits occur every
+time part of a range is requested that was requested before even though it's not
+exactly the same. There are only two small issues with this approach. The first
+one is that more data is requested from the upstream server than is actually
+needed to fulfill the request. However, this is probably not too severe when the
+block size is chosen small enough. The second issue is that when large ranges
+are requested, a lot of requests need to be send to the upstream server, because
+the large request gets split into a lot of smaller ones. Which could mean some
+unnecessary overhead.
 
 
 
@@ -224,7 +232,7 @@ to create the proposed setup.
 
 
 \chapter{Implementation}
-The server setup used consists of two servers, in this case virtual machines.
+The created server setup consists of two servers, in this case virtual machines.
 One that has the video files on disk, this will be called the storage server,
 and one that serves as a reverse proxy, this will be called the proxy server.
 The proxy server can also be called the cache server in the cases where it
@@ -235,11 +243,11 @@ ISS. The storage server only contains the mp4 file of the video. At some point
 in the server chain the segment needs to be generated from (part of) that mp4.
 
 \section{Different configurations}
-The servers contain a couple of different webserver application configurations and
-do this segment generation at different stages. A common characteristic in all
-these configurations is that the client connects with the proxy server and that
-server will then request content the content it needs to fulfill this request
-from the storage server.
+The servers contain a couple of different webserver application configurations
+to do this segment generation at different stages. A common characteristic in
+all these configurations is that the client connects with the proxy server and
+that server will then request the content it needs to fulfill this request from
+the storage server.
 
 
 \subsection{The CDN configuration}
@@ -258,15 +266,15 @@ instead of requesting it from the storage server.
 
 \subsection{The IsmProxyPass configuration}
 Another configuration that is currently being used is the IsmProxyPass
-configuration. This configuration does one thing quite different than the
+configuration. This configuration does one thing quite different compared to the
 CDN configuration. When the proxy server receives a request for a segment,
 instead of passing it to the storage directly, it will send a series of range
 requests to the storage server. Upon receiving one of those range requests, the
 storage server will return the bytes from the mp4 file that are in the request
 range. When the proxy server receives those bytes it will then use them to
 generate the segment requested by the client. After this is done the segment
-will be returned to the client. Another difference between this configuration
-and the CDN configuration is that there is no caching involved
+will be returned to the client. Another important difference between this
+configuration and the CDN configuration is that there is no caching involved
 
 
 \includegraphics{ismproxy_diagram.pdf}
@@ -288,13 +296,14 @@ the storage server. The storage server will again respond with the byte ranges
 requested.
 
 When Nginx receives a response to one of its range requests we will want it to
-cache that response. This can be done quite easily by using the range as part of
-the cache key,~\autocite{nginxcacheforum} which used to identify different items in
-the cache. Normally this key only contains the URL that is requested. This way
-of caching range requests can be very inefficient, because ranges that are not
-the same, but do overlap will both be cached. For video streaming however, this
-isn't a problem because the because the fragments are fixed, so the same ranges
-will always be requested and overlaps in those ranges should be minimal.
+cache that response. This can be done quite easily by using the second method
+described in section \ref{sec:caching}, which was the method that meant changing
+the cache key. The reason this method is sufficient and the third method isn't
+needed is because that method solves a problem that our use case doesn't have.
+It solves the problem of overlapping byte ranges. For video streaming however,
+this problem doesn't exist because the because the fragments that cen be
+requested are fixed. This means the same ranges will always be requested and
+overlaps in those ranges should be minimal.
 
 Apart from caching the response Nginx will also return it to Apache. Apache will
 then generate the originally requested segment and return that back to Nginx.
@@ -304,7 +313,12 @@ Nginx will then cache the segment and return it to the client.
 
 
 
-\section{Variations}
+\subsection{Configurations with less caching}
+Apart from these three main configurations, there are also configurations
+with caching disabled at certain points in the server chains. These
+configurations are created to find out what effect of each cache is on the
+different performance metrics.
+
 
 
 
