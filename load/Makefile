@@ -8,19 +8,20 @@ else ifeq ($(SERVER), nginx)
 PORT=82
 endif
 
-URL_PREFIX?=basic
-URL=http://$(URL_PREFIX).edge.usp.local/video/tears-of-steel
+export URL_PREFIX?=basic
+export URL=http://$(URL_PREFIX).edge.usp.local/video/tears-of-steel
 
-WRK=wrk/wrk
-SCRIPT=files/report.lua
+export WRK=wrk/wrk
+export SCRIPT=files/report.lua
 
 # expansion works in bash, not in sh
 SHELL=bash
-CONNECTIONS=1
-CONNECTION_STEPS:=$(shell eval echo {1..1})
-THREADS=1
-THREAD_STEPS:=$(shell eval echo {1..1})
-DURATION=60s
+export CONNECTIONS=1
+export CONNECTION_STEPS:=$(shell eval echo {1..1})
+export THREADS=1
+export THREAD_STEPS:=$(shell eval echo {1..1})
+export DURATION=25s
+export RUNS=1
 
 OBJECTS=
 #OBJECTS+=mp4
@@ -53,14 +54,7 @@ DATA=data/$(URL_PREFIX)
 
 # wrk -d1 -c1 -t1 -s files/report.lua --latency http://usp-pack:80/video.ref -- mp4
 define run-wrk
-	for run_type in initial next; do \
-		echo $$run_type >> $(2); \
-		date -u +"%Y-%m-%dT%T.%3N" >> $(2); \
-		echo running $$run_type; \
-		echo $(WRK) -t 1 -d $(DURATION) -s $(SCRIPT) -c $$(($(CONNECTIONS))) $(URL) -- $(1) $$run_type; \
-		$(WRK) -t 1 -d $(DURATION) -s $(SCRIPT) -c $$(($(CONNECTIONS))) $(URL) -- $(1) $$run_type \
-		| grep 'elapsed time\|{.*}' >> $(2); \
-	done;
+	bash do_tests.sh $(1) $(2)
 endef
 
 all: $(OBJECTS) \

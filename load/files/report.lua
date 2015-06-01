@@ -21,7 +21,7 @@ init = function(args)
 
   base_url = wrk.path
   target = args[1]
-  run_once = args[2] == 'initial'
+  run_once = args[2] == 'once'
   local requests = {}
   replay(requests, base_url, target)
 
