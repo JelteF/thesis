@@ -6,8 +6,8 @@ log_file=origin-size.log
 url_file_dir=files
 iss_file=$url_file_dir/fmp4-iss-log
 hls_file=$url_file_dir/fmp4-hls-log
-dash_file=$url_file_dir/fmp4-hds-log
-hds_file=$url_file_dir/fmp4-hls-log
+dash_file=$url_file_dir/fmp4-dash-log
+hds_file=$url_file_dir/fmp4-hds-log
 
 url_files="$iss_file $hls_file $dash_file $hds_file"
 
@@ -21,7 +21,7 @@ function connect_to_cache {
 
 function calculate_storage_trafic {
     echo "cd $log_dir;" \
-        "cat $log_file | tr ' ' '\\n' | paste -sd+ | bc" \
+        "echo 0 | cat - $log_file | tr ' ' '\\n' | paste -sd+ | bc" \
         | connect_to_storage
 }
 
@@ -44,7 +44,7 @@ function get_cache_used {
 
 function get_results {
     clear_storage_log;
-    echo -n test_time:
+    echo -n test_time: >> $2;
     date -u +"%Y-%m-%dT%T.%3N" >> $2;
     do_requests_with_write $1 $2 $3
     echo internal_bytes: `calculate_storage_trafic` >> $2
@@ -81,11 +81,10 @@ for run_type in first_time second_time after_other; do
     echo -e "\nrun_type:" $run_type >> $2;
     echo running $run_type;
     for i in `seq $RUNS`; do
+        echo doing run $i of $RUNS
         if [ "$run_type" == "second_time" ]; then
-            echo hiero $i
             get_results $1 $2 multiple
         else
-            echo no hiero $i
             if [ "$run_type" == "after_other" ]; then
                 for first_run in $url_files; do
                     if [ "$first_run" != "$1" ]; then
@@ -97,7 +96,7 @@ for run_type in first_time second_time after_other; do
                     fi
                 done
             else
-                echo doing the first actually
+                purge_cache
                 get_results $1 $2 once
             fi
         fi
