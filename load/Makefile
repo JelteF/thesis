@@ -20,8 +20,8 @@ export CONNECTIONS=1
 export CONNECTION_STEPS:=$(shell eval echo {1..1})
 export THREADS=1
 export THREAD_STEPS:=$(shell eval echo {1..1})
-export DURATION=25s
-export RUNS=1
+export DURATION=30s
+export RUNS=5
 
 OBJECTS=
 #OBJECTS+=mp4
