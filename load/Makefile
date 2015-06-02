@@ -16,12 +16,13 @@ export SCRIPT=files/report.lua
 
 # expansion works in bash, not in sh
 SHELL=bash
-export CONNECTIONS=1
+export CONNECTIONS?=1
 export CONNECTION_STEPS:=$(shell eval echo {1..1})
 export THREADS=1
 export THREAD_STEPS:=$(shell eval echo {1..1})
-export DURATION=30s
-export RUNS=5
+export DURATION?=30s
+export TIMEOUT?=20s
+export RUNS?=2
 
 OBJECTS=
 #OBJECTS+=mp4
@@ -44,7 +45,7 @@ OBJECTS+=s3-fmp4-iss-log
 .PHONY: clean all link
 
 TIMESTAMP:=$(shell date -u +"%Y-%m-%dT%T.%3N")
-DATA=data/$(URL_PREFIX)
+export DATA=data/$(URL_PREFIX)
 
 #	$(foreach i, $(THREAD_STEPS), \
 #		$(foreach n, $(CONNECTION_STEPS), \

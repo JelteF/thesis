@@ -78,7 +78,6 @@ done = function(summary, latency, requests)
       + summary.errors.timeout
       + summary.errors.connect
 
---[[
   summary["latency"] =
     {min=latency.min,
      max=latency.max,
@@ -91,7 +90,7 @@ done = function(summary, latency, requests)
       distribution[string.format("%g%%", p)]= n
   end
   summary["distribution"] = distribution
-]]--
+
   s = json.encode(summary)
   io.write('summary: ')
   io.write(s .. "\n")

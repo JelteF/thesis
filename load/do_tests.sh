@@ -50,6 +50,7 @@ function get_results {
     echo internal_bytes: `calculate_storage_trafic` >> $2
     echo internal_requests: `get_nr_requests` >> $2
     echo cache_usage: `get_cache_used` >> $2
+    echo connections: $CONNECTIONS >> $2
 }
 
 function do_requests_with_write {
@@ -63,11 +64,11 @@ function do_requests_without_write {
 }
 
 function print_request_command {
-    echo $WRK -t 1 -d $DURATION -s $SCRIPT -c $CONNECTIONS $URL -- $1 $2
+    echo $WRK -t 1 -d $DURATION -s $SCRIPT --timout $TIMEOUT -c $CONNECTIONS $URL -- $1 $2
 }
 
 function do_requests {
-    $WRK -t 1 -d $DURATION -s $SCRIPT -c $CONNECTIONS $URL -- $1 $2
+    $WRK -t 1 -d $DURATION -s $SCRIPT --timout $TIMEOUT -c $CONNECTIONS $URL -- $1 $2
 }
 
 function purge_cache {
@@ -76,16 +77,26 @@ function purge_cache {
 
 echo going to write stuff to $2
 
+mkdir -p $DATA
+
 
 for run_type in first_time second_time after_other; do
     echo -e "\nrun_type:" $run_type >> $2;
     echo running $run_type;
     for i in `seq $RUNS`; do
         echo doing run $i of $RUNS
-        if [ "$run_type" == "second_time" ]; then
-            get_results $1 $2 multiple
+        if [ "$run_type" == "first_time" ]; then
+            purge_cache
+            get_results $1 $2 once
         else
+            if [[ "$URL_PREFIX" == nocache* ]] || [[ "$URL_PREFIX" == ismproxy ]]; then
+                continue
+            fi
             if [ "$run_type" == "after_other" ]; then
+                if [[ "$URL_PREFIX" == cdn ]]; then
+                    continue
+                fi
+
                 for first_run in $url_files; do
                     if [ "$first_run" != "$1" ]; then
                         echo after: $first_run >> $2
@@ -96,8 +107,7 @@ for run_type in first_time second_time after_other; do
                     fi
                 done
             else
-                purge_cache
-                get_results $1 $2 once
+                get_results $1 $2 multiple
             fi
         fi
     done

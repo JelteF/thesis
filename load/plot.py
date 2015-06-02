@@ -7,7 +7,7 @@ import pandas as pd
 
 sns.set_context("poster")
 
-BASE_PATH = os.path.abspath('data_new')
+BASE_PATH = os.path.abspath('data_latest')
 dirs = os.listdir(BASE_PATH)
 data = []
 for d in dirs:
@@ -63,12 +63,21 @@ df = pd.DataFrame(data)
 df.fillna(0, inplace=True)
 print(df)
 
+
+def safe_filename(filename):
+    return "".join([c for c in filename if c.isalpha() or c.isdigit() or
+                    c in ' _-']).rstrip()
+
 for run_type, g in df.groupby('run_type'):
-    print(run_type)
-    print(g.max())
-    continue
-    for prop in ['MB/s', 'internal_bytes', 'internal_requests']:
+    extra_kwargs = {}
+    if run_type == 'after_other':
+        extra_kwargs['row'] = 'after'
+    plot_vals = ['MB/s', 'internal_bytes', 'internal_requests',
+                 'requests_per_second', 'cache_usage']
+    for prop in plot_vals:
         sns.factorplot('video_type', prop, 'server_type', kind='bar',
-                       data=g, sharey=False)
-        plt.title(run_type)
-        plt.show()
+                       data=g, sharey=False, **extra_kwargs)
+        if not len(extra_kwargs):
+            plt.title(run_type)
+        plt.savefig('plots/' + safe_filename(run_type + ' - ' + prop) +
+                    '.png')
