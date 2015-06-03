@@ -75,7 +75,7 @@ def safe_filename(filename):
 
 def saveplot(kind):
     # plt.show()
-    plt.savefig('plots2/' + safe_filename(' - '.join([run_type, prop, kind])) +
+    plt.savefig('plots/' + safe_filename(' - '.join([run_type, prop, kind])) +
                 '.png')
     plt.close()
 
@@ -109,7 +109,3 @@ for run_type, g in df.groupby('run_type'):
                        hue_order=bar_order, **extra_kwargs)
         saveplot('point')
 
-        # if len(extra_kwargs) > 1:
-        #     plt.title(run_type)
-        # plt.savefig('plots/' + safe_filename(run_type + ' - ' + prop) +
-        #             '.png')
