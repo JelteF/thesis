@@ -7,7 +7,7 @@ import pandas as pd
 
 sns.set_context("poster")
 
-BASE_PATH = os.path.abspath('data_latest')
+BASE_PATH = os.path.abspath('data')
 dirs = os.listdir(BASE_PATH)
 data = []
 for d in dirs:
@@ -44,10 +44,11 @@ for d in dirs:
                         seconds = cur_d['duration'] / 10**6
                     cur_d['seconds'] = seconds
 
-                    print(type(cur_d['requests']))
-                    print(seconds)
                     cur_d['requests_per_second'] = cur_d['requests'] / seconds
                     cur_d['MB/s'] = cur_d['bytes'] / 10**6 / seconds
+
+                    for k, v in cur_d['latency'].items():
+                        cur_d['latency' + '_' + k] = v
 
                     data.append(cur_d)
                     seconds = None
@@ -57,6 +58,9 @@ for d in dirs:
                     v = int(l.split()[-1])
 
                     cur_d[k] = v
+
+                    if k == 'internal_bytes':
+                        cur_d['Internally sent MB'] = v / 10**6
 
 
 df = pd.DataFrame(data)
@@ -68,16 +72,44 @@ def safe_filename(filename):
     return "".join([c for c in filename if c.isalpha() or c.isdigit() or
                     c in ' _-']).rstrip()
 
+
+def saveplot(kind):
+    # plt.show()
+    plt.savefig('plots2/' + safe_filename(' - '.join([run_type, prop, kind])) +
+                '.png')
+    plt.close()
+
+setup_order = ['nocache.cdn', 'cdn', 'ismproxy', 'nocache.transmux',
+               'single.transmux', 'double.transmux']
+
+transmux_cache_order = setup_order[-2:]
+
 for run_type, g in df.groupby('run_type'):
     extra_kwargs = {}
-    if run_type == 'after_other':
+    if run_type == 'first_time':
+        bar_order = setup_order[2:] + setup_order[:2]
+        print(g.max())
+    elif run_type == 'second_time':
+        bar_order = transmux_cache_order + ['cdn']
+    elif run_type == 'after_other':
         extra_kwargs['row'] = 'after'
-    plot_vals = ['MB/s', 'internal_bytes', 'internal_requests',
-                 'requests_per_second', 'cache_usage']
+        bar_order = transmux_cache_order
+
+    plot_vals = ['MB/s', 'Internally sent MB', 'internal_requests',
+                 'requests_per_second', 'cache_usage', 'latency_mean']
+    # plot_vals = ['latency_mean']
     for prop in plot_vals:
         sns.factorplot('video_type', prop, 'server_type', kind='bar',
-                       data=g, sharey=False, **extra_kwargs)
-        if not len(extra_kwargs):
-            plt.title(run_type)
-        plt.savefig('plots/' + safe_filename(run_type + ' - ' + prop) +
-                    '.png')
+                       col='connections', data=g, sharey=True,
+                       hue_order=bar_order, **extra_kwargs)
+        saveplot('bar')
+
+        sns.factorplot('connections', prop, 'server_type', kind='point',
+                       col='video_type', data=g, sharey=True,
+                       hue_order=bar_order, **extra_kwargs)
+        saveplot('point')
+
+        # if len(extra_kwargs) > 1:
+        #     plt.title(run_type)
+        # plt.savefig('plots/' + safe_filename(run_type + ' - ' + prop) +
+        #             '.png')

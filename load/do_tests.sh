@@ -64,11 +64,11 @@ function do_requests_without_write {
 }
 
 function print_request_command {
-    echo $WRK -t 1 -d $DURATION -s $SCRIPT --timout $TIMEOUT -c $CONNECTIONS $URL -- $1 $2
+    echo $WRK -t 1 -d $DURATION -s $SCRIPT --timeout $TIMEOUT -c $CONNECTIONS $URL -- $1 $2
 }
 
 function do_requests {
-    $WRK -t 1 -d $DURATION -s $SCRIPT --timout $TIMEOUT -c $CONNECTIONS $URL -- $1 $2
+    $WRK -t 1 -d $DURATION -s $SCRIPT --timeout $TIMEOUT -c $CONNECTIONS $URL -- $1 $2
 }
 
 function purge_cache {
