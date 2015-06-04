@@ -57,11 +57,12 @@ one is that the storage server might be far away from the viewer, which means
 more time is spent waiting before watching a video. The second one is that the
 storage server can be easily overwhelmed with requests, because its just one
 server. Using a Content Distribution
-Network\autocite{cdns} with reverse proxy caching\autocite{revproxy} nodes is a simple solution to these problems.
-Those nodes forward the request to the storage server and cache the response. If
-another request comes for the same content a node will just respond with the
-response in its cache. This works quite good, since a small percentage of the
-videos account for a large percentage of the views.
+Networkwith reverse proxy caching nodes is a simple solution to these problems
+\autocites{cdns}{revproxy}.  Those nodes forward the request to the storage
+server and cache the response. If another request comes for the same content a
+node will just respond with the response in its cache. This works quite good,
+since a small percentage of the videos account for a large percentage of the
+views.
 % For live streaming this also works fantastic since it's not even a whole video
 % that is downloaded a lot, it is only the last part of that video.
 
