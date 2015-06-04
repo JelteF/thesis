@@ -33,13 +33,13 @@
 \tableofcontents
 
 \chapter{Introduction}
-Streaming video reliably isn't an easy job. There are a couple of aspects that
+Streaming video reliably is no easy job. There are a couple of aspects that
 can cause some problems. A significant problem is that there are different video
 streaming protocols and not all of them are supported equally by all browsers.
 This means a good video host should have its videos in a lot of different
 formats to make sure they can be viewed in every browser. The video streaming
 protocols have one thing in common, they all stream little video sections
-instead of the whole file, because you can do that easiliy with
+instead of the whole file, because that can be done easiliy with
 HTTP\autocite{http}. All this means that at some point the original video file
 should be cut in smaller sections and those should be converted to the formats
 that are needed.
@@ -48,7 +48,7 @@ that are needed.
 \section{Traditional setups}
 The most obvious setup is ofcourse generating these files once and then setting
 up a file server that serves all these little files. This works but takes up
-quite a bit of space since you're essentially storing the same video multiple
+quite a bit of space since the same video is essentially multiple
 times. This issue can be solved by storing the raw video and converting it on
 the fly to the format needed when a request comes in.
 
@@ -135,9 +135,9 @@ Hosting large files on dedicated servers or VPS's can be expensive. This is why
 there are services that specialize just in hosting files, like Amazon S3.
 Services like this, which we'll call dumb storage from now, are quite popular
 for hosting large files, like videos, because it is relatively cheap. However,
-since the USP software requires you to install a module in the webserver
-application it can't simply be installed when using dumb storage, since you have
-no access to the actual webserver application.
+since the USP software requires to be installed as a module in the webserver
+application it cannot simply be installed when using dumb storage, because no
+acecss is granted to the actual webserver application.
 
 To solve this issue the USP conversion software can also be run on a different
 server than the server that actually stores the files. This is accomplished by
@@ -160,8 +160,8 @@ Since the proposed setup depends heavily on caching in the reverse proxy, it is
 important that the server application does this wel. This is the case for Nginx.
 Apache also does a good job at it, but one key difference is that cache locking is
 supported better in Nginx. Cache locking means that the same content will not be
-requested multiple times from the upstream server when multiple requests request
-the same content at the same time and there there isn't a cache entry for that
+requested multiple times from the upstream server when multiple requests ask for
+the same content at the same time and there is no cache entry for that
 request. Instead only one request will be proxied through to the storage server
 and the others wait until the response for that one is cached. This can
 significantly reduce the load on the storage server.
@@ -169,10 +169,11 @@ significantly reduce the load on the storage server.
 
 
 \subsubsection{Caching range requests}
-Since IsmProxyPass uses range requests it is also important that we are able to
-cache those. This is not directly supported in any webserver. The reason for
+Since IsmProxyPass uses range requests it is also important that those can be
+cached. This is not directly supported in any webserver. The reason for
 this is that it is not exactly trivial to do. Most caches work by supplying it
-some data to cache it, together with a key with which you can retrieve it.
+some data to cache, together with a key by which the data can be retrieved later
+on.
 Ideally one would cache the content using the key of the full file and add some
 info about what range is actually cached. Then when another request for a range
 comes in it would check in the cache if some of the requested bytes are in
@@ -296,10 +297,10 @@ directly, it sends them back to Nginx. Nginx then passes those requests along to
 the storage server. The storage server will again respond with the byte ranges
 requested.
 
-When Nginx receives a response to one of its range requests we will want it to
+When Nginx receives a response to one of its range requests it should to
 cache that response. This can be done quite easily by using the second method
 described in section \ref{sec:caching}, which was the method that meant changing
-the cache key. The reason this method is sufficient and the third method isn't
+the cache key. The reason this method is sufficient and the third method is not
 needed is because that method solves a problem that our use case doesn't have.
 It solves the problem of overlapping byte ranges. For video streaming however,
 this problem doesn't exist because the because the fragments that cen be
