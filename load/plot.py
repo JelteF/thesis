@@ -6,6 +6,8 @@ import json
 import pandas as pd
 
 sns.set_context("poster")
+sns.set_palette("Paired")
+palette = sns.color_palette("Paired")
 
 BASE_PATH = os.path.abspath('data')
 dirs = os.listdir(BASE_PATH)
@@ -66,6 +68,7 @@ for d in dirs:
 df = pd.DataFrame(data)
 df.fillna(0, inplace=True)
 print(df)
+print(df[df.total_errors != 0])
 
 
 def safe_filename(filename):
@@ -99,13 +102,16 @@ for run_type, g in df.groupby('run_type'):
                  'requests_per_second', 'cache_usage', 'latency_mean']
     # plot_vals = ['latency_mean']
     for prop in plot_vals:
-        sns.factorplot('video_type', prop, 'server_type', kind='bar',
-                       col='connections', data=g, sharey=True,
-                       hue_order=bar_order, **extra_kwargs)
-        saveplot('bar')
+        if prop in ['MB/s', 'requests_per_second', 'latency_mean']:
+            sns.factorplot('connections', prop, 'server_type', kind='point',
+                           col='video_type', data=g, sharey=True,
+                           hue_order=bar_order, palette=palette,
+                           **extra_kwargs)
+            saveplot('point')
 
-        sns.factorplot('connections', prop, 'server_type', kind='point',
-                       col='video_type', data=g, sharey=True,
-                       hue_order=bar_order, **extra_kwargs)
-        saveplot('point')
-
+        else:
+            sns.factorplot('video_type', prop, 'server_type', kind='bar',
+                           data=g, sharey=True,
+                           hue_order=bar_order, palette=palette,
+                           **extra_kwargs)
+            saveplot('bar')
