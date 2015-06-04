@@ -37,6 +37,9 @@ function request()
   if request_count == max_requests then
       -- Once the last request has been sent stop or start over depending on
       -- the way the command was invoked
+      if run_once then
+          return
+      end
       request_count = 0
   end
   request_count = request_count + 1
