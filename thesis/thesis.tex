@@ -13,6 +13,7 @@
 %Enable for final compilation
 %\usepackage[stretch=10]{microtype}
 \usepackage{graphicx}
+\usepackage{varioref}
 
 
 
@@ -33,19 +34,43 @@
 \tableofcontents
 
 \chapter{Introduction}
-Streaming video reliably is no easy job. There are a couple of aspects that
-can cause some problems. A significant problem is that there are different video
-streaming protocols and not all of them are supported equally by all browsers.
-This means a good video host should have its videos in a lot of different
-formats to make sure they can be viewed in every browser. The video streaming
-protocols have one thing in common, they all stream little video sections
-instead of the whole file, because that can be done easiliy with
+% Start with the grand scheme of things with respect to VOD
+Streaming video reliably is no easy job. One significant problem is that there
+are different video streaming protocols and not all of them are supported
+equally by all players. This means a good video host should have its videos in
+a lot of different formats to make sure they can be viewed in every browser. The
+video streaming protocols have one thing in common, they all stream little video
+sections instead of the whole file, because that can be done easiliy with
 HTTP\autocite{http}. All this means that at some point the original video file
 should be cut in smaller sections and those should be converted to the formats
 that are needed.
 
+\section{Unified Streaming}
+% Probably not worth a section
+This thesis is written in collaboration with Unified Streaming Platform, which
+will be called USP in the future. Unified Streaming is a company that provides an easy to use
+solution for streaming video. They have modules for a set of popular
+webserver applications, Apache, Nginx, IIS and Lighttpd.
+
+
+\section{Different streaming protocols}
+% More focus on the protocols, less on the USP
+One of the things the USP software tries to make easy is supporting the
+different streaming protocols that are used by the different types of players
+that exist. All these protocols require that the video is sent in a (slightly)
+different format.
+
+At the moment streaming in four different formats is supported by the USP
+software. IIS Smooth Streaming (ISS) \autocite{smooth} is developed by
+Microsoft and is used in Silverlight based players. HTTP Dynamic Streaming (HDS)
+\autocite{hds} is developed by Adobe and is used in Flash based players. HTTP Live
+Streaming (HLS) \autocite{hls} is developed by Apple and used on the iPhone, iPad
+and Apple TVs. The last format is Dynamic Adaptive Streaming over HTTP (DASH),
+which is developed as an ISO standard and is used in HTML5 video players.
+
 
 \section{Traditional setups}
+% Maybe less details
 The most obvious setup is ofcourse generating these files once and then setting
 up a file server that serves all these little files. This works but takes up
 quite a bit of space since the same video is essentially multiple
@@ -74,83 +99,79 @@ server. The other downside, specific to this setup, is that the cache will also
 request basically the same content from the storage. Those requests mean more
 internal traffic and more waiting time for the viewer.
 
-\section{Proposed setup}
-The proposed improvement to this setup is the use of ``Late transmuxing''.
-Instead of requesting the converted segments from the storage server, the cache
-requests the raw content needed to create a segment. That raw content is then
-cached and that cache can be used to generate responses for all the different
-formats.
-
-\subsection{Theoretical improvements over the traditional setup}
-In theory this has a couple of advantages over the traditional setup. The first
-time a specific segment is requested it should perform the same, but once that
-has happened the same segment can be requested in another format and no network
-traffic is generated. This is an advantage in itself, since network traffic can
-be expensive at a large scale. However, it also has the side effect that no
-extra latency is caused by a request to the storage server and that latency can
-be significant. Especially if the storage and the cache server are located
-far away from eachother geographically.
-
-Another theoretical improvement is lowering the storage required on the cache
-server to cache a segment. Instead of storing the same segment multiple times it
-is now only stored in the raw format. This means that the cache gets filled up
-less easily, which means it can cache more different segments.
+\section{Approach}
+% Very short exlaination of the idea to solve the problem.
 
 
 
 
 
 
+\chapter{Problem analysis}
+% Explain in the normal setups in detail together with their
+% shortcommings.
+\section{Different configurations}
+The servers contain a couple of different webserver application configurations
+to do this segment generation at different stages. A common characteristic in
+all these configurations is that the client connects with the proxy server and
+that server will then request the content it needs to fulfill this request from
+the storage server.
 
 
-\chapter{Background}
+\subsection{The CDN configuration}
+A configuration that is currently heavily in use is the CDN configuration. In
+this configuration the proxy server will receive the request for the segment
+from the client and passes that exact reqest along to the storage server. The
+storage server will then generate the segment from the mp4 and send the segment
+back to the proxy server.  The proxy server will then send the response back to
+the client, but it will also cache the response. That way, when a client
+requests the same segment it will be able to serve it from its cache directly,
+instead of requesting it from the storage server.
+See figure \vref{fig:cdn}, for a schematic overview of this configuration.
+\begin{figure}
+    \includegraphics{cdn_diagram.pdf}
+    \caption{The CDN configuration}
+    \label{fig:cdn}
+\end{figure}
+
+
+
+\subsection{The IsmProxyPass configuration}
+Another configuration that is currently being used is the IsmProxyPass
+configuration. This configuration does one thing quite different compared to the
+CDN configuration. When the proxy server receives a request for a segment,
+instead of passing it to the storage directly, it will send a series of range
+requests to the storage server. Upon receiving one of those range requests, the
+storage server will return the bytes from the mp4 file that are in the request
+range. When the proxy server receives those bytes it will then use them to
+generate the segment requested by the client. After this is done the segment
+will be returned to the client. Another important difference between this
+configuration and the CDN configuration is that there is no caching involved.
+See \vref{fig:ismproxy}, for a schematic overview of this configuration.
+
+\begin{figure}
+
+    \includegraphics{ismproxy_diagram.pdf}
+    \caption{The IsmProxyPass configuration}
+    \label{fig:ismproxy}
+
+\end{figure}
+
+
+
+
+
+
+
+\chapter{Design considerations}
+% Explain the search for technologies used instead of stating the decision and
+% then explaining why.
 To build the setup proposed in the introduction, existing technology can used
 heavily. This chapter will describe those technologies and explain how they can
 be utilized.
 
-\section{Unified Streaming}
-This thesis is written in collaboration with Unified Streaming Platform, which
-will be called USP in the future. Unified Streaming is a company that provides an easy to use
-solution for streaming video. They have modules for a set of popular
-webserver applications, Apache, Nginx, IIS and Lighttpd.
 
-
-\subsection{Different streaming protocols}
-One of the things the USP software tries to make easy is supporting the
-different streaming protocols that are used by the different types of players
-that exist. All these protocols require that the video is sent in a (slightly)
-different format.
-
-At the moment streaming in four different formats is supported by the USP
-software. IIS Smooth Streaming (ISS) \autocite{smooth} is developed by
-Microsoft and is used in Silverlight based players. HTTP Dynamic Streaming (HDS)
-\autocite{hds} is developed by Adobe and is used in Flash based players. HTTP Live
-Streaming (HLS) \autocite{hls} is developed by Apple and used on the iPhone, iPad
-and Apple TVs. The last format is Dynamic Adaptive Streaming over HTTP (DASH),
-which is developed as an ISO standard and is used in HTML5 video players.
-
-
-\subsection{IsmProxyPass}
-Hosting large files on dedicated servers or VPS's can be expensive. This is why
-there are services that specialize just in hosting files, like Amazon S3.
-Services like this, which we'll call dumb storage from now, are quite popular
-for hosting large files, like videos, because it is relatively cheap. However,
-since the USP software requires to be installed as a module in the webserver
-application it cannot simply be installed when using dumb storage, because no
-acecss is granted to the actual webserver application.
-
-To solve this issue the USP conversion software can also be run on a different
-server than the server that actually stores the files. This is accomplished by
-supplying a URL in the server config. This URL should point to the server that
-stores the actual video files. The smart server then requests the part of the
-video file that it needs to generate the fragment that is requested by the
-client. This is accomplished using HTTP range requests\autocite{rangerequests},
-which are a type of HTTP request that doesn't request an entire file, but
-instead requests a specific byte range from that file.
-
-
-
-\section{Nginx as a reverse proxy}
+\section{Webserver application on the proxy server}
 Nginx is chosen as the webserver application for the reverse proxy in the
 proposed setup. Apache could also be used, however Nginx has some features that
 probably make it a better choice for the proposed setup.
@@ -166,9 +187,16 @@ request. Instead only one request will be proxied through to the storage server
 and the others wait until the response for that one is cached. This can
 significantly reduce the load on the storage server.
 
+\subsection{Scripting}
+% In server lua vs CGI
+Another reason for choosing Nginx are its extensive scripting capabilities. It
+is possible to enable Lua scripting in the server itself by installing a special
+module\autocite{nginxlua}. This can be very usefull if advanced logic is needed
+to create the proposed setup.
 
 
-\subsubsection{Caching range requests}
+\section{Caching range requests}
+% Maybe use subsections so it will be less of a wall of text.
 Since IsmProxyPass uses range requests it is also important that those can be
 cached. This is not directly supported in any webserver. The reason for
 this is that it is not exactly trivial to do. Most caches work by supplying it
@@ -223,14 +251,6 @@ unnecessary overhead.
 
 
 
-\subsection{Scripting}
-Another reason for choosing Nginx are its extensive scripting capabilities. It
-is possible to enable Lua scripting in the server itself by installing a special
-module\autocite{nginxlua}. This can be very usefull if advanced logic is needed
-to create the proposed setup.
-
-
-
 
 
 \chapter{Implementation}
@@ -244,46 +264,9 @@ The client requests a specific segment of the video in a specific format, say
 ISS. The storage server only contains the mp4 file of the video. At some point
 in the server chain the segment needs to be generated from (part of) that mp4.
 
-\section{Different configurations}
-The servers contain a couple of different webserver application configurations
-to do this segment generation at different stages. A common characteristic in
-all these configurations is that the client connects with the proxy server and
-that server will then request the content it needs to fulfill this request from
-the storage server.
 
 
-\subsection{The CDN configuration}
-A configuration that is currently heavily in use is the CDN configuration. In
-this configuration the proxy server will receive the request for the segment
-from the client and passes that exact reqest along to the storage server. The
-storage server will then generate the segment from the mp4 and send the segment
-back to the proxy server.  The proxy server will then send the response back to
-the client, but it will also cache the response. That way, when a client
-requests the same segment it will be able to serve it from its cache directly,
-instead of requesting it from the storage server.
-
-\includegraphics{cdn_diagram.pdf}
-
-
-
-\subsection{The IsmProxyPass configuration}
-Another configuration that is currently being used is the IsmProxyPass
-configuration. This configuration does one thing quite different compared to the
-CDN configuration. When the proxy server receives a request for a segment,
-instead of passing it to the storage directly, it will send a series of range
-requests to the storage server. Upon receiving one of those range requests, the
-storage server will return the bytes from the mp4 file that are in the request
-range. When the proxy server receives those bytes it will then use them to
-generate the segment requested by the client. After this is done the segment
-will be returned to the client. Another important difference between this
-configuration and the CDN configuration is that there is no caching involved
-
-
-\includegraphics{ismproxy_diagram.pdf}
-
-
-
-\subsection{The Late Transmuxing configuration}
+\section{The Late Transmuxing configuration}
 The last configuration is the one this thesis is about. The late transmuxing
 configuration. This configuration is a mix of the previous two configurations.
 Stating it very simply, it is a version of the IsmProxyPass configuration with
@@ -309,13 +292,20 @@ overlaps in those ranges should be minimal.
 
 Apart from caching the response Nginx will also return it to Apache. Apache will
 then generate the originally requested segment and return that back to Nginx.
-Nginx will then cache the segment and return it to the client.
+Nginx will then cache the segment and return it to the client. See figure
+\vref{fig:latetrans} for a schematic overview of this setup.
 
-\includegraphics{latetrans_diagram.pdf}
+\begin{figure}
+    \includegraphics{latetrans_diagram.pdf}
+    \caption{The Late Transmuxing configuration}
+    \label{fig:latetrans}
+\end{figure}
+
+\subsection{Using two webserver applications on the same server}
+% Explain deadlocks
 
 
-
-\subsection{Configurations with less caching}
+\section{Configurations with less caching}
 Apart from these three main configurations, there are also configurations
 with caching disabled at certain points in the server chains. These
 configurations are created to find out what effect of each cache is on the
@@ -328,6 +318,8 @@ different performance metrics.
 
 \chapter{Experiments}
 \section{Setup}
+\subsection{Comcast}
+\subsection{wrk}
 \section{Results}
 
 \chapter{Discussion}
