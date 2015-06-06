@@ -14,7 +14,17 @@
 %\usepackage[stretch=10]{microtype}
 \usepackage{graphicx}
 \usepackage{varioref}
+\usepackage[toc,acronym,xindy]{glossaries}
 
+\makeglossaries
+
+
+\newacronym{abs}{ABS}{adaptive bitrate streaming}
+\newacronym{iss}{ISS}{ISS Smooth Streaming}
+\newacronym{dash}{DASH}{Dynamic Adaptive Streaming over HTTP}
+\newacronym{hds}{HDS}{HTTP Dynamic Streaming}
+\newacronym{hls}{HLS}{HTTP Live Streaming}
+\newacronym{usp}{USP}{Unified Streaming}
 
 
 % Title Page
@@ -35,38 +45,67 @@
 
 \chapter{Introduction}
 % Start with the grand scheme of things with respect to VOD
-Streaming video reliably is no easy job. One significant problem is that there
-are different video streaming protocols and not all of them are supported
-equally by all players. This means a good video host should have its videos in
-a lot of different formats to make sure they can be viewed in every browser. The
-video streaming protocols have one thing in common, they all stream little video
-sections instead of the whole file, because that can be done easiliy with
-HTTP\autocite{http}. All this means that at some point the original video file
-should be cut in smaller sections and those should be converted to the formats
-that are needed.
+The internet started out as a means of sending messages from one place to
+another. Since then it has become much faster and is used by a lot of different
+applications. It is still used to send messages, but because storage became
+cheaper and the internet became faster, it is now used for applications that
+require way more bandwith. It supplied the means for the revolution in the way
+we watch videos. Movie theaters and cable TV are not the only ways to watch
+those anymore. Streaming of videos over the internet has grown to an enormous
+industry of can be used to watch any video imaginable. Lots of amature videos
+are shared using YouTube, movies and TV shows can be watched easily using
+Netflix and even live TV is being moved to the internet by for instance the BBC
+iPlayer.
 
-\section{Unified Streaming}
-% Probably not worth a section
-This thesis is written in collaboration with Unified Streaming Platform, which
-will be called USP in the future. Unified Streaming is a company that provides an easy to use
-solution for streaming video. They have modules for a set of popular
-webserver applications, Apache, Nginx, IIS and Lighttpd.
+This way of video streaming is not limited to normal computers. It is done on on
+lots of different devices, like smartphones, tablets, set-top boxes,
+mediacenters or Smart TVs. Especially on mobile devices the network conditions
+can suddenly change drastically, for instance when changing the network
+connection from WiFi to a mobile network. With initial streaming technologies
+these changes caused buffering issues when the client was trying to get a high
+quality video using a low bandwith network connection. This brought life to the
+notion of \gls{abs}, which is a way of streaming video that changes the quality
+of the video that is being watched, based on what the network connection can
+handle \autocite{abs}.
+
+There are a couple of streaming solutions that implement
+\gls{abs}, most of those use HTTP as the underlying protocol \autocite{http}.
+One of the reasons for this is that HTTP is already in heavy and this way it is
+possible to leverage the already existing infrastructure that is in place for
+other HTTP communication. A disadvantage of HTTP however is that it is a
+protocol for sending whole files and entire video files are typically quite
+large. This is why the solutions stream little sections of the video instead of
+the whole file. This means that the original video file should be cut in smaller
+files. The solutions all have their own (slightly) different way of doing this,
+since they also need to store some extra metadata in those files, so a player
+can actually play it.
+
+% Maybe start with usp here and tell about the problem they solve.
+Streaming video reliably at scale using \gls{abs} is no easy job. One significant
+problem is that the different streaming solutions that implement \gls{abs} all
+use a (slightly) different file format. The reason that is a problem is that the
+different formats are not supported equally by the players used by different
+devices or browsers. Because of this, a good video host should have its videos
+in a lot of different formats to make sure they can be viewed by every device
+and browser.
 
 
-\section{Different streaming protocols}
-% More focus on the protocols, less on the USP
-One of the things the USP software tries to make easy is supporting the
-different streaming protocols that are used by the different types of players
-that exist. All these protocols require that the video is sent in a (slightly)
-different format.
+This thesis is written in collaboration with \gls{usp}. \gls{usp} is a company
+that provides an easy to use solution for streaming video. They have modules for
+a set of popular HTTP servers, Apache, Nginx, IIS and Lighttpd.  One of the
+things the USP software tries to make easy, is supporting the different
+\gls{abs} protocols that are used by the different types of players that exist.
+All these protocols require that the video is sent in a (slightly) different
+format.
 
 At the moment streaming in four different formats is supported by the USP
-software. IIS Smooth Streaming (ISS) \autocite{smooth} is developed by
-Microsoft and is used in Silverlight based players. HTTP Dynamic Streaming (HDS)
-\autocite{hds} is developed by Adobe and is used in Flash based players. HTTP Live
-Streaming (HLS) \autocite{hls} is developed by Apple and used on the iPhone, iPad
-and Apple TVs. The last format is Dynamic Adaptive Streaming over HTTP (DASH),
-which is developed as an ISO standard and is used in HTML5 video players.
+software. \Gls{iss} is developed by
+Microsoft and is used in Silverlight based players \autocite{iss}. \Gls{hds}
+ is developed by Adobe and is used in Flash based players \autocite{hds}.
+\Gls{hls} is developed by Apple and used on the iPhone, iPad
+and Apple TVs \autocite{hls}. The last format is \gls{dash},
+which is developed as an ISO standard and is used in HTML5 video players
+\autocite{dash}.
 
 
 \section{Traditional setups}
@@ -261,7 +300,7 @@ The proxy server can also be called the cache server in the cases where it
 caches proxied requests.
 
 The client requests a specific segment of the video in a specific format, say
-ISS. The storage server only contains the mp4 file of the video. At some point
+\gls{iss}. The storage server only contains the mp4 file of the video. At some point
 in the server chain the segment needs to be generated from (part of) that mp4.
 
 
@@ -327,7 +366,9 @@ different performance metrics.
 \chapter{Conclusions}
 
 
-\printbibliography{}
+\printbibliography[heading=bibintoc]{}
+
+\printglossaries
 
 
 \end{document}
