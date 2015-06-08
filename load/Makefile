@@ -22,7 +22,7 @@ export THREADS=1
 export THREAD_STEPS:=$(shell eval echo {1..1})
 export DURATION?=30s
 export TIMEOUT?=20s
-export RUNS?=5
+export RUNS?=2
 
 OBJECTS=
 #OBJECTS+=mp4
