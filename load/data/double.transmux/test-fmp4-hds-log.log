@@ -2878,3 +2878,963 @@ internal_bytes: 17071369
 internal_requests: 183
 cache_usage: 418768
 connections: 50
+
+run_type: first_time
+test_time:2015-06-07T16:47:55.364
+elapsed time: 15.654360055923
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000080,"requests":185,"distribution":{"99.999%":420644,"99%":258482,"50%":82475,"90%":111779},"bytes":131725668,"latency":{"max":420644,"stdev":35771.972339811,"min":16738,"mean":85165.833333333}}
+internal_bytes: 130707090
+internal_requests: 699
+cache_usage: 274432
+connections: 1
+test_time:2015-06-07T16:48:29.885
+elapsed time: 15.597648143768
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000089,"requests":185,"distribution":{"99.999%":424462,"99%":262300,"50%":80565,"90%":107729},"bytes":131725668,"latency":{"max":424462,"stdev":35897.8156832,"min":17518,"mean":84880.913978495}}
+internal_bytes: 130707090
+internal_requests: 699
+cache_usage: 274432
+connections: 1
+
+run_type: second_time
+test_time:2015-06-07T16:49:02.562
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30100241,"requests":10977,"distribution":{"99.999%":17742,"99%":9413,"50%":2256,"90%":3509},"bytes":7816573779,"latency":{"max":17742,"stdev":1415.672634036,"min":292,"mean":2479.78682966}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 1
+test_time:2015-06-07T16:49:35.331
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30099378,"requests":11520,"distribution":{"99.999%":16747,"99%":8514,"50%":2151,"90%":3283},"bytes":8202501442,"latency":{"max":16747,"stdev":1292.8791208325,"min":290,"mean":2343.1821513808}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 1
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-07T16:50:39.947
+elapsed time: 5.6493730545044
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000067,"requests":185,"distribution":{"99.999%":50001,"99%":46522,"50%":29887,"90%":32167},"bytes":131725668,"latency":{"max":50001,"stdev":3217.0216207271,"min":11361,"mean":30152.021621622}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 418844
+connections: 1
+after: files/fmp4-hls-log
+test_time:2015-06-07T16:51:51.629
+elapsed time: 4.0878071784973
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000081,"requests":185,"distribution":{"99.999%":46369,"99%":42313,"50%":21312,"90%":23355},"bytes":131725668,"latency":{"max":46369,"stdev":3068.1733232176,"min":11602,"mean":21701.8}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 1
+after: files/fmp4-dash-log
+test_time:2015-06-07T16:53:00.886
+elapsed time: 5.6602969169617
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000089,"requests":185,"distribution":{"99.999%":54137,"99%":47597,"50%":29822,"90%":32781},"bytes":131725668,"latency":{"max":54137,"stdev":3598.7257241177,"min":12051,"mean":30214.47027027}}
+internal_bytes: 17071388
+internal_requests: 183
+cache_usage: 418768
+connections: 1
+after: files/fmp4-iss-log
+test_time:2015-06-07T16:54:10.189
+elapsed time: 5.639701128006
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000071,"requests":185,"distribution":{"99.999%":57325,"99%":46149,"50%":29756,"90%":32610},"bytes":131725668,"latency":{"max":57325,"stdev":3486.0733364081,"min":11108,"mean":30097.156756757}}
+internal_bytes: 17071388
+internal_requests: 183
+cache_usage: 418844
+connections: 1
+after: files/fmp4-hls-log
+test_time:2015-06-07T16:55:28.260
+elapsed time: 4.0674819946289
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000135,"requests":185,"distribution":{"99.999%":45960,"99%":37871,"50%":21160,"90%":23031},"bytes":131725668,"latency":{"max":45960,"stdev":2973.19305173,"min":11392,"mean":21587.967567568}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 1
+after: files/fmp4-dash-log
+test_time:2015-06-07T16:56:40.792
+elapsed time: 5.7620069980621
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000130,"requests":185,"distribution":{"99.999%":173125,"99%":54917,"50%":29667,"90%":32498},"bytes":131725668,"latency":{"max":173125,"stdev":11017.810326611,"min":11773,"mean":30754.859459459}}
+internal_bytes: 17071388
+internal_requests: 183
+cache_usage: 418772
+connections: 1
+
+run_type: first_time
+test_time:2015-06-07T17:27:22.778
+elapsed time: 12.139113903046
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000129,"requests":185,"distribution":{"99.999%":629779,"99%":594071,"50%":122902,"90%":178366},"bytes":131725673,"latency":{"max":629779,"stdev":68409.538242059,"min":17069,"mean":130797.72972973}}
+internal_bytes: 130707071
+internal_requests: 699
+cache_usage: 274432
+connections: 2
+test_time:2015-06-07T17:28:05.246
+elapsed time: 11.786748170853
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000119,"requests":185,"distribution":{"99.999%":535140,"99%":423353,"50%":118520,"90%":173378},"bytes":131725673,"latency":{"max":535140,"stdev":55432.323129099,"min":17582,"mean":126990.45945946}}
+internal_bytes: 130707052
+internal_requests: 699
+cache_usage: 274432
+connections: 2
+
+run_type: second_time
+test_time:2015-06-07T17:28:44.269
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000267,"requests":17027,"distribution":{"99.999%":868558,"99%":547874,"50%":2850,"90%":5521},"bytes":12125504744,"latency":{"max":868558,"stdev":81232.809831073,"min":285,"mean":14902.686071606}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 2
+test_time:2015-06-07T17:29:23.250
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30002721,"requests":16429,"distribution":{"99.999%":1956665,"99%":1628490,"50%":2895,"90%":6298},"bytes":11698069640,"latency":{"max":1956665,"stdev":269271.25582989,"min":287,"mean":61433.910134909}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 2
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-07T17:30:35.761
+elapsed time: 3.200975894928
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000125,"requests":185,"distribution":{"99.999%":68034,"99%":66045,"50%":33095,"90%":37484},"bytes":131725673,"latency":{"max":68034,"stdev":6037.5005747859,"min":11616,"mean":34187.745945946}}
+internal_bytes: 17071388
+internal_requests: 183
+cache_usage: 418844
+connections: 2
+after: files/fmp4-hls-log
+test_time:2015-06-07T17:31:48.300
+elapsed time: 2.453840970993
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000104,"requests":185,"distribution":{"99.999%":56374,"99%":54919,"50%":24786,"90%":30182},"bytes":131725673,"latency":{"max":56374,"stdev":5965.5683410146,"min":11424,"mean":26102.648648649}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 2
+after: files/fmp4-dash-log
+test_time:2015-06-07T17:33:00.800
+elapsed time: 3.2452118396759
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000135,"requests":185,"distribution":{"99.999%":73698,"99%":66949,"50%":33148,"90%":41358},"bytes":131725673,"latency":{"max":73698,"stdev":6910.3568033148,"min":11290,"mean":34654.091891892}}
+internal_bytes: 17071388
+internal_requests: 183
+cache_usage: 418768
+connections: 2
+after: files/fmp4-iss-log
+test_time:2015-06-07T17:34:13.291
+elapsed time: 3.252387046814
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000090,"requests":185,"distribution":{"99.999%":76211,"99%":75457,"50%":33228,"90%":39385},"bytes":131725673,"latency":{"max":76211,"stdev":7164.9178523487,"min":11550,"mean":34729.32972973}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 2
+after: files/fmp4-hls-log
+test_time:2015-06-07T17:35:25.807
+elapsed time: 2.4352190494537
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000104,"requests":185,"distribution":{"99.999%":53856,"99%":53678,"50%":24494,"90%":30078},"bytes":131725673,"latency":{"max":53856,"stdev":5756.2363072048,"min":10754,"mean":25916.92972973}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 2
+after: files/fmp4-dash-log
+test_time:2015-06-07T17:36:38.346
+elapsed time: 3.2390458583832
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000120,"requests":185,"distribution":{"99.999%":58129,"99%":58052,"50%":33325,"90%":41605},"bytes":131725673,"latency":{"max":58129,"stdev":6439.0855056536,"min":11144,"mean":34608.308108108}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 2
+
+run_type: first_time
+test_time:2015-06-07T18:07:18.674
+elapsed time: 11.393187046051
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000133,"requests":185,"distribution":{"99.999%":2047485,"99%":1236671,"50%":234232,"90%":712623},"bytes":131725673,"latency":{"max":2047485,"stdev":255644.34820549,"min":17153,"mean":309398.81182796}}
+internal_bytes: 130707014
+internal_requests: 699
+cache_usage: 274432
+connections: 5
+test_time:2015-06-07T18:08:01.116
+elapsed time: 11.507508993149
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000128,"requests":185,"distribution":{"99.999%":1876564,"99%":1065750,"50%":231089,"90%":679126},"bytes":131725673,"latency":{"max":1876564,"stdev":232891.99979394,"min":24022,"mean":309204.8172043}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 5
+
+run_type: second_time
+test_time:2015-06-07T18:08:40.116
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30006379,"requests":14332,"distribution":{"99.999%":1552724,"99%":1175840,"50%":8250,"90%":129803},"bytes":10204512196,"latency":{"max":1552724,"stdev":181561.58135709,"min":309,"mean":55933.493579099}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 5
+test_time:2015-06-07T18:09:18.792
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30005586,"requests":15324,"distribution":{"99.999%":294724,"99%":202089,"50%":8001,"90%":76071},"bytes":10912919565,"latency":{"max":294724,"stdev":43988.376577494,"min":329,"mean":23464.260639447}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 5
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-07T18:10:30.651
+elapsed time: 2.3819279670715
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000121,"requests":185,"distribution":{"99.999%":190570,"99%":172393,"50%":59996,"90%":80756},"bytes":131725673,"latency":{"max":190570,"stdev":20345.966784106,"min":14208,"mean":63581.978378378}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 5
+after: files/fmp4-hls-log
+test_time:2015-06-07T18:11:43.172
+elapsed time: 1.8361558914185
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000106,"requests":185,"distribution":{"99.999%":103992,"99%":98161,"50%":45185,"90%":71298},"bytes":131725673,"latency":{"max":103992,"stdev":15440.707614061,"min":11641,"mean":48759.086486486}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 5
+after: files/fmp4-dash-log
+test_time:2015-06-07T18:12:55.611
+elapsed time: 2.5015299320221
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000089,"requests":185,"distribution":{"99.999%":151724,"99%":147106,"50%":62028,"90%":91357},"bytes":131725673,"latency":{"max":151724,"stdev":19914.388365514,"min":11392,"mean":66888.275675676}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 5
+after: files/fmp4-iss-log
+test_time:2015-06-07T18:14:08.126
+elapsed time: 2.4959428310394
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000129,"requests":185,"distribution":{"99.999%":136617,"99%":130582,"50%":61428,"90%":93948},"bytes":131725673,"latency":{"max":136617,"stdev":18076.719849237,"min":10813,"mean":66844.691891892}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 5
+after: files/fmp4-hls-log
+test_time:2015-06-07T18:15:20.617
+elapsed time: 1.8452069759369
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000129,"requests":185,"distribution":{"99.999%":141344,"99%":131816,"50%":45774,"90%":63191},"bytes":131725673,"latency":{"max":141344,"stdev":16646.741881288,"min":11653,"mean":49308.902702703}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 5
+after: files/fmp4-dash-log
+test_time:2015-06-07T18:16:33.032
+elapsed time: 2.4283020496368
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000134,"requests":185,"distribution":{"99.999%":140241,"99%":135222,"50%":61636,"90%":83144},"bytes":131725673,"latency":{"max":140241,"stdev":18903.696763956,"min":11268,"mean":64938.335135135}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 5
+
+run_type: first_time
+test_time:2015-06-07T18:47:11.031
+elapsed time: 11.174497127533
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000123,"requests":185,"distribution":{"99.999%":2287620,"99%":1611240,"50%":524564,"90%":991812},"bytes":131725673,"latency":{"max":2287620,"stdev":334314.67837812,"min":30330,"mean":597343.31351351}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 10
+test_time:2015-06-07T18:47:53.482
+elapsed time: 11.497133970261
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000075,"requests":185,"distribution":{"99.999%":3118187,"99%":1352592,"50%":537278,"90%":987076},"bytes":131725673,"latency":{"max":3118187,"stdev":341477.82488982,"min":32791,"mean":599937.84324324}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 10
+
+run_type: second_time
+test_time:2015-06-07T18:48:32.523
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30014578,"requests":12861,"distribution":{"99.999%":1682797,"99%":1274034,"50%":16499,"90%":177666},"bytes":9156079938,"latency":{"max":1682797,"stdev":197275.75079247,"min":368,"mean":76331.325918202}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 10
+test_time:2015-06-07T18:49:11.509
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30013340,"requests":12970,"distribution":{"99.999%":1397103,"99%":925708,"50%":16271,"90%":188817},"bytes":9235847846,"latency":{"max":1397103,"stdev":159496.46047196,"min":287,"mean":72265.901184203}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 10
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-07T18:50:23.482
+elapsed time: 2.4618270397186
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000091,"requests":185,"distribution":{"99.999%":400700,"99%":311913,"50%":119248,"90%":198119},"bytes":131725673,"latency":{"max":400700,"stdev":52179.112505556,"min":12743,"mean":131426.13513514}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 10
+after: files/fmp4-hls-log
+test_time:2015-06-07T18:51:36.009
+elapsed time: 1.8082671165466
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000107,"requests":185,"distribution":{"99.999%":293755,"99%":263190,"50%":88435,"90%":129826},"bytes":131725673,"latency":{"max":293755,"stdev":38555.325939597,"min":12840,"mean":96519.589189189}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 10
+after: files/fmp4-dash-log
+test_time:2015-06-07T18:52:48.597
+elapsed time: 2.4015460014343
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000129,"requests":185,"distribution":{"99.999%":303274,"99%":292812,"50%":119114,"90%":183812},"bytes":131725673,"latency":{"max":303274,"stdev":44491.981512822,"min":17449,"mean":128043.35675676}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 10
+after: files/fmp4-iss-log
+test_time:2015-06-07T18:54:01.168
+elapsed time: 2.4535410404205
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000088,"requests":185,"distribution":{"99.999%":349334,"99%":294454,"50%":120756,"90%":192778},"bytes":131725673,"latency":{"max":349334,"stdev":46383.882188696,"min":15337,"mean":130916.2972973}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 10
+after: files/fmp4-hls-log
+test_time:2015-06-07T18:55:13.676
+elapsed time: 1.7685859203339
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000099,"requests":185,"distribution":{"99.999%":217209,"99%":182302,"50%":88314,"90%":132313},"bytes":131725673,"latency":{"max":217209,"stdev":28932.175660543,"min":14899,"mean":93883.627027027}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 10
+after: files/fmp4-dash-log
+test_time:2015-06-07T18:56:26.176
+elapsed time: 2.5130660533905
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000132,"requests":185,"distribution":{"99.999%":332841,"99%":297530,"50%":122352,"90%":193875},"bytes":131725673,"latency":{"max":332841,"stdev":46826.506594506,"min":14535,"mean":134372.25945946}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 10
+
+run_type: first_time
+test_time:2015-06-07T19:27:05.441
+elapsed time: 11.172820091248
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000133,"requests":185,"distribution":{"99.999%":3795765,"99%":2507917,"50%":1503674,"90%":2040144},"bytes":131725673,"latency":{"max":3795765,"stdev":514428.57744953,"min":35215,"mean":1469553.2}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 25
+test_time:2015-06-07T19:27:47.894
+elapsed time: 11.1557970047
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000091,"requests":185,"distribution":{"99.999%":5429587,"99%":2820581,"50%":1501012,"90%":2108844},"bytes":131725673,"latency":{"max":5429587,"stdev":579706.60962715,"min":75588,"mean":1472528.4486486}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 25
+
+run_type: second_time
+test_time:2015-06-07T19:28:27.019
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30022457,"requests":6956,"distribution":{"99.999%":1492045,"99%":628827,"50%":79758,"90%":304189},"bytes":4953645776,"latency":{"max":1492045,"stdev":141975.77914758,"min":327,"mean":136926.78033649}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 25
+test_time:2015-06-07T19:29:06.058
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30012689,"requests":8873,"distribution":{"99.999%":1166046,"99%":570800,"50%":51448,"90%":296831},"bytes":6323021382,"latency":{"max":1166046,"stdev":134603.53449262,"min":396,"mean":121026.20609013}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 25
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-07T19:30:18.603
+elapsed time: 2.5314078330994
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000105,"requests":185,"distribution":{"99.999%":945489,"99%":855235,"50%":308010,"90%":527607},"bytes":131725673,"latency":{"max":945489,"stdev":146109.49730269,"min":35867,"mean":337116.20540541}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 25
+after: files/fmp4-hls-log
+test_time:2015-06-07T19:31:31.134
+elapsed time: 1.765527009964
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000089,"requests":185,"distribution":{"99.999%":560467,"99%":521392,"50%":213251,"90%":367590},"bytes":131725673,"latency":{"max":560467,"stdev":92440.729552109,"min":45935,"mean":234051.93513514}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 25
+after: files/fmp4-dash-log
+test_time:2015-06-07T19:32:43.732
+elapsed time: 2.525356054306
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000132,"requests":185,"distribution":{"99.999%":958394,"99%":709271,"50%":309283,"90%":477335},"bytes":131725673,"latency":{"max":958394,"stdev":118999.5909212,"min":29728,"mean":334700.39459459}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 25
+after: files/fmp4-iss-log
+test_time:2015-06-07T19:33:56.343
+elapsed time: 2.553160905838
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000120,"requests":185,"distribution":{"99.999%":1233907,"99%":884081,"50%":317955,"90%":497042},"bytes":131725673,"latency":{"max":1233907,"stdev":147498.84550016,"min":33060,"mean":340299.65405405}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 25
+after: files/fmp4-hls-log
+test_time:2015-06-07T19:35:08.900
+elapsed time: 1.7764461040497
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000131,"requests":185,"distribution":{"99.999%":477529,"99%":473061,"50%":214756,"90%":361467},"bytes":131725673,"latency":{"max":477529,"stdev":91158.90210564,"min":50872,"mean":231327.69189189}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 25
+after: files/fmp4-dash-log
+test_time:2015-06-07T19:36:20.864
+elapsed time: 2.5757541656494
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000076,"requests":185,"distribution":{"99.999%":1208741,"99%":843966,"50%":319980,"90%":471958},"bytes":131725673,"latency":{"max":1208741,"stdev":137936.51700773,"min":32125,"mean":343065.78378378}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 25
+
+run_type: first_time
+test_time:2015-06-07T20:07:01.119
+elapsed time: 11.131028175354
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000098,"requests":185,"distribution":{"99.999%":10170374,"99%":4796141,"50%":2917857,"90%":3741512},"bytes":131725673,"latency":{"max":10170374,"stdev":1002821.7303375,"min":74270,"mean":2806211.6864865}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 50
+test_time:2015-06-07T20:07:43.670
+elapsed time: 11.168570041656
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000110,"requests":185,"distribution":{"99.999%":10171465,"99%":4663386,"50%":2890517,"90%":3713179},"bytes":131725673,"latency":{"max":10171465,"stdev":1045705.5609301,"min":75156,"mean":2791515.9891892}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 50
+
+run_type: second_time
+test_time:2015-06-07T20:08:22.747
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30001644,"requests":4277,"distribution":{"99.999%":3808163,"99%":1527799,"50%":319574,"90%":611764},"bytes":3057871928,"latency":{"max":3808163,"stdev":270966.16134544,"min":3792,"mean":371747.16600964}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 50
+test_time:2015-06-07T20:09:01.436
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30002910,"requests":4212,"distribution":{"99.999%":3502776,"99%":1374662,"50%":325822,"90%":631339},"bytes":3010174980,"latency":{"max":3502776,"stdev":257772.3778088,"min":3516,"mean":375111.90332594}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 50
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-07T20:10:13.380
+elapsed time: 2.565071105957
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000123,"requests":185,"distribution":{"99.999%":1934946,"99%":1850821,"50%":610688,"90%":998086},"bytes":131725673,"latency":{"max":1934946,"stdev":270130.33332044,"min":57691,"mean":657795.88108108}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 50
+after: files/fmp4-hls-log
+test_time:2015-06-07T20:11:25.406
+elapsed time: 1.8180160522461
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000100,"requests":185,"distribution":{"99.999%":1242527,"99%":1217416,"50%":430984,"90%":633580},"bytes":131725673,"latency":{"max":1242527,"stdev":175370.47945119,"min":58048,"mean":464617.21081081}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 50
+after: files/fmp4-dash-log
+test_time:2015-06-07T20:12:37.337
+elapsed time: 2.6160521507263
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000087,"requests":185,"distribution":{"99.999%":1793824,"99%":1735245,"50%":601387,"90%":1019438},"bytes":131725673,"latency":{"max":1793824,"stdev":285158.45201804,"min":52745,"mean":668341.38918919}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 50
+after: files/fmp4-iss-log
+test_time:2015-06-07T20:13:49.945
+elapsed time: 2.6466348171234
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000104,"requests":185,"distribution":{"99.999%":1561346,"99%":1498456,"50%":640133,"90%":1163268},"bytes":131725673,"latency":{"max":1561346,"stdev":294633.81458043,"min":62714,"mean":694866.37297297}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 50
+after: files/fmp4-hls-log
+test_time:2015-06-07T20:15:02.582
+elapsed time: 1.8374080657959
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000101,"requests":185,"distribution":{"99.999%":1125701,"99%":1011146,"50%":437022,"90%":746993},"bytes":131725673,"latency":{"max":1125701,"stdev":199420.73434674,"min":84524,"mean":470178.52432432}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 50
+after: files/fmp4-dash-log
+test_time:2015-06-07T20:16:15.153
+elapsed time: 2.6611571311951
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000101,"requests":185,"distribution":{"99.999%":1926560,"99%":1625701,"50%":653954,"90%":1055746},"bytes":131725673,"latency":{"max":1926560,"stdev":295005.97592729,"min":53668,"mean":695207.45405405}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 50
+
+run_type: first_time
+test_time:2015-06-08T03:23:25.281
+elapsed time: 15.906440973282
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000126,"requests":185,"distribution":{"99.999%":423122,"99%":348066,"50%":80142,"90%":114361},"bytes":131725668,"latency":{"max":423122,"stdev":41390.212924415,"min":17617,"mean":87056.518716578}}
+internal_bytes: 130707090
+internal_requests: 699
+cache_usage: 274432
+connections: 1
+test_time:2015-06-08T03:23:59.811
+elapsed time: 15.626664876938
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000102,"requests":185,"distribution":{"99.999%":420795,"99%":258633,"50%":80506,"90%":109213},"bytes":131725668,"latency":{"max":420795,"stdev":35549.323258239,"min":17632,"mean":85019.655913978}}
+internal_bytes: 130707090
+internal_requests: 699
+cache_usage: 274432
+connections: 1
+
+run_type: second_time
+test_time:2015-06-08T03:24:32.492
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30099698,"requests":11208,"distribution":{"99.999%":18070,"99%":9445,"50%":2210,"90%":3428},"bytes":7978841123,"latency":{"max":18070,"stdev":1380.8225046886,"min":289,"mean":2425.066375164}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 1
+test_time:2015-06-08T03:25:05.258
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000690,"requests":11395,"distribution":{"99.999%":200179,"99%":12522,"50%":2161,"90%":3352},"bytes":8111990695,"latency":{"max":200179,"stdev":9325.639555849,"min":292,"mean":2999.2908639438}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 1
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-08T03:26:09.792
+elapsed time: 5.6012969017029
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000075,"requests":185,"distribution":{"99.999%":55149,"99%":52405,"50%":29524,"90%":31501},"bytes":131725668,"latency":{"max":55149,"stdev":3630.9117705134,"min":11443,"mean":29899.72972973}}
+internal_bytes: 17071388
+internal_requests: 183
+cache_usage: 418844
+connections: 1
+after: files/fmp4-hls-log
+test_time:2015-06-08T03:27:14.350
+elapsed time: 4.022362947464
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000120,"requests":185,"distribution":{"99.999%":44012,"99%":29668,"50%":21173,"90%":23054},"bytes":131725668,"latency":{"max":44012,"stdev":2443.2999361452,"min":11529,"mean":21358.140540541}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 1
+after: files/fmp4-dash-log
+test_time:2015-06-08T03:28:18.907
+elapsed time: 5.598072052002
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000134,"requests":185,"distribution":{"99.999%":51260,"99%":42548,"50%":29485,"90%":32515},"bytes":131725668,"latency":{"max":51260,"stdev":3050.3851345808,"min":11973,"mean":29873.940540541}}
+internal_bytes: 17071388
+internal_requests: 183
+cache_usage: 418768
+connections: 1
+after: files/fmp4-iss-log
+test_time:2015-06-08T03:29:23.489
+elapsed time: 5.6531050205231
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000122,"requests":185,"distribution":{"99.999%":55624,"99%":43472,"50%":29799,"90%":32351},"bytes":131725668,"latency":{"max":55624,"stdev":3263.2068101457,"min":11528,"mean":30169.681081081}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 1
+after: files/fmp4-hls-log
+test_time:2015-06-08T03:30:28.056
+elapsed time: 4.0763590335846
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000076,"requests":185,"distribution":{"99.999%":48494,"99%":31835,"50%":21421,"90%":23009},"bytes":131725668,"latency":{"max":48494,"stdev":2730.3031487183,"min":11349,"mean":21629.708108108}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 1
+after: files/fmp4-dash-log
+test_time:2015-06-08T03:31:32.614
+elapsed time: 5.5883340835571
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000124,"requests":185,"distribution":{"99.999%":54082,"99%":41447,"50%":29482,"90%":32001},"bytes":131725668,"latency":{"max":54082,"stdev":3128.1458939228,"min":11377,"mean":29816.194594595}}
+internal_bytes: 17071388
+internal_requests: 183
+cache_usage: 418768
+connections: 1
+
+run_type: first_time
+test_time:2015-06-08T03:58:14.537
+elapsed time: 12.281217098236
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000124,"requests":185,"distribution":{"99.999%":616001,"99%":595241,"50%":122038,"90%":172964},"bytes":131725673,"latency":{"max":616001,"stdev":75301.423084955,"min":15903,"mean":132239.61081081}}
+internal_bytes: 130707033
+internal_requests: 699
+cache_usage: 274432
+connections: 2
+test_time:2015-06-08T03:58:49.042
+elapsed time: 11.797665834427
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000138,"requests":185,"distribution":{"99.999%":581792,"99%":420851,"50%":119143,"90%":178833},"bytes":131725673,"latency":{"max":581792,"stdev":56314.785296011,"min":20193,"mean":127108.20540541}}
+internal_bytes: 130707033
+internal_requests: 699
+cache_usage: 274432
+connections: 2
+
+run_type: second_time
+test_time:2015-06-08T03:59:21.728
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30005584,"requests":17024,"distribution":{"99.999%":1187780,"99%":865955,"50%":2815,"90%":5707},"bytes":12121612080,"latency":{"max":1187780,"stdev":129660.98173093,"min":302,"mean":25548.405876249}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 2
+test_time:2015-06-08T03:59:54.424
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30001123,"requests":17651,"distribution":{"99.999%":209651,"99%":15082,"50%":2777,"90%":5002},"bytes":12568569613,"latency":{"max":209651,"stdev":9942.7430325433,"min":298,"mean":3830.6305483029}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 2
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-08T04:00:58.357
+elapsed time: 3.1815259456635
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000134,"requests":185,"distribution":{"99.999%":80785,"99%":62191,"50%":32763,"90%":37776},"bytes":131725673,"latency":{"max":80785,"stdev":6528.6414226828,"min":11472,"mean":33989.389189189}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 2
+after: files/fmp4-hls-log
+test_time:2015-06-08T04:02:02.997
+elapsed time: 2.3946478366852
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000085,"requests":185,"distribution":{"99.999%":51898,"99%":50905,"50%":24458,"90%":28827},"bytes":131725673,"latency":{"max":51898,"stdev":4263.8835637665,"min":11411,"mean":25447.140540541}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 2
+after: files/fmp4-dash-log
+test_time:2015-06-08T04:03:07.574
+elapsed time: 3.3340620994568
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000075,"requests":185,"distribution":{"99.999%":184100,"99%":177323,"50%":33050,"90%":37658},"bytes":131725673,"latency":{"max":184100,"stdev":16354.855300258,"min":10607,"mean":35635.205405405}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 2
+after: files/fmp4-iss-log
+test_time:2015-06-08T04:04:12.111
+elapsed time: 3.198028087616
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000088,"requests":185,"distribution":{"99.999%":72205,"99%":54737,"50%":33233,"90%":38548},"bytes":131725673,"latency":{"max":72205,"stdev":5459.1618991928,"min":12655,"mean":34157.756756757}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 2
+after: files/fmp4-hls-log
+test_time:2015-06-08T04:05:17.130
+elapsed time: 2.4426391124725
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000091,"requests":185,"distribution":{"99.999%":50699,"99%":50293,"50%":24840,"90%":29509},"bytes":131725673,"latency":{"max":50699,"stdev":4738.6740244925,"min":11517,"mean":25952.778378378}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 2
+after: files/fmp4-dash-log
+test_time:2015-06-08T04:06:21.697
+elapsed time: 3.3255348205566
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000116,"requests":185,"distribution":{"99.999%":162966,"99%":143840,"50%":33575,"90%":38230},"bytes":131725673,"latency":{"max":162966,"stdev":13435.395586332,"min":11355,"mean":35528.372972973}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 2
+
+run_type: first_time
+test_time:2015-06-08T04:33:02.305
+elapsed time: 11.58360004425
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000088,"requests":185,"distribution":{"99.999%":1411483,"99%":1137599,"50%":233341,"90%":693696},"bytes":131725673,"latency":{"max":1411483,"stdev":225306.92028253,"min":35177,"mean":306817.47567568}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 5
+test_time:2015-06-08T04:33:36.856
+elapsed time: 11.418282985687
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000103,"requests":185,"distribution":{"99.999%":1916360,"99%":1105547,"50%":222117,"90%":733753},"bytes":131725673,"latency":{"max":1916360,"stdev":247193.19450329,"min":18551,"mean":309737.57526882}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 5
+
+run_type: second_time
+test_time:2015-06-08T04:34:09.543
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30004837,"requests":15349,"distribution":{"99.999%":412710,"99%":202075,"50%":8013,"90%":57676},"bytes":10931898831,"latency":{"max":412710,"stdev":42154.800181453,"min":278,"mean":21884.890915047}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 5
+test_time:2015-06-08T04:34:41.909
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30009136,"requests":15169,"distribution":{"99.999%":479629,"99%":206119,"50%":7887,"90%":86337},"bytes":10801380462,"latency":{"max":479629,"stdev":47018.709791303,"min":325,"mean":25158.197596154}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 5
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-08T04:35:45.816
+elapsed time: 2.5611319541931
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000069,"requests":185,"distribution":{"99.999%":155576,"99%":124378,"50%":65221,"90%":91141},"bytes":131725673,"latency":{"max":155576,"stdev":18192.144714334,"min":11893,"mean":68498.324324324}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 5
+after: files/fmp4-hls-log
+test_time:2015-06-08T04:36:50.418
+elapsed time: 1.7443249225616
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000136,"requests":185,"distribution":{"99.999%":124395,"99%":115861,"50%":43625,"90%":63210},"bytes":131725673,"latency":{"max":124395,"stdev":15345.093166769,"min":11471,"mean":46590.086486486}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 5
+after: files/fmp4-dash-log
+test_time:2015-06-08T04:37:54.972
+elapsed time: 2.479640007019
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000088,"requests":185,"distribution":{"99.999%":115570,"99%":113244,"50%":63966,"90%":86989},"bytes":131725673,"latency":{"max":115570,"stdev":16966.497873017,"min":11362,"mean":66164.286486486}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 5
+after: files/fmp4-iss-log
+test_time:2015-06-08T04:38:59.609
+elapsed time: 2.4615480899811
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000100,"requests":185,"distribution":{"99.999%":168444,"99%":156400,"50%":62218,"90%":88627},"bytes":131725673,"latency":{"max":168444,"stdev":19305.440952541,"min":11215,"mean":65697.643243243}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 5
+after: files/fmp4-hls-log
+test_time:2015-06-08T04:40:04.241
+elapsed time: 1.6990458965302
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000079,"requests":185,"distribution":{"99.999%":88946,"99%":83206,"50%":43841,"90%":58082},"bytes":131725673,"latency":{"max":88946,"stdev":10605.666355899,"min":12023,"mean":45318.12972973}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 5
+after: files/fmp4-dash-log
+test_time:2015-06-08T04:41:08.804
+elapsed time: 2.4569752216339
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000087,"requests":185,"distribution":{"99.999%":132633,"99%":129055,"50%":61995,"90%":89384},"bytes":131725673,"latency":{"max":132633,"stdev":19150.542919688,"min":11900,"mean":65536.654054054}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 5
+
+run_type: first_time
+test_time:2015-06-08T05:07:48.757
+elapsed time: 11.44474697113
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000089,"requests":185,"distribution":{"99.999%":1968989,"99%":1541395,"50%":553379,"90%":1013344},"bytes":131725673,"latency":{"max":1968989,"stdev":324803.82120568,"min":44904,"mean":599819.71351351}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 10
+test_time:2015-06-08T05:08:23.294
+elapsed time: 11.495361089706
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000133,"requests":185,"distribution":{"99.999%":2417385,"99%":1386198,"50%":536602,"90%":1033415},"bytes":131725673,"latency":{"max":2417385,"stdev":333631.03365337,"min":33465,"mean":600961.90810811}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 10
+
+run_type: second_time
+test_time:2015-06-08T05:08:55.998
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30017143,"requests":13194,"distribution":{"99.999%":937507,"99%":552824,"50%":16438,"90%":160218},"bytes":9396464850,"latency":{"max":937507,"stdev":98543.423513982,"min":332,"mean":53488.909198914}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 10
+test_time:2015-06-08T05:09:28.369
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30010842,"requests":13262,"distribution":{"99.999%":1700571,"99%":1095272,"50%":16146,"90%":167644},"bytes":9446082082,"latency":{"max":1700571,"stdev":170410.70422842,"min":391,"mean":68530.013320594}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 10
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-08T05:10:32.334
+elapsed time: 2.4181129932404
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000088,"requests":185,"distribution":{"99.999%":238399,"99%":237137,"50%":124168,"90%":171102},"bytes":131725673,"latency":{"max":238399,"stdev":31301.46917596,"min":13910,"mean":128803.56216216}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 10
+after: files/fmp4-hls-log
+test_time:2015-06-08T05:11:36.971
+elapsed time: 1.7980401515961
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000119,"requests":185,"distribution":{"99.999%":298450,"99%":298357,"50%":84634,"90%":126299},"bytes":131725673,"latency":{"max":298450,"stdev":46447.529608279,"min":18964,"mean":95842.194594595}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 10
+after: files/fmp4-dash-log
+test_time:2015-06-08T05:12:41.521
+elapsed time: 2.3533630371094
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000129,"requests":185,"distribution":{"99.999%":272995,"99%":233414,"50%":119706,"90%":177248},"bytes":131725673,"latency":{"max":272995,"stdev":38948.360705819,"min":12400,"mean":125478.28108108}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 10
+after: files/fmp4-iss-log
+test_time:2015-06-08T05:13:46.148
+elapsed time: 2.4080739021301
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000094,"requests":185,"distribution":{"99.999%":225290,"99%":220271,"50%":125471,"90%":170744},"bytes":131725673,"latency":{"max":225290,"stdev":31537.513765544,"min":14169,"mean":127443.31891892}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 10
+after: files/fmp4-hls-log
+test_time:2015-06-08T05:14:50.787
+elapsed time: 1.77450299263
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000095,"requests":185,"distribution":{"99.999%":188184,"99%":184707,"50%":89028,"90%":151147},"bytes":131725673,"latency":{"max":188184,"stdev":32578.852522291,"min":14090,"mean":94561.837837838}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 10
+after: files/fmp4-dash-log
+test_time:2015-06-08T05:15:55.332
+elapsed time: 2.4115960597992
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000130,"requests":185,"distribution":{"99.999%":215369,"99%":198004,"50%":126060,"90%":163510},"bytes":131725673,"latency":{"max":215369,"stdev":27634.935899849,"min":13790,"mean":128580.36216216}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 10
+
+run_type: first_time
+test_time:2015-06-08T05:42:36.813
+elapsed time: 11.163779973984
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000073,"requests":185,"distribution":{"99.999%":5419908,"99%":2775190,"50%":1472898,"90%":2109361},"bytes":131725673,"latency":{"max":5419908,"stdev":602648.11710537,"min":48836,"mean":1469160.9027027}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 25
+test_time:2015-06-08T05:43:11.375
+elapsed time: 11.162462234497
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000130,"requests":185,"distribution":{"99.999%":5243266,"99%":2759286,"50%":1435020,"90%":2106964},"bytes":131725673,"latency":{"max":5243266,"stdev":586680.00458959,"min":35736,"mean":1463722.8054054}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 25
+
+run_type: second_time
+test_time:2015-06-08T05:43:44.107
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30019831,"requests":5753,"distribution":{"99.999%":1709263,"99%":691486,"50%":89765,"90%":357674},"bytes":4100843491,"latency":{"max":1709263,"stdev":161520.20462449,"min":1689,"mean":159392.88423913}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 25
+test_time:2015-06-08T05:44:16.838
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30022413,"requests":6616,"distribution":{"99.999%":2114482,"99%":1683291,"50%":81773,"90%":385105},"bytes":4715019412,"latency":{"max":2114482,"stdev":279241.31008125,"min":440,"mean":180641.23839344}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 25
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-08T05:45:21.489
+elapsed time: 2.4433798789978
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000121,"requests":185,"distribution":{"99.999%":944672,"99%":853485,"50%":299189,"90%":457372},"bytes":131725673,"latency":{"max":944672,"stdev":122753.91872898,"min":31314,"mean":323888.17837838}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 25
+after: files/fmp4-hls-log
+test_time:2015-06-08T05:46:26.148
+elapsed time: 1.7669870853424
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000102,"requests":185,"distribution":{"99.999%":587350,"99%":553613,"50%":208215,"90%":356286},"bytes":131725673,"latency":{"max":587350,"stdev":94604.250571784,"min":39944,"mean":232865.03243243}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 25
+after: files/fmp4-dash-log
+test_time:2015-06-08T05:47:30.741
+elapsed time: 2.5008089542389
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000103,"requests":185,"distribution":{"99.999%":936444,"99%":864213,"50%":309126,"90%":492293},"bytes":131725673,"latency":{"max":936444,"stdev":133359.50175193,"min":33750,"mean":330447.47567568}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 25
+after: files/fmp4-iss-log
+test_time:2015-06-08T05:48:35.521
+elapsed time: 2.5090038776398
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000132,"requests":185,"distribution":{"99.999%":696361,"99%":687518,"50%":308496,"90%":467305},"bytes":131725673,"latency":{"max":696361,"stdev":112930.93759735,"min":33298,"mean":329712.62702703}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 25
+after: files/fmp4-hls-log
+test_time:2015-06-08T05:49:40.207
+elapsed time: 1.7337851524353
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000089,"requests":185,"distribution":{"99.999%":627655,"99%":565440,"50%":211523,"90%":363164},"bytes":131725673,"latency":{"max":627655,"stdev":98414.507834722,"min":30611,"mean":230794.72972973}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 25
+after: files/fmp4-dash-log
+test_time:2015-06-08T05:50:44.830
+elapsed time: 2.5304210186005
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000106,"requests":185,"distribution":{"99.999%":796002,"99%":736723,"50%":307964,"90%":493213},"bytes":131725673,"latency":{"max":796002,"stdev":124492.1452334,"min":45581,"mean":336199.10810811}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 25
+
+run_type: first_time
+test_time:2015-06-08T06:17:25.519
+elapsed time: 11.208087921143
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000135,"requests":185,"distribution":{"99.999%":10622516,"99%":5820396,"50%":2834984,"90%":3858248},"bytes":131725673,"latency":{"max":10622516,"stdev":1117613.8742339,"min":73864,"mean":2830186.8702703}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 50
+test_time:2015-06-08T06:18:00.149
+elapsed time: 11.109097003937
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000089,"requests":185,"distribution":{"99.999%":4946993,"99%":4863936,"50%":2860177,"90%":3735686},"bytes":131725673,"latency":{"max":4946993,"stdev":847913.30468069,"min":110600,"mean":2803176.2432432}}
+internal_bytes: 130706976
+internal_requests: 699
+cache_usage: 274432
+connections: 50
+
+run_type: second_time
+test_time:2015-06-08T06:18:32.900
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30004360,"requests":4087,"distribution":{"99.999%":3583370,"99%":1294371,"50%":338666,"90%":663224},"bytes":2922244897,"latency":{"max":3583370,"stdev":257176.82998064,"min":1990,"mean":383975.98291961}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 50
+test_time:2015-06-08T06:19:05.335
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30002395,"requests":4184,"distribution":{"99.999%":3108729,"99%":1494200,"50%":324899,"90%":628248},"bytes":2993639439,"latency":{"max":3108729,"stdev":268272.34944731,"min":2722,"mean":379883.66376423}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 274432
+connections: 50
+
+run_type: after_other
+after: files/fmp4-iss-log
+test_time:2015-06-08T06:20:09.394
+elapsed time: 2.591057062149
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000075,"requests":185,"distribution":{"99.999%":1633384,"99%":1493175,"50%":641479,"90%":997553},"bytes":131725673,"latency":{"max":1633384,"stdev":282394.56551283,"min":62893,"mean":662122.37297297}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 50
+after: files/fmp4-hls-log
+test_time:2015-06-08T06:21:14.097
+elapsed time: 1.773784160614
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000102,"requests":185,"distribution":{"99.999%":1182455,"99%":992160,"50%":425433,"90%":732530},"bytes":131725673,"latency":{"max":1182455,"stdev":192457.21882964,"min":58561,"mean":455314.76216216}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 50
+after: files/fmp4-dash-log
+test_time:2015-06-08T06:22:18.761
+elapsed time: 2.6471409797668
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000108,"requests":185,"distribution":{"99.999%":1599077,"99%":1377859,"50%":622085,"90%":1060218},"bytes":131725673,"latency":{"max":1599077,"stdev":276864.17074407,"min":83297,"mean":678500.98918919}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 50
+after: files/fmp4-iss-log
+test_time:2015-06-08T06:23:23.660
+elapsed time: 2.669459104538
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000101,"requests":185,"distribution":{"99.999%":2194912,"99%":1983328,"50%":624490,"90%":1109766},"bytes":131725673,"latency":{"max":2194912,"stdev":313464.95217119,"min":61115,"mean":685929.18918919}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418844
+connections: 50
+after: files/fmp4-hls-log
+test_time:2015-06-08T06:24:28.508
+elapsed time: 1.9036409854889
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000096,"requests":185,"distribution":{"99.999%":1704310,"99%":1391379,"50%":468218,"90%":750691},"bytes":131725673,"latency":{"max":1704310,"stdev":235222.65444983,"min":56104,"mean":489896.73513514}}
+internal_bytes: 0
+internal_requests: 0
+cache_usage: 407772
+connections: 50
+after: files/fmp4-dash-log
+test_time:2015-06-08T06:25:33.172
+elapsed time: 2.5997769832611
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":30000078,"requests":185,"distribution":{"99.999%":1662505,"99%":1624636,"50%":645606,"90%":964827},"bytes":131725673,"latency":{"max":1662505,"stdev":274335.97190757,"min":40468,"mean":672468.29189189}}
+internal_bytes: 17071369
+internal_requests: 183
+cache_usage: 418768
+connections: 50
