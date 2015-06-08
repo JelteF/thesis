@@ -95,7 +95,7 @@ for run_type, g in df.groupby('run_type'):
     elif run_type == 'second_time':
         bar_order = transmux_cache_order + ['cdn']
     elif run_type == 'after_other':
-        extra_kwargs['row'] = 'after'
+        extra_kwargs['col'] = 'after'
         bar_order = transmux_cache_order
 
     plot_vals = ['MB/s', 'Internally sent MB', 'internal_requests',
@@ -103,11 +103,18 @@ for run_type, g in df.groupby('run_type'):
     # plot_vals = ['latency_mean']
     for prop in plot_vals:
         if prop in ['MB/s', 'requests_per_second', 'latency_mean']:
+            if 'col' not in extra_kwargs:
+                vid_type_key = 'col'
+            else:
+                vid_type_key = 'row'
+            extra_kwargs[vid_type_key] = 'video_type'
+
             sns.factorplot('connections', prop, 'server_type', kind='point',
-                           col='video_type', data=g, sharey=True,
+                           data=g, sharey=True,
                            hue_order=bar_order, palette=palette,
                            **extra_kwargs)
             saveplot('point')
+            del extra_kwargs[vid_type_key]
 
         else:
             sns.factorplot('video_type', prop, 'server_type', kind='bar',
