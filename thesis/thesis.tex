@@ -25,6 +25,7 @@
 \newacronym{hds}{HDS}{HTTP Dynamic Streaming}
 \newacronym{hls}{HLS}{HTTP Live Streaming}
 \newacronym{usp}{USP}{Unified Streaming}
+\newacronym{cdn}{CDN}{content delivery network}
 
 
 % Title Page
@@ -46,7 +47,7 @@
 \chapter{Introduction}
 % Start with the grand scheme of things with respect to VOD
 The internet started out as a means of sending messages from one place to
-another. Since then it has become much faster and is used by a lot of different
+another. Since then it has become much faster and is used by many different
 applications. It is still used to send messages, but because storage became
 cheaper and the internet became faster, it is now used for applications that
 require way more bandwith. It supplied the means for the revolution in the way
@@ -54,7 +55,7 @@ we watch videos. Movie theaters and cable TV are not the only ways to watch
 those anymore. Streaming of videos over the internet has grown to an enormous
 industry of can be used to watch any video imaginable. Lots of amature videos
 are shared using YouTube, movies and TV shows can be watched easily using
-Netflix and even live TV is being moved to the internet by for instance the BBC
+Netflix and even live TV is being moved to the internet, for instance by the BBC
 iPlayer.
 
 This way of video streaming is not limited to normal computers. It is done on on
@@ -68,71 +69,64 @@ notion of \gls{abs}, which is a way of streaming video that changes the quality
 of the video that is being watched, based on what the network connection can
 handle \autocite{abs}.
 
-There are a couple of streaming solutions that implement
-\gls{abs}, most of those use HTTP as the underlying protocol \autocite{http}.
-One of the reasons for this is that HTTP is already in heavy and this way it is
-possible to leverage the already existing infrastructure that is in place for
-other HTTP communication. A disadvantage of HTTP however is that it is a
-protocol for sending whole files and entire video files are typically quite
-large. This is why the solutions stream little sections of the video instead of
-the whole file. This means that the original video file should be cut in smaller
-files. The solutions all have their own (slightly) different way of doing this,
-since they also need to store some extra metadata in those files, so a player
-can actually play it.
+There are a couple of streaming solutions that implement \gls{abs}, most of
+those use HTTP as the underlying protocol \autocite{http}.  One of the reasons
+for this is that HTTP is already in heavy and this way it is possible to
+leverage the already existing infrastructure that is in place for other HTTP
+communication. A disadvantage of HTTP however is that it is a protocol for
+sending whole files and entire video files are typically quite large. This is
+why the solutions stream little sections of the video instead of the whole file.
+This means that the original video file should be cut in smaller files. They
+also need to store some extra metadata in those files, so a player will actually
+know how to play it. The solutions all have their own (slightly) different way
+of adding this metadata.
 
 % Maybe start with usp here and tell about the problem they solve.
-Streaming video reliably at scale using \gls{abs} is no easy job. One significant
-problem is that the different streaming solutions that implement \gls{abs} all
-use a (slightly) different file format. The reason that is a problem is that the
-different formats are not supported equally by the players used by different
-devices or browsers. Because of this, a good video host should have its videos
-in a lot of different formats to make sure they can be viewed by every device
-and browser.
+When hosting video these different formats can cause quite a bit of trouble.
+The reason for this is that the different formats are not supported equally by
+the players used by different devices or browsers. Because of this, a good video
+host should have its videos available in a lot of different formats to make sure
+they can be viewed by every device and browser. The most obvious way of doing
+this is ofcourse generating the files in all the needed formats and then setting
+up a file server that simply serves all the little files. This works but takes
+up quite a bit of space since the same video is essentially stored multiple
+times.
 
-
-This thesis is written in collaboration with \gls{usp}. \gls{usp} is a company
-that provides an easy to use solution for streaming video. They have modules for
-a set of popular HTTP servers, Apache, Nginx, IIS and Lighttpd.  One of the
-things the USP software tries to make easy, is supporting the different
-\gls{abs} protocols that are used by the different types of players that exist.
-All these protocols require that the video is sent in a (slightly) different
-format.
-
-At the moment streaming in four different formats is supported by the USP
-software. \Gls{iss} is developed by
-Microsoft and is used in Silverlight based players \autocite{iss}. \Gls{hds}
- is developed by Adobe and is used in Flash based players \autocite{hds}.
-\Gls{hls} is developed by Apple and used on the iPhone, iPad
-and Apple TVs \autocite{hls}. The last format is \gls{dash},
-which is developed as an ISO standard and is used in HTML5 video players
-\autocite{dash}.
+\Gls{usp} is a company that provides an easy to use solution for this problem.
+They have modules for a set of popular HTTP servers, Apache, Nginx, IIS and
+Lighttpd. The way their module solves the problem of storing the video multiple
+times is by only storing the mp4 and converting that on the fly to the requested
+format. At the moment four different \gls{abs} formats are supported by the
+\gls{usp} software. \Gls{iss} is developed by Microsoft and is used in
+Silverlight based players \autocite{iss}. \Gls{hds} is developed by Adobe and is
+used in Flash based players \autocite{hds}.  \Gls{hls} is developed by Apple and
+used on the iPhone, iPad and Apple TVs \autocite{hls}. The last format is
+\gls{dash}, which is developed as an ISO standard and is used in \textsc{HTML5}
+video players \autocite{dash}.
 
 
 \section{Traditional setups}
 % Maybe less details
-The most obvious setup is ofcourse generating these files once and then setting
-up a file server that serves all these little files. This works but takes up
-quite a bit of space since the same video is essentially multiple
-times. This issue can be solved by storing the raw video and converting it on
-the fly to the format needed when a request comes in.
-
+The simplest way on the fly conversion can be used in a setup, is again a
+single server, that converts the mp4 to the needed format for every request.
 However, in large streaming setups this is not enough for two reasons. The first
 one is that the storage server might be far away from the viewer, which means
 more time is spent waiting before watching a video. The second one is that the
 storage server can be easily overwhelmed with requests, because its just one
-server. Using a Content Distribution
-Networkwith reverse proxy caching nodes is a simple solution to these problems
-\autocites{cdns}{revproxy}.  Those nodes forward the request to the storage
-server and cache the response. If another request comes for the same content a
-node will just respond with the response in its cache. This works quite good,
-since a small percentage of the videos account for a large percentage of the
-views.
+server.
+
+Using a \gls{cdn} with reverse proxy caching nodes is a simple solution to these
+problems \autocites{cdns}{revproxy}, which can also used when hosting lots of
+content besides videos. Those nodes forward the request to the storage server
+and cache the response. If another request comes for the same content a node
+will just respond with the response in its cache. This works quite good, since a
+small percentage of the videos account for a large percentage of the views.
 % For live streaming this also works fantastic since it's not even a whole video
 % that is downloaded a lot, it is only the last part of that video.
 
 The big problem of this setup is that, just like with the very first setup, it
 stores the converted files instead of the raw files, only now in the cache
-instead of the storage server, which has two downsides in this case. Again, the
+instead of the storage server, which has two downsides in this case. Again, a
 server will contain the same content multiple times, only in this case the cache
 server. The other downside, specific to this setup, is that the cache will also
 request basically the same content from the storage. Those requests mean more
@@ -140,6 +134,13 @@ internal traffic and more waiting time for the viewer.
 
 \section{Approach}
 % Very short exlaination of the idea to solve the problem.
+The problem described above is why this thesis will explore the possibility of
+using a ``Late Transmuxing''. This setup would do the conversion of the video
+directly on the caching nodes, instead of at the storage level. This means that
+the cache server would request segments of the mp4 file from the storage server,
+instead of the already converted files. This approach should solve both the
+extra storage problem and the internal traffic problem, because only the segments
+of mp4 have to be stored and requested.
 
 
 
@@ -158,7 +159,7 @@ the storage server.
 
 
 \subsection{The CDN configuration}
-A configuration that is currently heavily in use is the CDN configuration. In
+A configuration that is currently heavily in use is the \gls{cdn} configuration. In
 this configuration the proxy server will receive the request for the segment
 from the client and passes that exact reqest along to the storage server. The
 storage server will then generate the segment from the mp4 and send the segment
@@ -169,7 +170,7 @@ instead of requesting it from the storage server.
 See figure~\vref{fig:cdn}, for a schematic overview of this configuration.
 \begin{figure}
     \includegraphics{cdn_diagram.pdf}
-    \caption{The CDN configuration}\label{fig:cdn}
+    \caption{The \gls{cdn} configuration}\label{fig:cdn}
 \end{figure}
 
 
@@ -177,14 +178,14 @@ See figure~\vref{fig:cdn}, for a schematic overview of this configuration.
 \subsection{The IsmProxyPass configuration}
 Another configuration that is currently being used is the IsmProxyPass
 configuration. This configuration does one thing quite different compared to the
-CDN configuration. When the proxy server receives a request for a segment,
+\gls{cdn} configuration. When the proxy server receives a request for a segment,
 instead of passing it to the storage directly, it will send a series of range
 requests to the storage server. Upon receiving one of those range requests, the
 storage server will return the bytes from the mp4 file that are in the request
 range. When the proxy server receives those bytes it will then use them to
 generate the segment requested by the client. After this is done the segment
 will be returned to the client. Another important difference between this
-configuration and the CDN configuration is that there is no caching involved.
+configuration and the \gls{cdn} configuration is that there is no caching involved.
 See figure~\vref{fig:ismproxy}, for a schematic overview of this configuration.
 
 \begin{figure}
