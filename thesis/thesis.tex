@@ -16,7 +16,7 @@
 \usepackage{varioref}
 \usepackage[toc,acronym,xindy]{glossaries}
 
-\makeglossaries
+\makeglossaries{}
 
 
 \newacronym{abs}{ABS}{adaptive bitrate streaming}
@@ -166,11 +166,10 @@ back to the proxy server.  The proxy server will then send the response back to
 the client, but it will also cache the response. That way, when a client
 requests the same segment it will be able to serve it from its cache directly,
 instead of requesting it from the storage server.
-See figure \vref{fig:cdn}, for a schematic overview of this configuration.
+See figure~\vref{fig:cdn}, for a schematic overview of this configuration.
 \begin{figure}
     \includegraphics{cdn_diagram.pdf}
-    \caption{The CDN configuration}
-    \label{fig:cdn}
+    \caption{The CDN configuration}\label{fig:cdn}
 \end{figure}
 
 
@@ -186,13 +185,12 @@ range. When the proxy server receives those bytes it will then use them to
 generate the segment requested by the client. After this is done the segment
 will be returned to the client. Another important difference between this
 configuration and the CDN configuration is that there is no caching involved.
-See \vref{fig:ismproxy}, for a schematic overview of this configuration.
+See figure~\vref{fig:ismproxy}, for a schematic overview of this configuration.
 
 \begin{figure}
 
     \includegraphics{ismproxy_diagram.pdf}
-    \caption{The IsmProxyPass configuration}
-    \label{fig:ismproxy}
+    \caption{The IsmProxyPass configuration}\label{fig:ismproxy}
 
 \end{figure}
 
@@ -215,7 +213,7 @@ Nginx is chosen as the webserver application for the reverse proxy in the
 proposed setup. Apache could also be used, however Nginx has some features that
 probably make it a better choice for the proposed setup.
 
-\subsection{Caching} \label{sec:caching}
+\subsection{Caching}\label{sec:caching}
 Since the proposed setup depends heavily on caching in the reverse proxy, it is
 important that the server application does this wel. This is the case for Nginx.
 Apache also does a good job at it, but one key difference is that cache locking is
@@ -261,7 +259,7 @@ requests is that requesting the full file is not necessary.
 A simple solution proposed on the Nginx forums\autocite{nginxcacheforum} is to
 force Nginx to request the range from upstream and then adding the requested
 range to the cache key. This basically means that a range request is handled by
-the cache as if it were a seperate URL. The main downside of this solution is that
+the cache as if it were a seperate URL\@. The main downside of this solution is that
 when overlapping byte ranges are requested they will both be cached in full.
 This means this  solution works fine when the ranges that get requested are
 always the same. However if the requested ranges are different almost every
@@ -319,15 +317,15 @@ directly, it sends them back to Nginx. Nginx then passes those requests along to
 the storage server. The storage server will again respond with the byte ranges
 requested.
 
-When Nginx receives a response to one of its range requests it should to
-cache that response. This can be done quite easily by using the second method
-described in section \ref{sec:caching}, which was the method that meant changing
-the cache key. The reason this method is sufficient and the third method is not
-needed is because that method solves a problem that our use case doesn't have.
-It solves the problem of overlapping byte ranges. For video streaming however,
-this problem doesn't exist because the because the fragments that cen be
-requested are fixed. This means the same ranges will always be requested and
-overlaps in those ranges should be minimal.
+When Nginx receives a response to one of its range requests it should to cache
+that response. This can be done quite easily by using the second method
+described in section~\vref{sec:caching}, which was the method that meant
+changing the cache key. The reason this method is sufficient and the third
+method is not needed is because that method solves a problem that our use case
+doesn't have.  It solves the problem of overlapping byte ranges. For video
+streaming however, this problem doesn't exist because the because the fragments
+that cen be requested are fixed. This means the same ranges will always be
+requested and overlaps in those ranges should be minimal.
 
 Apart from caching the response Nginx will also return it to Apache. Apache will
 then generate the originally requested segment and return that back to Nginx.
@@ -336,8 +334,7 @@ Nginx will then cache the segment and return it to the client. See figure
 
 \begin{figure}
     \includegraphics{latetrans_diagram.pdf}
-    \caption{The Late Transmuxing configuration}
-    \label{fig:latetrans}
+    \caption{The Late Transmuxing configuration}\label{fig:latetrans}
 \end{figure}
 
 \subsection{Using two webserver applications on the same server}
@@ -368,7 +365,7 @@ different performance metrics.
 
 \printbibliography[heading=bibintoc]{}
 
-\printglossaries
+\printglossaries{}
 
 
 \end{document}
