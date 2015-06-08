@@ -148,50 +148,94 @@ of mp4 have to be stored and requested.
 
 
 \chapter{Problem analysis}
-% Explain in the normal setups in detail together with their
-% shortcommings.
-\section{Different configurations}
-The servers contain a couple of different webserver application configurations
-to do this segment generation at different stages. A common characteristic in
-all these configurations is that the client connects with the proxy server and
-that server will then request the content it needs to fulfill this request from
-the storage server.
+% Explain the normal setups in detail together with their shortcommings.
+As explained shortly in the introduction, when caching video segments, a segment
+has to be cached for each supported format. This chapter will explain in detail
+what kind of setups are currently available and what their advantages and
+disadvantages are. The setups that will be looked into are ones that convert an
+mp4 on the fly to different \gls{abs} formats. The reason for this is that those
+setups already have a clear advantage over servers that simply store files in
+all formats, namely the space required to store the videos.
+
+The different server setups consist of one or two servers. One server, which is
+present in every setup, stores the the mp4 files on disk, this will be called
+the storage server. The more advanced setups also contain a second server, which
+serves as a reverse proxy, this server will be called the proxy server. In the
+setups where a proxy server is used the client connects to the proxy server and
+the proxy server then requests content from the storage server that it needs
+to fulfill the request from the client. When caching takes place on the proxy
+server, it can also be called the cache server.
+
+Lastly, on both of these physical servers will run a HTTP server to serve the
+HTTP requests. For illustration purposes a clear distinction between a
+physical server and the HTTP server that runs on that server needs to be made.
+This will be done by describing the setups as if Apache is used on the storage
+server and Nginx is used on the proxy server. Keep in mind however that this is
+just for illustration purposes, in practice any of the HTTP servers supported by
+\gls{usp} can be used on any of the physical servers.
 
 
-\subsection{The CDN configuration}
-A configuration that is currently heavily in use is the \gls{cdn} configuration. In
-this configuration the proxy server will receive the request for the segment
+\section{The single server setup}
+As already briefly explained in the introduction this setup
+See figure~\vref{fig:singleserver}, for a schematic overview of this setup.
+
+\begin{figure}
+    \includegraphics{singleserver_diagram.pdf}
+    \caption{The single server setup}\label{fig:singleserver}
+\end{figure}
+
+\section{The CDN setup}
+A setup that is currently heavily in use is the \gls{cdn} setup. In
+this setup the proxy server will receive the request for the segment
 from the client and passes that exact reqest along to the storage server. The
 storage server will then generate the segment from the mp4 and send the segment
 back to the proxy server.  The proxy server will then send the response back to
 the client, but it will also cache the response. That way, when a client
 requests the same segment it will be able to serve it from its cache directly,
 instead of requesting it from the storage server.
-See figure~\vref{fig:cdn}, for a schematic overview of this configuration.
+See figure~\vref{fig:cdn}, for a schematic overview of this setup.
 \begin{figure}
     \includegraphics{cdn_diagram.pdf}
-    \caption{The \gls{cdn} configuration}\label{fig:cdn}
+    \caption{The \gls{cdn} setup}\label{fig:cdn}
 \end{figure}
 
 
 
-\subsection{The IsmProxyPass configuration}
-Another configuration that is currently being used is the IsmProxyPass
-configuration. This configuration does one thing quite different compared to the
-\gls{cdn} configuration. When the proxy server receives a request for a segment,
+\section{The IsmProxyPass setup}
+
+Hosting large files on dedicated servers or VPS’s can be expensive. This is why
+there are services that specialize just in hosting files, like Amazon S3.
+Services like this, which we’ll call dumb storage from now, are quite popular
+for hosting large files, like videos, because it is relatively cheap. However,
+since the USP software requires you to install a module in the webserver
+application it can’t simply be installed when using dumb storage, since you have
+no access to the actual webserver application.
+
+To solve this issue the USP conversion software can also be run on a different
+server than the server that actually stores the files. This is accomplished by
+supplying a URL in the server config. This URL should point to the server that
+stores the actual video files. The smart server then requests the part of the
+video file that it needs to generate the fragment that is requested by the
+client. This is accomplished using HTTP range requests, which are a type of
+HTTP request that doesn’t request an entire file, but instead requests a
+specific byte range from that file \autocite{rangerequests}.
+
+Another setup that is currently being used is the IsmProxyPass
+setup. This setup does one thing quite different compared to the
+\gls{cdn} setup. When the proxy server receives a request for a segment,
 instead of passing it to the storage directly, it will send a series of range
 requests to the storage server. Upon receiving one of those range requests, the
 storage server will return the bytes from the mp4 file that are in the request
 range. When the proxy server receives those bytes it will then use them to
 generate the segment requested by the client. After this is done the segment
 will be returned to the client. Another important difference between this
-configuration and the \gls{cdn} configuration is that there is no caching involved.
-See figure~\vref{fig:ismproxy}, for a schematic overview of this configuration.
+setup and the \gls{cdn} setup is that there is no caching involved.
+See figure~\vref{fig:ismproxy}, for a schematic overview of this setup.
 
 \begin{figure}
 
     \includegraphics{ismproxy_diagram.pdf}
-    \caption{The IsmProxyPass configuration}\label{fig:ismproxy}
+    \caption{The IsmProxyPass setup}\label{fig:ismproxy}
 
 \end{figure}
 

@@ -1,0 +1,26 @@
+\documentclass{standalone}
+\input{tikz_preamble.tex}
+
+\begin{document}
+\begin{tikzpicture}[ ]
+
+    \clientnode
+
+    \node[block, below=3cm of cl] (ap) {Apache};
+    \node[right=3cm of ap] (ap_desc) {Converts stored mp4 to segment};
+
+
+    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}
+
+    \graph [use existing nodes] {
+        cl ->[\reqseg] ap;
+        ap --[dotted] ap_desc;
+    };
+
+
+
+  \end{tikzpicture}
+  \begin{tikzpicture}[
+  ]
+  \end{tikzpicture}
+\end{document}
