@@ -286,15 +286,33 @@ issue however, is still present. Since for every clients request still needs to
 reach the location of the storage server, it doesn't matter that they are
 converted to range requests, they still need reach the storage eventually.
 
-Hosting large files on dedicated servers or VPS’s can be expensive. This is why
-there are services that specialize just in hosting files, like Amazon S3.
-Services like this, which we’ll call dumb storage from now, are quite popular
-for hosting large files, like videos, because it is relatively cheap. However,
-since the USP software requires you to install a module in the webserver
-application it can’t simply be installed when using dumb storage, since you have
-no access to the actual webserver application.
+So it seems that this setup is only worse than the CDN setup. However, it does
+have one important advantage. Hosting large files on dedicated servers or VPS’s
+can be quite expensive. This is why there are services that specialize just in
+hosting files, like Amazon S3. Services like this, which will be called dumb
+storage from now on, are quite popular for hosting large files, like videos,
+because it is relatively cheap. Dumb storage allows files to be uploaded and it
+will make them accessible over HTTP by supplying a URL\@. However, there is now
+way to access the server internals, like the HTTP server that is running on the
+server. This is no problem for static content, however, on the fly conversion is
+no static content. The \gls{usp} software needs to be installed into the HTTP
+server itself, which means it is impossible to use on dumb storage. This setup
+solves this issue by separating the storage and the conversion step, which makes
+it possible to host the mp4 files on dumb storage and use other servers for the
+conversion.
 
-\section{The problem}
+
+
+\section{The final problem}
+There is one final issue, which is both present in the \gls{cdn} setup and the
+\gls{ipp} setup. This is the issue of internal network traffic. It might seem
+like a small issue, but in large setups internal network traffic is
+
+\subsection{The solution}
+A combination between the \gls{cdn} setup and the \gls{ipp} setup that would
+have both of their advantages could be an ideal setup. However, currently no
+such setup exists. This thesis sets out to design such a setup and also test its
+performance against currently available setups.
 
 
 
