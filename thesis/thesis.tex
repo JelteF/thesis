@@ -13,7 +13,8 @@
 %Enable for final compilation
 %\usepackage[stretch=10]{microtype}
 \usepackage{graphicx}
-\usepackage{varioref}
+\usepackage{varioref} % Fancy references
+\usepackage{caption} % Fixes hyperref to figure
 \usepackage[toc,acronym,xindy]{glossaries}
 
 \makeglossaries{}
@@ -51,13 +52,13 @@ The internet started out as a means of sending messages from one place to
 another. Since then it has become much faster and is used by many different
 applications. It is still used to send messages, but because storage became
 cheaper and the internet became faster, it is now used for applications that
-require way more bandwith. It supplied the means for the revolution in the way
-we watch videos. Movie theaters and cable TV are not the only ways to watch
-those anymore. Streaming of videos over the internet has grown to an enormous
-industry of can be used to watch any video imaginable. Lots of amature videos
-are shared using YouTube, movies and TV shows can be watched easily using
-Netflix and even live TV is being moved to the internet, for instance by the BBC
-iPlayer.
+require way more bandwith. Because of it a revolution in the way we watch videos
+has taken place. Movie theaters and cable TV are not the only ways to watch
+movies and TV programs anymore. Streaming of videos over the internet has grown
+to an enormous industry that can be used to watch any kind of video imaginable.
+Lots of amature videos are shared using YouTube, movies and TV shows can be
+watched easily using Netflix and even live TV is being moved to the internet,
+for instance by the BBC iPlayer.
 
 This way of video streaming is not limited to normal computers. It is done on on
 lots of different devices, like smartphones, tablets, set-top boxes,
@@ -88,22 +89,22 @@ The reason for this is that the different formats are not supported equally by
 the players used by different devices or browsers. Because of this, a good video
 host should have its videos available in a lot of different formats to make sure
 they can be viewed by every device and browser. The most obvious way of doing
-this is ofcourse generating the files in all the needed formats and then setting
-up a file server that simply serves all the little files. This works but takes
-up quite a bit of space since the same video is essentially stored multiple
-times.
+this ofcourse, is generating the files in all the needed formats and then
+setting up a file server that simply serves all the little files. This works but
+takes up quite a bit of space since the same video is essentially stored
+multiple times.
 
 \Gls{usp} is a company that provides an easy to use solution for this problem.
-They have modules for a set of popular HTTP servers, Apache, Nginx, IIS and
-Lighttpd. The way their module solves the problem of storing the video multiple
-times is by only storing the mp4 and converting that on the fly to the requested
-format. At the moment four different \gls{abs} formats are supported by the
-\gls{usp} software. \Gls{iss} is developed by Microsoft and is used in
-Silverlight based players \autocite{iss}. \Gls{hds} is developed by Adobe and is
-used in Flash based players \autocite{hds}.  \Gls{hls} is developed by Apple and
-used on the iPhone, iPad and Apple TVs \autocite{hls}. The last format is
-\gls{dash}, which is developed as an ISO standard and is used in \textsc{HTML5}
-video players \autocite{dash}.
+They do this by supplying modules for a set of popular HTTP servers, Apache,
+Nginx, IIS and Lighttpd. The way their module solves the problem of storing the
+video multiple times is by only storing the mp4 and converting that on the fly
+to the requested format. At the moment four different \gls{abs} formats are
+supported by the \gls{usp} software. \Gls{iss}, which is developed by Microsoft and is
+used in Silverlight based players~\autocite{iss}. \Gls{hds}, which is developed by
+Adobe and is used in Flash based players \autocite{hds}.  \Gls{hls}, which is developed
+by Apple and used on the iPhone, iPad and Apple TVs~\autocite{hls}. The last
+format is \gls{dash}, which is developed as an ISO standard and is used in
+\textsc{HTML5} video players~\autocite{dash}.
 
 
 \section{Traditional setups}
@@ -117,21 +118,22 @@ storage server can be easily overwhelmed with requests, because its just one
 server.
 
 Using a \gls{cdn} with reverse proxy caching nodes is a simple solution to these
-problems \autocites{cdns}{revproxy}, which can also used when hosting lots of
-content besides videos. Those nodes forward the request to the storage server
-and cache the response. If another request comes for the same content a node
-will just respond with the response in its cache. This works quite good, since a
-small percentage of the videos account for a large percentage of the views.
+problems, which can also used when hosting lots of content besides
+videos~\autocites{cdns}{revproxy}. Those nodes forward the request to the
+storage server and cache the response. If another request comes for the same
+content a node will just respond with the response in its cache. This works
+quite good, since a small percentage of the videos account for a large
+percentage of the views.
 % For live streaming this also works fantastic since it's not even a whole video
 % that is downloaded a lot, it is only the last part of that video.
 
 The big problem of this setup is that, just like with the very first setup, it
 stores the converted files instead of the raw files, only now in the cache
 instead of the storage server, which has two downsides in this case. Again, a
-server will contain the same content multiple times, only in this case the cache
-server. The other downside, specific to this setup, is that the cache will also
-request basically the same content from the storage. Those requests mean more
-internal traffic and more waiting time for the viewer.
+server will essentially contain the same content multiple times, only in this
+case the cache server. The other downside, specific to this setup, is that the
+cache will also request basically the same content from the storage. Those
+requests mean more internal traffic and more waiting time for the viewer.
 
 \section{Approach}
 % Very short exlaination of the idea to solve the problem.
@@ -150,15 +152,15 @@ of mp4 have to be stored and requested.
 
 \chapter{Problem analysis}
 % Explain the normal setups in detail together with their shortcommings.
-As explained shortly in the introduction, when caching video segments, a segment
-has to be cached for each supported format. This chapter will explain in detail
-what kind of setups are currently available and what their advantages and
-disadvantages are. The setups that will be looked into are ones that convert an
-mp4 on the fly to different \gls{abs} formats. The reason for this is that those
-setups already have a clear advantage over servers that simply store files in
-all formats, namely the space required to store the videos. To explain how each
-of the setups work, each step will be described, from the client requesting a
-segment of video in a specific format, to the client receiving that segment.
+The introduction briefly described some of the server setups used for streaming
+video. This chapter will explain in detail what kind of setups are currently
+available and what their advantages and disadvantages are. The setups that will
+be looked into are the ones that convert an mp4 on the fly to different
+\gls{abs} formats. The reason for this is that those setups already have a clear
+advantage over servers that simply store files in all formats, namely the space
+required to store the videos. To explain how each of the setups work, each step
+will be described, from the client requesting a segment of video in a specific
+format, to the client receiving that segment.
 
 The different server setups consist of one or two servers. One server, which is
 present in every setup, stores the the mp4 files on disk, this will be called
@@ -169,7 +171,7 @@ the proxy server then requests content from the storage server that it needs
 to fulfill the request from the client. When caching takes place on the proxy
 server, it can also be called the cache server.
 
-Lastly, on both of these physical servers will run a HTTP server to serve the
+Lastly, on both of these physical servers will run an HTTP server to serve the
 HTTP requests. For illustration purposes a clear distinction between a
 physical server and the HTTP server that runs on that server needs to be made.
 This will be done by describing the setups as if Apache is used on the storage
@@ -180,13 +182,13 @@ just for illustration purposes, in practice any of the HTTP servers supported by
 
 \section{The single server setup}
 This setup was already briefly explained in the introduction and it is the most
-simple setup that will be covered. A client requests a segment directly from the
-storage server. Apache will then locate the mp4 that contains the requested
-segment. It will then read the parts of the file that are necessary to create
-the segment in the requested format. From these parts, it will then create the
-segment and send it back to the client. After the client receives it, it can be
-played by the player. For a schematic overview of this setup see
-figure~\vref{fig:singleserver}.
+simple setup that will be covered. In this setup a client requests a segment
+directly from the storage server. Apache will then locate the mp4 that contains
+the requested segment. It will then read the parts of the file that are
+necessary to create the segment in the requested format. From these parts, it
+will then create the segment and send it back to the client. After the client
+receives it, it can be played by the player. For a schematic overview of this
+setup see figure~\vref{fig:singleserver}.
 
 \begin{figure}[h]
     \includegraphics{singleserver_diagram.pdf}
@@ -210,14 +212,14 @@ for instance on another continent.
 
 \section{The CDN setup}
 Another setup that was already briefly introduced is the \gls{cdn} setup. It is
-a quite a simple extension on the single server setup. In this setup the proxy
-server will receive the request for the segment from the client and passes that
-exact reqest along to the storage server. The storage server will then generate
-the segment from the mp4 and send the segment back to the proxy server.  The
-proxy server will then send the response back to the client, but it will also
-cache the response. That way, when a client requests the same segment in the
-same format the proxy server will be able to serve the segment directly from its
-cache, instead of requesting it from the storage server. For a schematic
+a quite a simple extension of the single server setup. In this setup the proxy
+server will receive the request for the segment from the client. It then passes
+that exact reqest along to the storage server. The storage server will then
+generate the segment from the mp4 and send the segment back to the proxy server.
+The proxy server will then send the response back to the client, but it will
+also cache the response. That way, when a client requests the same segment in
+the same format the proxy server will be able to serve the segment directly from
+its cache, instead of requesting it from the storage server. For a schematic
 overview of this setup see figure~\vref{fig:cdn}.
 
 \begin{figure}[h]
@@ -226,110 +228,106 @@ overview of this setup see figure~\vref{fig:cdn}.
 \end{figure}
 
 Using this setup solves the issues present in the single server
-setup. Because segments will be cached once they have been requested once,
-overloading of the storage server is much less of an issue. This should help
-quite a lot, since there probably is a set of videos that receives a lot of
-views and a set that receives (almost) none. Because of the caching, the storage
-only needs to convert the mp4 for the popular videos once for each segment and
-format, instead of for every request.
-% This is also why it scales pretty good,
-% since the load on the storage server is never extremely high, just upgrading
-% that server when nessecary is probably fine.
-The latency issue is also mostly
-mittigated by the caching. By simply adding more proxy servers, spread around
-the globe, only the first request for a segment will have the high latency, the
-next request for that same segment only need to travel to the proxy server.
+setup. The simple server setup was easy to overload with lots of requests.
+Caching should help quite a lot in this regard, since there normally is a set of
+videos that receives a lot of views and a set that receives (almost) none.
+Because of the caching, the storage only needs to convert the mp4 for the
+popular videos once for each segment and format, instead of for every request.
+The latency issue is also mostly mittigated by the caching. By simply adding
+more proxy servers, spread around the globe, only the first request for a
+segment will have high latency, the next request for that same segment only
+needs to travel to the proxy server.
 
 One of the disadvantages of this setup is ofcourse that it is less trivial to
-set up than the single server setup. It also has some other disadvantages,
-because it is caching the converted segments, it is essentially storing the same
-part of the video multiple times only in another format, which is exactly the
+set up than the single server setup. It also has some other disadvantages.
+Because it caches the converted segments, it is essentially storing the same
+part of the video multiple times, only in another format, which is exactly the
 problem that on the fly conversion was there to solve. This time it is only
 doing this however for the most frequently watched videos, so it is less of an
-issue, but it's still something that is best kept to a minimum.
+issue, but it is still something that is best kept to a minimum.
 
 Another small disadvantage is caused by the proxy requests this server uses. A
-request that isn't cached yet will actually take longer to return to the client
-than it would with the single server setup. This is because of the overhead of
-first traveling to the proxy server and then to the storage server. This is
-almost always a longer route then the route directly to the storage server.
-Because this longer route is taken only the first time a segment is requested
-and the next times the route will be shorter this is not such a bad problem, but
-it still is something that should be noted.
+request that is not cached yet will actually take longer to return to the
+client than it would with the single server setup. This is because of the
+overhead of first traveling to the proxy server and then to the storage server.
+This is almost always a longer (and never a shorter) route then the route
+directly to the storage server. Because this longer route is taken only the
+first time a specific segment is requested and the next times the route will be
+shorter this is not such a big problem, but it still is something that should be
+noted.
 
 
 \section{The IsmProxyPass setup}
 Another setup that the \gls{usp} software supports is the \gls{ipp} setup. Just
 like the \gls{cdn} setup, this setup extends the single server setup. However it
-does this in quite a different way. One of the key differences is that the
-\gls{usp} software does not run on the storage server, but on the proxy server.
-This time, when the proxy server receives a request from a client, instead of
-passing it directly to the storage, it will send a series of HTTP range
-requests, which are generated by the \gls{usp} software, to the storage
-server~\autocite{rangerequests}. Range requests are a type of
-HTTP requests that do not request the whole file that the server would return
-for a normal HTTP request, it only requests a specific byte range of that file.
-These kind of requests are especially useful when a small piece of a large file
-is needed.
+does this in quite a different way. The key difference is that the \gls{usp}
+software does not run on the storage server, but on the proxy server. This
+time, when the proxy server receives a request from a client, instead of passing
+it directly to the storage, it will send a series of HTTP range requests, which
+are generated by the \gls{usp} software, to the storage
+server~\autocite{rangerequests}. Range requests are a type of HTTP requests that
+do not request the whole file that the server would return for a normal HTTP
+request, it only requests a specific byte range of that file.  These kind of
+requests are especially useful when only a small piece of a large file is
+needed.
 
 Upon receiving one of those range requests, the storage server will simply
 return the requested bytes from the mp4. When the proxy server then receives
 those bytes it will use them to generate the segment requested by the client.
-After this is done the segment will be returned to the client. Another important
-difference between this setup and the \gls{cdn} setup is that there is no
-caching involved.  For a schematic overview of this setup see
-figure~\vref{fig:ismproxy}.
+After this is done the segment will be returned to the client. For a schematic
+overview of this setup see figure~\vref{fig:ismproxy}.
 
 \begin{figure}[h]
     \includegraphics{ismproxy_diagram.pdf}
     \caption{The IsmProxyPass setup}\label{fig:ismproxy}
 \end{figure}
 
-This setup shares some of the advantages of the \gls{cdn} setup. This setup can easily
+This setup shares some of the advantages of the \gls{cdn} setup. It can easily
 be used to mitigate the storage overloading issue. By just adding more proxy
 servers the CPU intensive conversion work can be shared by multiple servers. All
 that the storage server has to do is serve the byte ranges that the proxy
 servers need, which is not nearly as intensive as the conversion. The latency
-issue however, is still present. Since for every clients request still needs to
-reach the location of the storage server, it doesn't matter that they are
+issue however, is still present. Since for every request of a client still needs
+to reach the location of the storage server, it does not matter that they are
 converted to range requests, they still need reach the storage eventually.
 
-The issue with internal requests is again present and it is much worse then with
+The issue with internal requests is again present and it is much worse than with
 the \gls{cdn} setup. The first reason for this is that no caching takes place,
-so every clients request has to travel further, instead of just the first one
-for each segment. Another issue is that the request is that every request of a
-client spawns multiple range requests, which means even more waiting.
+so every clients request has to travel further, instead of just the first
+request for each segment. Another issue is that every request of a client spawns
+multiple range requests, which means even more overhead and thus more waiting.
 
-So it seems that this setup is only worse than the CDN setup. However, it does
-have one important advantage. Hosting large files on dedicated servers or VPS’s
-can be quite expensive. This is why there are services that specialize just in
-hosting files, like Amazon S3. Services like this, which will be called dumb
-storage from now on, are quite popular for hosting large files, like videos,
-because it is relatively cheap. Dumb storage allows files to be uploaded and it
-will make them accessible over HTTP by supplying a URL\@. However, there is now
-way to access the server internals, like the HTTP server that is running on the
-server. This is no problem for static content, however, on the fly conversion is
-no static content. The \gls{usp} software needs to be installed into the HTTP
-server itself, which means it is impossible to use on dumb storage. This setup
-solves this issue by separating the storage and the conversion step, which makes
-it possible to host the mp4 files on dumb storage and use other servers for the
-conversion.
+Because of all this, it seems that this setup is only worse than the \gls{cdn}
+setup. However, it does have one important advantage. Hosting large files on
+dedicated servers or VPS’s can be quite expensive. This is why there are
+services that specialize just in hosting files, like Amazon~S3. Services like
+this, which will be called dumb storage from now on, are quite popular for
+hosting large files, like videos, because it is relatively cheap. Dumb storage
+allows files to be uploaded and it will make them accessible over HTTP by
+supplying a URL\@.  However, there is now way to access the server internals,
+like the HTTP server that is running on the server. This is no problem for
+static content, however, on the fly conversion makes the videos dynamic content.
+The \gls{usp} software needs to be installed into the HTTP server itself, which
+means it is impossible to use on dumb storage. This setup solves this issue by
+separating the storage and the conversion tasks, which makes it possible to host
+the mp4 files on dumb storage and use other servers for the conversion.
 
-\section{Improvement}
+\section{Combining the setups}
 Both the \gls{cdn} setup and the \gls{ipp} setup have their clear advatages.
 Both their disadvantages are clear as well. A combination between the \gls{cdn}
 setup and the \gls{ipp} setup that would have both of their advantages could be
 an ideal setup. However, currently no such setup exists. The clear advantage
-would be that it is possible to combine the cheap dumb storage possiblities with
-the speed of \gls{cdn} setup. However, another advantage is gained as well. The
-proxy server would now be caching the range requests of the raw mp4 instead of
-the request for a converted segment. This would mean that the same content
-is not stored multiple times, like in the \gls{cdn} setup, since the same cached
-range requests can be used to generate a segment in a different format.  This
-would also mean that the amount of internal traffic would go down since no
-requests would have to be done for the same segment in a different format. These
-advantages are why this thesis sets out to design such a setup and to test its
-performance against currently available setups.
+of a combinition like this would be that it is possible to combine cheap dumb
+storage with the speed of \gls{cdn} setup. However, another advantage is gained
+as well. In this combination the proxy server would be caching the range
+requests of the raw mp4 instead of the request for a converted segment. This
+would mean that the same content is not stored multiple times in the cache, like
+in the \gls{cdn} setup, since the same cached range requests can be used to
+generate a segment in a different format. This would also mean that the amount
+of internal traffic would go down since no requests would have to be done for
+the same segment in a different format. These advantages are why this thesis
+sets out to design such a setup and to test its performance against currently
+available setups.
 
 
 
@@ -340,9 +338,9 @@ performance against currently available setups.
 \chapter{Design considerations}
 % Explain the search for technologies used instead of stating the decision and
 % then explaining why.
-To build the setup proposed in the introduction, existing technology can used
-heavily. This chapter will describe those technologies and explain how they can
-be utilized.
+To build the proposed setup, existing technology can be used heavily. This
+chapter will describe the technologies used and why they have been chosen over
+other similar technologies.
 
 
 \section{Webserver application on the proxy server}
