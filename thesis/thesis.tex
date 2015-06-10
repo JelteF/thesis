@@ -343,37 +343,90 @@ chapter will describe the technologies used and why they have been chosen over
 other similar technologies.
 
 
-\section{Webserver application on the proxy server}
-Nginx is chosen as the webserver application for the reverse proxy in the
-proposed setup. Apache could also be used, however Nginx has some features that
-probably make it a better choice for the proposed setup.
+\section{HTTP servers}
+The proposed setup consists of two different servers the storage server and the
+proxy server. Both of these servers need to have an HTTP server to handle the
+incomming requests. Both the Nginx and Apache are very capable and popular HTTP
+servers. They are also both available for Linux and they are supported by the
+\gls{usp} software. There are quite a bit of differences that and some of those
+are of importance for the proposed setup.
 
-\subsection{Caching}\label{sec:caching}
+
+\subsection{General differences}
+There are a couple of general differences between Apache and Nginx that have
+already been thoroughly explored in a multitude of
+resources~\autocites{nginx1}{nginx2}{apachevsnginx}. Their core architecture is
+very different. Apache spawns a new thread for each connection, while Nginx
+dispatches the requests to already existing threads. This means that Nginx can
+handle a lot of concurrent requests with very little resources. Their take on
+dynamic content is also quite different. Apache uses modules that can be easily
+loaded into Apache itself to handle dynamic content. Nginx just receives the
+requests and sends them to other applications, sometimes even Apache, if content
+needs to be dynamically generated. This is why Nginx is usually a good choice as
+a reverse proxy.
+
+
+\subsection{USP integration}
+While USP supports both servers fully, because of the architecture of both
+servers it is easier to create a working setup with Apache. Apache can load
+modules for dynamic functionality easily, which is how the \gls{usp}
+installation works~\autocite{uspapache}. Just download and install the module
+and enable it by adding some lines to the server config files. Nginx however is
+not designed to just load modules on the fly. For dynamic content it normally
+just contacts an external application. However, it is possible to extend Nginx
+by including a module at compile time, so that is how the \gls{usp} module
+needs to be installed~\autocite{uspnginx}. This means it is not possible to just
+use the Nginx supplied by the Linux distribution of choice. So it is quite clear
+that the setup for Apache is quite a bit easier than the one for Nginx.
+
+
+\subsection{Caching}
 Since the proposed setup depends heavily on caching in the reverse proxy, it is
-important that the server application does this wel. This is the case for Nginx.
-Apache also does a good job at it, but one key difference is that cache locking is
-supported better in Nginx. Cache locking means that the same content will not be
+important that the server application does this wel. This is both the case for
+Nginx and Apache. There is a key difference however, this is the cache locking
+support better in Nginx. Cache locking means that the same content will not be
 requested multiple times from the upstream server when multiple requests ask for
-the same content at the same time and there is no cache entry for that
-request. Instead only one request will be proxied through to the storage server
-and the others wait until the response for that one is cached. This can
-significantly reduce the load on the storage server.
+the same content at the same time and there is no cache entry for that request.
+Instead only one request will be proxied through to the storage server and the
+others wait until the response for that one is cached. This can significantly
+reduce the load on the storage server. Both Nginx and Apache support cache
+locking. However, on Apache the server only uses it as a hint and it will still
+fetch from the storage if it receives a request with a header enable that tells
+it to do so~\autocite{apachecache}. This is not the case for
+Nginx~\autocite{nginxcache}.
+
 
 \subsection{Scripting}
 % In server lua vs CGI
 Another reason for choosing Nginx are its extensive scripting capabilities. It
 is possible to enable Lua scripting in the server itself by installing a special
-module\autocite{nginxlua}. This can be very usefull if advanced logic is needed
-to create the proposed setup.
+module~\autocites{nginxlua}{cloudflarelua}. This can be very useful if advanced
+logic is needed to create the proposed setup.
+
+\subsection{Decision}
+Nginx is chosen as the HTTP server for the reverse proxy in the
+proposed setup. The scripting capabilities and better support for cache locking
+are the main reasons, since those could be useful for the actual setup. Its
+low memory footprint and speed are nice to have, but not essential for the setup
+itself. Which type of HTTP server is used by the storage server is not really
+important for this specific setup either, since they can both serve static files
+and support range requests out of the box. For the setup that will be used for
+testing the performance Apache will be used on the storage server, the reason
+for this is that the storage server needs on the fly conversion support to be
+able to simulate the \gls{cdn} setup and it is easier to enable the \gls{usp}
+module in Apache than in Nginx.
 
 
-\section{Caching range requests}
+
+
+\section{Caching range requests}\label{sec:caching}
 % Maybe use subsections so it will be less of a wall of text.
 Since IsmProxyPass uses range requests it is also important that those can be
 cached. This is not directly supported in any webserver. The reason for
 this is that it is not exactly trivial to do. Most caches work by supplying it
 some data to cache, together with a key by which the data can be retrieved later
 on.
+
 Ideally one would cache the content using the key of the full file and add some
 info about what range is actually cached. Then when another request for a range
 comes in it would check in the cache if some of the requested bytes are in
@@ -383,6 +436,7 @@ future use. This hasn't been implemented anywhere yet. However, our proposed
 setup is not the first that would benefit from caching range requests. So some
 suboptimal solutions have been proposed for different use cases.
 
+\subsection{Ignore range}
 The most simple one, which is employed by Nginx by default,
 is removing the range request header from the request when sending it to
 upstream. This will request the whole file instead of just the requesting byte
@@ -391,6 +445,7 @@ requested. According to the RFC this behaviour is allowed, but this it is
 clearly not behaviour that one would want, since the whole point of range
 requests is that requesting the full file is not necessary.
 
+\subsection{Match exact range}
 A simple solution proposed on the Nginx forums\autocite{nginxcacheforum} is to
 force Nginx to request the range from upstream and then adding the requested
 range to the cache key. This basically means that a range request is handled by
@@ -402,24 +457,26 @@ time this solution is not acceptable since a lot of the cache wil contain the
 same bytes, because of the overlap in the byte ranges.
 
 % Check wat proxy_force_ranges doet en of het te gebruiken is in mijn versie van
+\subsection{Ranger}
+Ranger is another solution to the problem that tries to solve the overlap
+problem~\autocite{ranger}. Everytime a range request comes in, instead of
+sending it directly to the upstream server, it generates other range requests
+that together contain all the bytes requested. These new range requests are
+always from the same block size and they also start at the same byte position.
+These requests will then be sent to upstream and after a response comes back
+they will be cached as well.  This way, even though the initial range request
+can be any range and can overlap with others, the requests sent to upstream will
+always match previously sent requests, which makes sure that cache hits occur
+every time part of a range is requested that was requested before even though
+it's not exactly the same. There are only two small issues with this approach.
+The first one is that more data is requested from the upstream server than is
+actually needed to fulfill the request. However, this is probably not too severe
+when the block size is chosen small enough. The second issue is that when large
+ranges are requested, a lot of requests need to be send to the upstream server,
+because the large request gets split into a lot of smaller ones. Which could
+mean some unnecessary overhead.
 
-Ranger\autocite{ranger} is another solution to the problem that tries to solve
-the overlap problem. Everytime a range request comes in, instead of sending it
-directly to the upstream server, it generates other range requests that together
-contain all the bytes requested. These new range requests are always from the
-same block size and they also start at the same byte position. These requests
-will then be sent to upstream and after a response comes back they will be
-cached as well.  This way, even though the initial range request can be any
-range and can overlap with others, the requests sent to upstream will always
-match previously sent requests, which makes sure that cache hits occur every
-time part of a range is requested that was requested before even though it's not
-exactly the same. There are only two small issues with this approach. The first
-one is that more data is requested from the upstream server than is actually
-needed to fulfill the request. However, this is probably not too severe when the
-block size is chosen small enough. The second issue is that when large ranges
-are requested, a lot of requests need to be send to the upstream server, because
-the large request gets split into a lot of smaller ones. Which could mean some
-unnecessary overhead.
+\subsection{Decision}
 
 
 
@@ -489,8 +546,21 @@ different performance metrics.
 
 \chapter{Experiments}
 \section{Setup}
-\subsection{Comcast}
-\subsection{wrk}
+\subsection{The different setups}
+
+\subsection{Virtual machines}
+To create the proposed setup a storage server and a proxy server are needed. A
+possibility is to use physical servers for this. This will however
+
+
+\subsubsection{Comcast}
+Since the VMs will be running on the same machine there are almost no network
+limitations. That is why artificial network throtteling is needed. Comcast is a
+tool that
+
+\subsection{The wrk tool}
+\subsection{The tests}
+
 \section{Results}
 
 \chapter{Discussion}
