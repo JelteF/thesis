@@ -188,7 +188,7 @@ segment and send it back to the client. After the client receives it, it can be
 played by the player. For a schematic overview of this setup see
 figure~\vref{fig:singleserver}.
 
-\begin{figure}
+\begin{figure}[h]
     \includegraphics{singleserver_diagram.pdf}
     \caption{The single server setup}\label{fig:singleserver}
 \end{figure}
@@ -220,7 +220,7 @@ same format the proxy server will be able to serve the segment directly from its
 cache, instead of requesting it from the storage server. For a schematic
 overview of this setup see figure~\vref{fig:cdn}.
 
-\begin{figure}
+\begin{figure}[h]
     \includegraphics{cdn_diagram.pdf}
     \caption{The \gls{cdn} setup}\label{fig:cdn}
 \end{figure}
@@ -248,6 +248,14 @@ problem that on the fly conversion was there to solve. This time it is only
 doing this however for the most frequently watched videos, so it is less of an
 issue, but it's still something that is best kept to a minimum.
 
+Another small disadvantage is caused by the proxy requests this server uses. A
+request that isn't cached yet will actually take longer to return to the client
+than it would with the single server setup. This is because of the overhead of
+first traveling to the proxy server and then to the storage server. This is
+almost always a longer route then the route directly to the storage server.
+Because this longer route is taken only the first time a segment is requested
+and the next times the route will be shorter this is not such a bad problem, but
+it still is something that should be noted.
 
 
 \section{The IsmProxyPass setup}
@@ -272,12 +280,12 @@ difference between this setup and the \gls{cdn} setup is that there is no
 caching involved.  For a schematic overview of this setup see
 figure~\vref{fig:ismproxy}.
 
-\begin{figure}
+\begin{figure}[h]
     \includegraphics{ismproxy_diagram.pdf}
     \caption{The IsmProxyPass setup}\label{fig:ismproxy}
 \end{figure}
 
-This setup shares some of the advantages of the CDN setup. This setup can easily
+This setup shares some of the advantages of the \gls{cdn} setup. This setup can easily
 be used to mitigate the storage overloading issue. By just adding more proxy
 servers the CPU intensive conversion work can be shared by multiple servers. All
 that the storage server has to do is serve the byte ranges that the proxy
@@ -285,6 +293,12 @@ servers need, which is not nearly as intensive as the conversion. The latency
 issue however, is still present. Since for every clients request still needs to
 reach the location of the storage server, it doesn't matter that they are
 converted to range requests, they still need reach the storage eventually.
+
+The issue with internal requests is again present and it is much worse then with
+the \gls{cdn} setup. The first reason for this is that no caching takes place,
+so every clients request has to travel further, instead of just the first one
+for each segment. Another issue is that the request is that every request of a
+client spawns multiple range requests, which means even more waiting.
 
 So it seems that this setup is only worse than the CDN setup. However, it does
 have one important advantage. Hosting large files on dedicated servers or VPS’s
@@ -301,17 +315,20 @@ solves this issue by separating the storage and the conversion step, which makes
 it possible to host the mp4 files on dumb storage and use other servers for the
 conversion.
 
-
-
-\section{The final problem}
-There is one final issue, which is both present in the \gls{cdn} setup and the
-\gls{ipp} setup. This is the issue of internal network traffic. It might seem
-like a small issue, but in large setups internal network traffic is
-
-\subsection{The solution}
-A combination between the \gls{cdn} setup and the \gls{ipp} setup that would
-have both of their advantages could be an ideal setup. However, currently no
-such setup exists. This thesis sets out to design such a setup and also test its
+\section{Improvement}
+Both the \gls{cdn} setup and the \gls{ipp} setup have their clear advatages.
+Both their disadvantages are clear as well. A combination between the \gls{cdn}
+setup and the \gls{ipp} setup that would have both of their advantages could be
+an ideal setup. However, currently no such setup exists. The clear advantage
+would be that it is possible to combine the cheap dumb storage possiblities with
+the speed of \gls{cdn} setup. However, another advantage is gained as well. The
+proxy server would now be caching the range requests of the raw mp4 instead of
+the request for a converted segment. This would mean that the same content
+is not stored multiple times, like in the \gls{cdn} setup, since the same cached
+range requests can be used to generate a segment in a different format.  This
+would also mean that the amount of internal traffic would go down since no
+requests would have to be done for the same segment in a different format. These
+advantages are why this thesis sets out to design such a setup and to test its
 performance against currently available setups.
 
 
