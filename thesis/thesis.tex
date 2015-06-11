@@ -16,18 +16,27 @@
 \usepackage{varioref} % Fancy references
 \usepackage{caption} % Fixes hyperref to figure
 \usepackage[toc,acronym,xindy]{glossaries}
+\usepackage{xspace}
 
 \makeglossaries{}
 
+\newcommand{\betternewacronym}[3]{
+    \newacronym{#1}{#2}{#3}
+    \expandafter\newcommand\csname #1\endcsname{\gls{#1}\xspace}
+    \expandafter\newcommand\csname #1up\endcsname{\Gls{#1}\xspace}
+    \expandafter\newcommand\csname #1long\endcsname{\acrlong{#1}\xspace}
+}
 
-\newacronym{abs}{ABS}{adaptive bitrate streaming}
-\newacronym{iss}{ISS}{ISS Smooth Streaming}
-\newacronym{dash}{DASH}{Dynamic Adaptive Streaming over HTTP}
-\newacronym{hds}{HDS}{HTTP Dynamic Streaming}
-\newacronym{hls}{HLS}{HTTP Live Streaming}
-\newacronym{usp}{USP}{Unified Streaming}
-\newacronym{cdn}{CDN}{content delivery network}
-\newacronym{ipp}{IPP}{IsmProxyPass}
+
+\betternewacronym{abs}{ABS}{adaptive bitrate streaming}
+\betternewacronym{iss}{ISS}{ISS Smooth Streaming}
+\betternewacronym{dash}{DASH}{Dynamic Adaptive Streaming over HTTP}
+\betternewacronym{hds}{HDS}{HTTP Dynamic Streaming}
+\betternewacronym{hls}{HLS}{HTTP Live Streaming}
+\betternewacronym{usp}{USP}{Unified Streaming}
+\betternewacronym{cdn}{CDN}{content delivery network}
+\betternewacronym{ipp}{IPP}{IsmProxyPass}
+\betternewacronym{lt}{LT}{late transmuxing}
 
 
 % Title Page
@@ -67,11 +76,11 @@ can suddenly change drastically, for instance when changing the network
 connection from WiFi to a mobile network. With initial streaming technologies
 these changes caused buffering issues when the client was trying to get a high
 quality video using a low bandwith network connection. This brought life to the
-notion of \gls{abs}, which is a way of streaming video that changes the quality
+notion of \abs, which is a way of streaming video that changes the quality
 of the video that is being watched, based on what the network connection can
 handle \autocite{abs}.
 
-There are a couple of streaming solutions that implement \gls{abs}, most of
+There are a couple of streaming solutions that implement \abs, most of
 those use HTTP as the underlying protocol \autocite{http}.  One of the reasons
 for this is that HTTP is already in heavy and this way it is possible to
 leverage the already existing infrastructure that is in place for other HTTP
@@ -271,16 +280,18 @@ request, it only requests a specific byte range of that file.  These kind of
 requests are especially useful when only a small piece of a large file is
 needed.
 
-Upon receiving one of those range requests, the storage server will simply
-return the requested bytes from the mp4. When the proxy server then receives
-those bytes it will use them to generate the segment requested by the client.
-After this is done the segment will be returned to the client. For a schematic
-overview of this setup see figure~\vref{fig:ismproxy}.
-
 \begin{figure}[h]
     \includegraphics{ismproxy_diagram.pdf}
     \caption{The IsmProxyPass setup}\label{fig:ismproxy}
 \end{figure}
+
+Upon receiving one of those range requests, the storage server will simply
+return the requested bytes from the mp4. When the proxy server then receives
+those bytes it will use them to generate the segment requested by the client.
+After this is done the segment will be returned to the client. This all works by
+using \glspl{usp} custom \ipplong server directive and supply it a URL at
+which it can reach the storage server~\autocites{uspismproxy}. For a schematic overview of this setup
+see figure~\vref{fig:ismproxy}.
 
 This setup shares some of the advantages of the \gls{cdn} setup. It can easily
 be used to mitigate the storage overloading issue. By just adding more proxy
@@ -338,38 +349,41 @@ available setups.
 \chapter{Design considerations}
 % Explain the search for technologies used instead of stating the decision and
 % then explaining why.
-To build the proposed setup, existing technology can be used heavily. This
-chapter will describe the technologies used and why they have been chosen over
-other similar technologies.
+To build the proposed setup, choices have to be made about which technologies
+to use and some other design decisions have to be made as well. This chapter
+will describe the different technologies that could be used and the other
+desicions that have to be made. It will also explain which technologies have
+been chosen and what the outcomes of the other desicions are.
 
 
 \section{HTTP servers}
-The proposed setup consists of two different servers the storage server and the
+The proposed setup consists of two different servers, the storage server and the
 proxy server. Both of these servers need to have an HTTP server to handle the
 incomming requests. Both the Nginx and Apache are very capable and popular HTTP
 servers. They are also both available for Linux and they are supported by the
-\gls{usp} software. There are quite a bit of differences that and some of those
-are of importance for the proposed setup.
+\gls{usp} software. However, there are quite a bit of differences them and some
+of those are important for the proposed setup.
 
 
 \subsection{General differences}
 There are a couple of general differences between Apache and Nginx that have
 already been thoroughly explored in a multitude of
-resources~\autocites{nginx1}{nginx2}{apachevsnginx}. Their core architecture is
-very different. Apache spawns a new thread for each connection, while Nginx
-dispatches the requests to already existing threads. This means that Nginx can
-handle a lot of concurrent requests with very little resources. Their take on
-dynamic content is also quite different. Apache uses modules that can be easily
-loaded into Apache itself to handle dynamic content. Nginx just receives the
-requests and sends them to other applications, sometimes even Apache, if content
-needs to be dynamically generated. This is why Nginx is usually a good choice as
-a reverse proxy.
+resources~\autocites{nginx1}{nginx2}{apachevsnginx}{nginxperformancescale}.
+Their core architecture is very different. Apache spawns a new thread for each
+connection, while Nginx dispatches the requests to already existing threads.
+This means that Nginx can handle a lot of concurrent requests with very little
+resources. Their take on dynamic content is also quite different. Apache uses
+modules that can be easily loaded into Apache itself to handle dynamic content.
+Nginx just receives the requests and sends them to other applications, sometimes
+even Apache, if content needs to be dynamically generated. These differences are
+why Apache shines as an application server, but Nginx is usually a good choice
+for serving as a static file server or as a reverse proxy.
 
 
 \subsection{USP integration}
 While USP supports both servers fully, because of the architecture of both
 servers it is easier to create a working setup with Apache. Apache can load
-modules for dynamic functionality easily, which is how the \gls{usp}
+modules for dynamic functionality easily. This is also how the \gls{usp}
 installation works~\autocite{uspapache}. Just download and install the module
 and enable it by adding some lines to the server config files. Nginx however is
 not designed to just load modules on the fly. For dynamic content it normally
@@ -382,47 +396,86 @@ that the setup for Apache is quite a bit easier than the one for Nginx.
 
 \subsection{Caching}
 Since the proposed setup depends heavily on caching in the reverse proxy, it is
-important that the server application does this wel. This is both the case for
-Nginx and Apache. There is a key difference however, this is the cache locking
-support better in Nginx. Cache locking means that the same content will not be
-requested multiple times from the upstream server when multiple requests ask for
-the same content at the same time and there is no cache entry for that request.
-Instead only one request will be proxied through to the storage server and the
-others wait until the response for that one is cached. This can significantly
-reduce the load on the storage server. Both Nginx and Apache support cache
-locking. However, on Apache the server only uses it as a hint and it will still
+important that the server application does this wel. Both Nginx and Apache have
+good caching support~\autocites{nginxcache}{apachecache}. There is a key
+difference however, this is the better cache locking support in Nginx. Cache
+locking is a mechanism that can be used to reduce load on the storage server.
+Normally if a request comes in for some content and there is no cache for it,
+it will be proxied through to the storage server. This happens even if another
+request for the same content is already being proxied through but has not
+retured yet. If cache locking is enabled, the second request for some content
+will wait until the first request has returned and fills the cache. This can
+significantly reduce the load on the storage server. Nginx and Apache both
+support cache locking. However, Apache only uses it as a hint and it will still
 fetch from the storage if it receives a request with a header enable that tells
-it to do so~\autocite{apachecache}. This is not the case for
-Nginx~\autocite{nginxcache}.
+it to do so. Nginx will always make a second request wait if cache locking is
+enabled, even with special headers.
 
 
 \subsection{Scripting}
 % In server lua vs CGI
-Another reason for choosing Nginx are its extensive scripting capabilities. It
-is possible to enable Lua scripting in the server itself by installing a special
-module~\autocites{nginxlua}{cloudflarelua}. This can be very useful if advanced
-logic is needed to create the proposed setup.
+Both servers allow for low level scripting using
+Lua~\autocites{nginxlua}{cloudflarelua}{apachelua}. This can be very useful if
+complicated logic is needed to handle a request correctly. One big difference
+between the Apache version and the Nginx version is that the Nginx version
+can spawn subrequests, which can be very useful. For instance, one of the things
+subrequests allow, is that based on some checks in the Lua code the request can
+be handled by two entirely different Nginx paths. This way one can use the power
+of the complicated lua logic in combination with the simpleness of normal
+configurations.
 
-\subsection{Decision}
-Nginx is chosen as the HTTP server for the reverse proxy in the
-proposed setup. The scripting capabilities and better support for cache locking
-are the main reasons, since those could be useful for the actual setup. Its
-low memory footprint and speed are nice to have, but not essential for the setup
-itself. Which type of HTTP server is used by the storage server is not really
-important for this specific setup either, since they can both serve static files
-and support range requests out of the box. For the setup that will be used for
-testing the performance Apache will be used on the storage server, the reason
-for this is that the storage server needs on the fly conversion support to be
-able to simulate the \gls{cdn} setup and it is easier to enable the \gls{usp}
-module in Apache than in Nginx.
+
+\subsection{The decision}
+Nginx is chosen as the HTTP server for the reverse proxy in the proposed setup.
+The better support for cache locking and scripting are the main reasons, since
+those could be useful for the actual setup. Its low memory footprint and speed
+are nice to have, but not essential for the setup itself.  Which type of HTTP
+server is used by the storage server is not really important for this specific
+setup either, since they can both serve static files and support range requests
+out of the box. For the setup that will be used for testing the performance
+Apache will be used on the storage server, the reason for this is that the
+storage server needs on the fly conversion support to be able to simulate the
+\gls{cdn} setup and it is easier to enable the \gls{usp} module in Apache than
+in Nginx.
+
+
+
+
+\section{What responses to cache}
+The proposed setup is basically a version the \gls{ipp} setup with
+caching enabled. Because of this, it is important to decide what it is that
+needs to be cached exactly. There are two types of responses that could be
+cached on the proxy server, the range request responses it gets from the storage
+server and the converted segments it sends to the client. The responses to the
+range requests that the \acrlong{ipp} directive generates are most important to
+cache. These are most important since they cause network traffic between the
+proxy server and the storage server, which introduces latency.
+
+The responses the proxy server sends to the client might also be useful to
+cache. In the \gls{cdn} setup these responses were mostly cached done because of
+network latency. However, when already caching the range requests in the
+\gls{ipp} setup, network latency shouldn't be an issue since the responses can
+be generated on the fly from the cached range requests. This generating however
+is CPU intensive, so caching the result of this conversion could reduce the CPU
+load. Caching the converted segments still has the storage disadvantage it had
+with the \gls{cdn} setup. The same segments are essentially cached multiple
+times and this is even worse when also caching the range requets, since that
+means segments are cached one extra time in comparison to the \gls{cdn} setup.
+
+Currently it is unclear what the effect of caching each type of response has on
+the performance. This is why the final implementation will come in two
+flavors. A setup where all of the previously described responses are cached and
+one where only the range requests are cached. A third flavor would be one where
+only the responses to the client are cached, but since this flavor would
+basically be the same as the \cdn setup it is net necessary
 
 
 
 
 \section{Caching range requests}\label{sec:caching}
 % Maybe use subsections so it will be less of a wall of text.
-Since IsmProxyPass uses range requests it is also important that those can be
-cached. This is not directly supported in any webserver. The reason for
+Since the IsmProxyPass setup uses range requests it is also important that those
+can be cached. This is not directly supported in Nginx or Apache. The reason for
 this is that it is not exactly trivial to do. Most caches work by supplying it
 some data to cache, together with a key by which the data can be retrieved later
 on.
@@ -442,23 +495,23 @@ is removing the range request header from the request when sending it to
 upstream. This will request the whole file instead of just the requesting byte
 range. Nginx will then cache this and return the whole file everytime a range is
 requested. According to the RFC this behaviour is allowed, but this it is
-clearly not behaviour that one would want, since the whole point of range
-requests is that requesting the full file is not necessary.
+clearly not desired behaviour, since the whole point of range requests is that
+requesting the full file is not necessary.
 
 \subsection{Match exact range}
-A simple solution proposed on the Nginx forums\autocite{nginxcacheforum} is to
-force Nginx to request the range from upstream and then adding the requested
-range to the cache key. This basically means that a range request is handled by
-the cache as if it were a seperate URL\@. The main downside of this solution is that
-when overlapping byte ranges are requested they will both be cached in full.
-This means this  solution works fine when the ranges that get requested are
-always the same. However if the requested ranges are different almost every
-time this solution is not acceptable since a lot of the cache wil contain the
-same bytes, because of the overlap in the byte ranges.
+A simple solution tho this, proposed on the Nginx forums, is to force Nginx to
+request the range from upstream and then adding the requested range to the cache
+key~\autocite{nginxcacheforum}. This basically means that a range request is
+handled by the cache as if it were a seperate URL\@. The main downside of this
+solution is that when overlapping byte ranges are requested they will both be
+cached in full.  This means this  solution works fine when the ranges that get
+requested are always the same. However if the requested ranges are different
+almost every time this solution is not acceptable since a lot of the cache wil
+contain the same bytes, because of the overlap in the byte ranges.
 
 % Check wat proxy_force_ranges doet en of het te gebruiken is in mijn versie van
 \subsection{Ranger}
-Ranger is another solution to the problem that tries to solve the overlap
+Ranger extends further on the previous solution and tries to solve the overlap
 problem~\autocite{ranger}. Everytime a range request comes in, instead of
 sending it directly to the upstream server, it generates other range requests
 that together contain all the bytes requested. These new range requests are
@@ -476,38 +529,44 @@ ranges are requested, a lot of requests need to be send to the upstream server,
 because the large request gets split into a lot of smaller ones. Which could
 mean some unnecessary overhead.
 
-\subsection{Decision}
+\subsection{The decision}
+At this point it is clear that the first approach for caching range requests is
+not desired, since that would mean the whole video would have to be sent to the
+proxy server to send a small segment of that video to the client. The second
+aproach is one that shows great promise for the proposed setup. If the timing
+and length of segments sent for each format are the same, it would probably mean
+that the ranges requested are exactly the same as well. This would mean that the
+caching with this approach would just work. However, if after preliminary
+testing it is shown that a lot of the ranges are (slightly) different, using
+ranger might be preferable over the second approach.
+
+
+
+
+
+
 
 
 
 
 
 \chapter{Implementation}
-The created server setup consists of two servers, in this case virtual machines.
-One that has the video files on disk, this will be called the storage server,
-and one that serves as a reverse proxy, this will be called the proxy server.
-The proxy server can also be called the cache server in the cases where it
-caches proxied requests.
+The implementation of the \gls{lt} setup consists of configuration files for the
+HTTP servers running on the proxy server and on the storage server. What it
+implements, stating it very simply, it is a version of the \gls{ipp} setup
+with caching enabled. This chapter will explain at a high level how the
+implementation works.
 
-The client requests a specific segment of the video in a specific format, say
-\gls{iss}. The storage server only contains the mp4 file of the video. At some point
-in the server chain the segment needs to be generated from (part of) that mp4.
-
-
-
-\section{The Late Transmuxing configuration}
-The last configuration is the one this thesis is about. The late transmuxing
-configuration. This configuration is a mix of the previous two configurations.
-Stating it very simply, it is a version of the IsmProxyPass configuration with
-caching built in. This is accomplished by running two different server
-applications on the proxy server. A request of the client is initially handled
-on the proxy server by Nginx. Nginx then passes the request along to Apache,
-running on the same server. Apache then uses IsmProxyPass from the Unified
-Streaming module to send the range requests mentioned in the previous
-configuration.  However, instead of sending those requests to the storage server
-directly, it sends them back to Nginx. Nginx then passes those requests along to
-the storage server. The storage server will again respond with the byte ranges
-requested.
+\section{Initial implementation}
+With all this in mind a server setup was
+This is accomplished by running two different server applications on
+the proxy server. A request of the client is initially handled on the proxy
+server by Nginx. Nginx then passes the request along to Apache, running on the
+same server. Apache then uses IsmProxyPass from the Unified Streaming module to
+send the range requests mentioned in the previous setup.  However,
+instead of sending those requests to the storage server directly, it sends them
+back to Nginx. Nginx then passes those requests along to the storage server. The
+storage server will again respond with the byte ranges requested.
 
 When Nginx receives a response to one of its range requests it should to cache
 that response. This can be done quite easily by using the second method
@@ -522,15 +581,43 @@ requested and overlaps in those ranges should be minimal.
 Apart from caching the response Nginx will also return it to Apache. Apache will
 then generate the originally requested segment and return that back to Nginx.
 Nginx will then cache the segment and return it to the client. See figure
-\vref{fig:latetrans} for a schematic overview of this setup.
+\vref{fig:latetransold} for a schematic overview of this setup.
+
+\begin{figure}
+    \includegraphics{latetransold_diagram.pdf}
+    \caption{The initial late transmuxing setup}\label{fig:latetransold}
+\end{figure}
+
+\section{Final implementation}
+% Explain deadlocks
+This is accomplished by running two different server applications on
+the proxy server. A request of the client is initially handled on the proxy
+server by Nginx. Nginx then passes the request along to Apache, running on the
+same server. Apache then uses IsmProxyPass from the Unified Streaming module to
+send the range requests mentioned in the previous setup.  However,
+instead of sending those requests to the storage server directly, it sends them
+back to Nginx. Nginx then passes those requests along to the storage server. The
+storage server will again respond with the byte ranges requested.
+
+When Nginx receives a response to one of its range requests it should to cache
+that response. This can be done quite easily by using the second method
+described in section~\vref{sec:caching}, which was the method that meant
+changing the cache key. The reason this method is sufficient and the third
+method is not needed is because that method solves a problem that our use case
+doesn't have.  It solves the problem of overlapping byte ranges. For video
+streaming however, this problem doesn't exist because the because the fragments
+that cen be requested are fixed. This means the same ranges will always be
+requested and overlaps in those ranges should be minimal.
+
+Apart from caching the response Nginx will also return it to Apache. Apache will
+then generate the originally requested segment and return that back to Nginx.
+Nginx will then cache the segment and return it to the client. See figure
+\vref{fig:latetransold} for a schematic overview of this setup.
 
 \begin{figure}
     \includegraphics{latetrans_diagram.pdf}
-    \caption{The Late Transmuxing configuration}\label{fig:latetrans}
+    \caption{The final late transmuxing setup}\label{fig:latetrans}
 \end{figure}
-
-\subsection{Using two webserver applications on the same server}
-% Explain deadlocks
 
 
 \section{Configurations with less caching}
