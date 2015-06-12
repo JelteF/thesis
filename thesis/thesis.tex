@@ -18,6 +18,7 @@
 \usepackage[toc,acronym,xindy]{glossaries}
 \usepackage{xspace}
 \usepackage{nameref}
+\usepackage{cleveref}
 \usepackage[binary-units]{siunitx}
 
 \makeglossaries{}
@@ -737,6 +738,74 @@ for a test run, so more useful tests can be executed in the same time.
 
 
 \section{Results}
+\subsection{Cold cache}
+\subsubsection{Transfer speed measurements}
+In the figures \ref{fig:first_time_mbps} and
+\ref{fig:first_time_requests_per_second} a couple of things should be noticed.
+\begin{enumerate}
+    \item
+        The \cdn type setups perform best in almost all of the the transfer
+        speed measurements.
+
+    \item
+        All setups eventually reach a maximum transfer speed when the amount of
+        concurrent connections is increased.
+
+    \item
+        The \cdn type setups already reach a maximum in transfer speed already
+        after two connections.
+
+    \item
+        Unlike the other setups, the \ipp setup reacts very irregularly to
+        an increasing amount of connections.
+
+    \item
+        Some setups behave quite similar to others. The \cdn type setups perform
+        roughly the same and the caching \lt setups do this as well. The \ipp
+        and the \lt-nocache setup share the maximum they reach and also perform
+        quite the same with one connection. They differ in between the setups
+        however.
+
+    \item
+        Most setups perform similarly for the different formats when comparing
+        MB/s, but when comparing requests per second they perform worse for \hds
+        and \hls than for \dash and \iss.
+
+\end{enumerate}
+
+\input{plots/first_time_mbps.tex}
+\input{plots/first_time_requests_per_second.tex}
+\subsubsection{Latency}
+In figure 1 can be seen how lat
+When looking at the graphs for the latency it can be seen that larger differences
+start to occur when the amount of connections increase.
+\input{plots/first_time_latency_mean.tex}
+\subsubsection{Server measurements}
+\input{plots/first_time_cache_usage.tex}
+\input{plots/first_time_internal_mb.tex}
+\input{plots/first_time_internal_requests.tex}
+\clearpage
+
+\subsection{Cache filled with the same format}
+\subsubsection{Client measurements}
+\input{plots/second_time_mbps.tex}
+\input{plots/second_time_requests_per_second.tex}
+\input{plots/second_time_latency_mean.tex}
+\subsubsection{Server measurements}
+\input{plots/second_time_cache_usage.tex}
+\input{plots/second_time_internal_mb.tex}
+\input{plots/second_time_internal_requests.tex}
+
+\subsection{Cache filled with another format}
+\subsubsection{Client measurements}
+\input{plots/after_other_mbps.tex}
+\input{plots/after_other_requests_per_second.tex}
+\input{plots/after_other_latency_mean.tex}
+\subsubsection{Server measurements}
+\input{plots/after_other_cache_usage.tex}
+\input{plots/after_other_internal_mb.tex}
+\input{plots/after_other_internal_requests.tex}
+
 
 \chapter{Discussion}
 \section{Future Work}

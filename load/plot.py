@@ -4,9 +4,10 @@ import seaborn as sns  # noqa
 import os
 import json
 import pandas as pd
+from pylatex import Figure
 
 sns.set_style('whitegrid', rc={'lines.solid_capstyle': 'butt'})
-sns.set_context("paper", rc={"lines.linewidth": 0.75})
+sns.set_context("paper", rc={"lines.linewidth": 0.55})
 sns.set_palette("Paired")
 palette = sns.color_palette("Paired")
 
@@ -92,11 +93,18 @@ def safe_filename(filename):
                     c in ' _-']).rstrip()
 
 
-def saveplot(kind):
+def saveplot():
     # plt.show()
-    plt.savefig('plots/' + safe_filename(' - '.join([run_type, prop, kind])) +
-                '.pdf')
+    filename = 'plots/' + safe_filename('_'.join([run_type, prop]))
+    plt.savefig(filename + '.pdf')
+
     plt.close()
+
+    fig = Figure()
+    fig.add_image(filename + '.pdf')
+    fig.add_caption(labels[prop] + ' with ' + run_type_labels[run_type])
+    fig.append(r'\label{fig:' + filename.split('/')[-1] + '}')
+    fig.generate_tex(filename)
 
 
 setup_order = ['CDN-nocache', 'CDN', 'IPP', 'LT-nocache', 'LT-single',
@@ -113,6 +121,13 @@ labels = {
     'latency_mean': 'Average latency in ms',
 }
 
+run_type_labels = {
+    'first_time': 'a cold cache',
+    'second_time': 'the cache filled with the same format',
+    'after_other': 'the cache filled with another format',
+}
+
+col_wrap = 2
 for run_type, g in df.groupby('run_type'):
     extra_kwargs = {'size': 2}
     point_title_format = 'Requested {col_name}'
@@ -129,32 +144,50 @@ for run_type, g in df.groupby('run_type'):
 
     plot_vals = ['mbps', 'internal_mb', 'internal_requests',
                  'requests_per_second', 'cache_usage', 'latency_mean']
-    # plot_vals = ['internal_mb']
+    plot_vals = ['latency_mean']
     for prop in plot_vals:
+        print(run_type, prop)
         if prop in ['mbps', 'requests_per_second', 'latency_mean']:
             if 'col' not in extra_kwargs:
                 vid_type_key = 'col'
             else:
                 vid_type_key = 'row'
+                col_wrap = None
             extra_kwargs[vid_type_key] = 'video_type'
 
             p = sns.factorplot('connections', prop, 'Server setup',
-                               kind='point', data=g, sharey=True, sharex=False,
-                               hue_order=bar_order, palette=palette,
+                               kind='point', data=g, sharey=True,
+                               sharex=False, hue_order=bar_order,
+                               palette=palette, col_wrap=col_wrap,
                                **extra_kwargs)
 
             p.set_titles(point_title_format)
             p.set_xlabels('Concurrent connections')
             p.set_ylabels(labels[prop])
-            saveplot('point')
+
+            if prop == 'latency_mean':
+                for ax in p.fig.get_axes():
+                    ax.set_yscale('log')
+
+            saveplot()
+
             del extra_kwargs[vid_type_key]
+            col_wrap = 2
 
         else:
+            aspect = 1
+            if 'col' not in extra_kwargs:
+                aspect = 1.5
+                col_wrap = None
+
             p = sns.factorplot('video_type', prop, 'Server setup', kind='bar',
                                data=g, sharey=True, sharex=False,
                                hue_order=bar_order, palette=palette,
+                               col_wrap=col_wrap,
+                               aspect=aspect,
                                **extra_kwargs)
             p.set_titles(bar_title_format)
             p.set_xlabels('Requested video format')
             p.set_ylabels(labels[prop])
-            saveplot('bar')
+            saveplot()
+            col_wrap = 2
