@@ -5,11 +5,12 @@ import os
 import json
 import pandas as pd
 
-sns.set_context("poster")
+sns.set_style('whitegrid', rc={'lines.solid_capstyle': 'butt'})
+sns.set_context("paper", rc={"lines.linewidth": 0.75})
 sns.set_palette("Paired")
 palette = sns.color_palette("Paired")
 
-BASE_PATH = os.path.abspath('data')
+BASE_PATH = os.path.abspath('data_100mbit')
 dirs = os.listdir(BASE_PATH)
 data = []
 for d in dirs:
@@ -47,10 +48,10 @@ for d in dirs:
                     cur_d['seconds'] = seconds
 
                     cur_d['requests_per_second'] = cur_d['requests'] / seconds
-                    cur_d['MB/s'] = cur_d['bytes'] / 10**6 / seconds
+                    cur_d['mbps'] = cur_d['bytes'] / 10**6 / seconds
 
                     for k, v in cur_d['latency'].items():
-                        cur_d['latency' + '_' + k] = v
+                        cur_d['latency' + '_' + k] = v / 1000
 
                     data.append(cur_d)
                     seconds = None
@@ -62,13 +63,28 @@ for d in dirs:
                     cur_d[k] = v
 
                     if k == 'internal_bytes':
-                        cur_d['Internally sent MB'] = v / 10**6
+                        cur_d['internal_mb'] = v / 10**6
+                    if k == 'cache_usage':
+                        # Covert blocks to mb
+                        cur_d['cache_usage'] = v * 1024 / 10**6
 
 
 df = pd.DataFrame(data)
 df.fillna(0, inplace=True)
-print(df)
-print(df[df.total_errors != 0])
+# print(df)
+# print(df[df.total_errors != 0])
+server_type_dict = {
+    'ismproxy': 'IPP',
+    'cdn': 'CDN',
+    'single.transmux': 'LT-single',
+    'double.transmux': 'LT-double',
+    'nocache.transmux': 'LT-nocache',
+    'nocache.cdn': 'CDN-nocache',
+}
+df.replace({'server_type': server_type_dict}, inplace=True)
+df.video_type = df.video_type.str.upper()
+df.after = df.after.str.upper()
+df.rename(columns={'server_type': 'Server setup'}, inplace=True)
 
 
 def safe_filename(filename):
@@ -79,46 +95,66 @@ def safe_filename(filename):
 def saveplot(kind):
     # plt.show()
     plt.savefig('plots/' + safe_filename(' - '.join([run_type, prop, kind])) +
-                '.png')
+                '.pdf')
     plt.close()
 
-setup_order = ['nocache.cdn', 'cdn', 'ismproxy', 'nocache.transmux',
-               'single.transmux', 'double.transmux']
+
+setup_order = ['CDN-nocache', 'CDN', 'IPP', 'LT-nocache', 'LT-single',
+               'LT-double']
 
 transmux_cache_order = setup_order[-2:]
 
+labels = {
+    'mbps': 'Received MB/s',
+    'internal_mb': 'Internally sent MB',
+    'internal_requests': 'Amount of internal requests',
+    'requests_per_second': 'Handled requests per second',
+    'cache_usage': 'Cache usage in MB',
+    'latency_mean': 'Average latency in ms',
+}
+
 for run_type, g in df.groupby('run_type'):
-    extra_kwargs = {}
+    extra_kwargs = {'size': 2}
+    point_title_format = 'Requested {col_name}'
     if run_type == 'first_time':
         bar_order = setup_order[2:] + setup_order[:2]
-        print(g.max())
+
     elif run_type == 'second_time':
-        bar_order = transmux_cache_order + ['cdn']
+        bar_order = transmux_cache_order + ['CDN']
     elif run_type == 'after_other':
         extra_kwargs['col'] = 'after'
         bar_order = transmux_cache_order
+        bar_title_format = 'Requested {col_var} {col_name}'
+        point_title_format = 'Requested {row_name} {col_var} {col_name}'
 
-    plot_vals = ['MB/s', 'Internally sent MB', 'internal_requests',
+    plot_vals = ['mbps', 'internal_mb', 'internal_requests',
                  'requests_per_second', 'cache_usage', 'latency_mean']
-    # plot_vals = ['latency_mean']
+    # plot_vals = ['internal_mb']
     for prop in plot_vals:
-        if prop in ['MB/s', 'requests_per_second', 'latency_mean']:
+        if prop in ['mbps', 'requests_per_second', 'latency_mean']:
             if 'col' not in extra_kwargs:
                 vid_type_key = 'col'
             else:
                 vid_type_key = 'row'
             extra_kwargs[vid_type_key] = 'video_type'
 
-            sns.factorplot('connections', prop, 'server_type', kind='point',
-                           data=g, sharey=True,
-                           hue_order=bar_order, palette=palette,
-                           **extra_kwargs)
+            p = sns.factorplot('connections', prop, 'Server setup',
+                               kind='point', data=g, sharey=True, sharex=False,
+                               hue_order=bar_order, palette=palette,
+                               **extra_kwargs)
+
+            p.set_titles(point_title_format)
+            p.set_xlabels('Concurrent connections')
+            p.set_ylabels(labels[prop])
             saveplot('point')
             del extra_kwargs[vid_type_key]
 
         else:
-            sns.factorplot('video_type', prop, 'server_type', kind='bar',
-                           data=g, sharey=True,
-                           hue_order=bar_order, palette=palette,
-                           **extra_kwargs)
+            p = sns.factorplot('video_type', prop, 'Server setup', kind='bar',
+                               data=g, sharey=True, sharex=False,
+                               hue_order=bar_order, palette=palette,
+                               **extra_kwargs)
+            p.set_titles(bar_title_format)
+            p.set_xlabels('Requested video format')
+            p.set_ylabels(labels[prop])
             saveplot('bar')
