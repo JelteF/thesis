@@ -52,6 +52,7 @@
 
 \begin{document}
 \maketitle
+% \pagenumbering{gobble}
 
 \begin{abstract}
 \end{abstract}
@@ -65,36 +66,36 @@ The internet started out as a means of sending messages from one place to
 another. Since then it has become much faster and is used by many different
 applications. It is still used to send messages, but because storage became
 cheaper and the internet became faster, it is now used for applications that
-require way more bandwith. Because of it a revolution in the way we watch videos
+require way more bandwidth. Because of it a revolution in the way we watch videos
 has taken place. Movie theaters and cable TV are not the only ways to watch
 movies and TV programs anymore. Streaming of videos over the internet has grown
 to an enormous industry that can be used to watch any kind of video imaginable.
-Lots of amature videos are shared using YouTube, movies and TV shows can be
+Lots of amateur videos are shared using YouTube, movies and TV shows can be
 watched easily using Netflix and even live TV is being moved to the internet,
 for instance by the BBC iPlayer.
 
 This way of video streaming is not limited to normal computers. It is done on on
 lots of different devices, like smartphones, tablets, set-top boxes,
-mediacenters or Smart TVs. Especially on mobile devices the network conditions
+media centers or Smart TVs. Especially on mobile devices the network conditions
 can suddenly change drastically, for instance when changing the network
 connection from WiFi to a mobile network. With initial streaming technologies
 these changes caused buffering issues when the client was trying to get a high
-quality video using a low bandwith network connection. This brought life to the
+quality video using a low bandwidth network connection. This brought life to the
 notion of \abs, which is a way of streaming video that changes the quality
 of the video that is being watched, based on what the network connection can
 handle \autocite{abs}.
 
 There are a couple of streaming solutions that implement \abs, most of
 those use HTTP as the underlying protocol \autocite{http}.  One of the reasons
-for this is that HTTP is already in heavy and this way it is possible to
+for this is that HTTP is already used widely so it becomes possible to
 leverage the already existing infrastructure that is in place for other HTTP
 communication. A disadvantage of HTTP however is that it is a protocol for
 sending whole files and entire video files are typically quite large. This is
 why the solutions stream little sections of the video instead of the whole file.
 This means that the original video file should be cut in smaller files. They
-also need to store some extra metadata in those files, so a player will actually
-know how to play it. The solutions all have their own (slightly) different way
-of adding this metadata.
+also need to store some extra data in those files, so a player will actually
+know how to play it. The solutions all have their own different way of adding
+this data.
 
 % Maybe start with usp here and tell about the problem they solve.
 When hosting video these different formats can cause quite a bit of trouble.
@@ -102,7 +103,7 @@ The reason for this is that the different formats are not supported equally by
 the players used by different devices or browsers. Because of this, a good video
 host should have its videos available in a lot of different formats to make sure
 they can be viewed by every device and browser. The most obvious way of doing
-this ofcourse, is generating the files in all the needed formats and then
+this of course, is generating the files in all the needed formats and then
 setting up a file server that simply serves all the little files. This works but
 takes up quite a bit of space since the same video is essentially stored
 multiple times.
@@ -176,7 +177,7 @@ will be described, from the client requesting a segment of video in a specific
 format, to the client receiving that segment.
 
 The different server setups consist of one or two servers. One server, which is
-present in every setup, stores the the mp4 files on disk, this will be called
+present in every setup, stores the mp4 files on disk, this will be called
 the storage server. The more advanced setups also contain a second server, which
 serves as a reverse proxy, this server will be called the proxy server. In the
 setups where a proxy server is used the client connects to the proxy server and
@@ -213,7 +214,7 @@ one server and all it has to do store files and run the conversion code. The
 main disadvantage is also that it is just one server. This means that it can
 easily be overwhelmed with requests when traffic is high, especially since it
 not only has to serve files, but also run the conversion code. Another issue
-that occures because it is just a single server is that the time to reach the
+that occurs because it is just a single server is that the time to reach the
 client can be quite long when the client is located far away from the server,
 for instance on another continent.
 
@@ -227,7 +228,7 @@ for instance on another continent.
 Another setup that was already briefly introduced is the \gls{cdn} setup. It is
 a quite a simple extension of the single server setup. In this setup the proxy
 server will receive the request for the segment from the client. It then passes
-that exact reqest along to the storage server. The storage server will then
+that exact request along to the storage server. The storage server will then
 generate the segment from the mp4 and send the segment back to the proxy server.
 The proxy server will then send the response back to the client, but it will
 also cache the response. That way, when a client requests the same segment in
@@ -246,12 +247,12 @@ Caching should help quite a lot in this regard, since there normally is a set of
 videos that receives a lot of views and a set that receives (almost) none.
 Because of the caching, the storage only needs to convert the mp4 for the
 popular videos once for each segment and format, instead of for every request.
-The latency issue is also mostly mittigated by the caching. By simply adding
+The latency issue is also mostly mitigated by the caching. By simply adding
 more proxy servers, spread around the globe, only the first request for a
 segment will have high latency, the next request for that same segment only
 needs to travel to the proxy server.
 
-One of the disadvantages of this setup is ofcourse that it is less trivial to
+One of the disadvantages of this setup is of course that it is less trivial to
 set up than the single server setup. It also has some other disadvantages.
 Because it caches the converted segments, it is essentially storing the same
 part of the video multiple times, only in another format, which is exactly the
@@ -314,7 +315,7 @@ multiple range requests, which means even more overhead and thus more waiting.
 
 Because of all this, it seems that this setup is only worse than the \gls{cdn}
 setup. However, it does have one important advantage. Hosting large files on
-dedicated servers or VPS’s can be quite expensive. This is why there are
+dedicated servers or VPSs can be quite expensive. This is why there are
 services that specialize just in hosting files, like Amazon~S3. Services like
 this, which will be called dumb storage from now on, are quite popular for
 hosting large files, like videos, because it is relatively cheap. Dumb storage
@@ -328,11 +329,11 @@ separating the storage and the conversion tasks, which makes it possible to host
 the mp4 files on dumb storage and use other servers for the conversion.
 
 \section{Combining the setups}
-Both the \gls{cdn} setup and the \gls{ipp} setup have their clear advatages.
+Both the \gls{cdn} setup and the \gls{ipp} setup have their clear advantages.
 Both their disadvantages are clear as well. A combination between the \gls{cdn}
 setup and the \gls{ipp} setup that would have both of their advantages could be
 an ideal setup. However, currently no such setup exists. The clear advantage
-of a combinition like this would be that it is possible to combine cheap dumb
+of a combination like this would be that it is possible to combine cheap dumb
 storage with the speed of \gls{cdn} setup. However, another advantage is gained
 as well. In this combination the proxy server would be caching the range
 requests of the raw mp4 instead of the request for a converted segment. This
@@ -362,7 +363,7 @@ explain what the final decision for those choices is and why.
 \section{HTTP servers}
 The proposed setup consists of two different servers, the storage server and the
 proxy server. Both of these servers need to have an HTTP server to handle the
-incomming requests. Nginx and Apache are both very capable and popular HTTP
+incoming requests. Nginx and Apache are both very capable and popular HTTP
 servers. They are also both available for Linux and they are supported by the
 \gls{usp} software. However, there are quite a different in some aspects and some
 of those aspects are important for the proposed setup.
@@ -390,7 +391,7 @@ While USP supports both servers fully, because of the architecture of both
 servers it is easier to create a working setup with Apache. Apache can load
 modules for dynamic functionality easily, so this is used by the \gls{usp}
 software~\autocite{uspapache}. Just download and install the module
-and enable it by adding some lines to the server config files. Nginx however is
+and enable it by adding some lines to the server configuration files. Nginx however is
 not designed to just load modules on the fly. For dynamic content it normally
 just contacts an external application. However, it is possible to add new
 functionality to Nginx itself by including a module at compile time. This is
@@ -402,14 +403,14 @@ is quite a bit easier than the one for Nginx.
 
 \subsection{Caching}
 Since the proposed setup depends heavily on caching in the reverse proxy, it is
-important that the server application does this wel. Both Nginx and Apache have
+important that the server application does this well. Both Nginx and Apache have
 good caching support~\autocites{nginxcache}{apachecache}. There is a key
 difference however, this is the better cache locking support in Nginx. Cache
 locking is a mechanism that can be used to reduce load on the storage server.
 Normally if a request comes in for some content and there is no cache for it,
 it will be proxied through to the storage server. This happens even if another
 request for the same content is already being proxied through but has not
-retured yet. If cache locking is enabled, the second request for some content
+returned yet. If cache locking is enabled, the second request for some content
 will wait until the first request has returned and fills the cache. This can
 significantly reduce the load on the storage server, since the second request
 can just fetch the response from the cache. Nginx and Apache both support cache
@@ -436,7 +437,7 @@ configurations.
 Nginx is chosen as the HTTP server for the reverse proxy in the proposed setup.
 The better support for cache locking and scripting are the main reasons, since
 those could be useful for the actual setup. Its low memory footprint and speed
-are nice sideeffects, but they are not essential for the setup itself.  Which
+are nice side effects, but they are not essential for the setup itself.  Which
 type of HTTP server is used by the storage server is not really important for
 this specific setup, since they can both serve static files and support
 range requests out of the box. Apache will be chosen for the setup that will be
@@ -466,7 +467,7 @@ be generated on the fly from the cached range requests. This generating however
 is CPU intensive, so caching the result of this conversion should reduce the CPU
 load. Caching the converted segments still has the storage disadvantage it had
 with the \gls{cdn} setup. The same segments are essentially cached multiple
-times and this is even worse when also caching the range requets, since that
+times and this is even worse when also caching the range requests, since that
 means segments are cached one extra time in comparison to the \gls{cdn} setup.
 
 
@@ -504,7 +505,7 @@ So some suboptimal solutions have been proposed for different use cases.
 The most simple one, which is employed by Nginx by default, is removing the
 range request header from the request when sending it upstream. This will
 request the whole file instead of just the requesting byte range. Nginx will
-then cache this and return the whole file everytime a range is requested.
+then cache this and return the whole file every time a range is requested.
 According to the RFC this behaviour is allowed, but this it is clearly not
 desired behaviour, since the whole point of range requests is that requesting
 the full file is not necessary.
@@ -513,17 +514,17 @@ the full file is not necessary.
 A simple solution to this, proposed on the Nginx forums, is to force Nginx to
 request the range from upstream and then adding the requested range to the cache
 key~\autocite{nginxcacheforum}. This basically means that a range request is
-handled by the cache as if it were a seperate URL\@. The main downside of this
+handled by the cache as if it were a separate URL\@. The main downside of this
 solution is that when overlapping byte ranges are requested they will both be
 cached in full.  This means this  solution works fine when the ranges that get
 requested are always the same. However if the requested ranges are different
-almost every time, this solution is not acceptable since a lot of the cache wil
+almost every time, this solution is not acceptable since a lot of the cache will
 contain the same bytes, because of the overlap in the byte ranges.
 
 % Check wat proxy_force_ranges doet en of het te gebruiken is in mijn versie van
 \subsection{Ranger}
 Ranger extends further on the previous solution and tries to solve the overlap
-problem~\autocite{ranger}. Everytime a range request comes in, instead of
+problem~\autocite{ranger}. Every time a range request comes in, instead of
 sending it directly to the upstream server, it generates other range requests
 that together contain all the bytes requested. These new range requests always
 have the same block size and they also start at the same byte position.  These
@@ -544,7 +545,7 @@ ones. Which could mean some unnecessary overhead.
 At this point it is clear that the first approach for caching range requests is
 not sufficient, since that would mean the whole video would have to be sent to
 the proxy server to send a small segment of that video to the client. The second
-aproach is one that shows great promise for the proposed setup. If the timing
+approach is one that shows great promise for the proposed setup. If the timing
 and length of segments sent for each format are the same, it would probably mean
 that the ranges requested are exactly the same as well. This would mean that the
 caching with this approach would just work. However, if after preliminary
@@ -607,7 +608,7 @@ return it to the client.
 
 The outcome of the initial tests of this setup were as expected. As it turns out
 however, in its current form the setup has one big problem. When testing this
-setup with more concurrent connections than the amount of threads that
+setup with more concurrent connections than the amount of processes that
 Nginx is defined to use it results in deadlock. The reason for this is that the
 \ipplong directive supplied by \usp spawns the range requests in a blocking way,
 instead of in the non blocking way that Nginx normally spawns requests. This
@@ -657,13 +658,13 @@ type of machine. However, to make the development process easier the different
 machines where simulated using virtual machines. VirtualBox was used to create
 the VMs. One VM was used as the proxy and a second one was used as the storage
 server. The host operating system was used as the client. Since the machines
-have to communicate with eachother, a separate network interface was set up to
+have to communicate with each other, a separate network interface was set up to
 allow communication. The VMs have the same virtual hardware, they are both
 allowed to use \SI{2}{\giga\byte} of RAM and one CPU core.
 
 \subsubsection{Comcast}
 Since the VMs will be running on the same machine there are almost no network
-limitations. That is why artificial network throtteling is needed to simulate
+limitations. That is why artificial network throttling is needed to simulate
 more realistic real world environments. Comcast is a command line tool that
 provides a simple interface over standard Linux tools to throttle the
 network~\autocite{comcast}. Using Comcast the bandwidth between the proxy server
@@ -673,10 +674,10 @@ and the storage server is throttled down to allow a maximum of
 
 \subsection{The different setups}
 The VMs are six different setups that will be tested in a variety of tests.
-These setups can be split into old setups and new setups and controll setups.
+These setups can be split into old setups and new setups and control setups.
 The old setups consist of of the \cdn and \ipp setup, described in
 \nameref{ch:problem}. The new setups consist of the two flavors of the \lt
-setup. The one that only caches the responses to the range requsts will be
+setup. The one that only caches the responses to the range requests will be
 called \lt-single and the one that also caches the responses to the client
 \lt-double. The control setups are setups that are purely there to test the
 effect of the actual caching the \lt and the \cdn setups. These setups have all
@@ -688,10 +689,10 @@ caching disabled, but the rest is the same and they will respectively be called
 The performance of each setup will be measured when downloading all the
 segments of a whole video in the highest quality available in all the formats
 supported by the \usp software. All the segments of the video in a specific
-format will be refered to from now on as ``the video"
+format will be referred to from now on as ``the video"
 
 \subsubsection{Generating requests}
-Since only one client is used, it is necessary that it generates a signifcant
+Since only one client is used, it is necessary that it generates a significant
 amount of requests in a short time so it can be measured how the different
 setups perform under different loads. Wrk is a HTTP benchmarking tool that will
 be used to do this~\autocite{wrk}. It can be supplied with an URL, a duration
@@ -701,9 +702,9 @@ duration provided to that URL and afterwards it will output statistics about
 Wrk also provides a scripting interface that allows for more complicated logic
 for the requests to be sent. This interface is used by the testing setup to fire
 requests for all the segments of the video. This is done by looping over the
-contents of a file that contain all the urls for the different segments of the
+contents of a file that contain all the URLs for the different segments of the
 video in a specific format. The files for the different formats have been
-generated by letting a player play a the video from start to end and saving the
+generated by letting a player play the video from start to end and saving the
 requests. The player used for this was the Unified Capture tool created by \usp,
 which impersonates a player to save an online video to a file.
 
@@ -713,7 +714,7 @@ first three characteristics are simply measured by wrk. The first of these is
 the amount of requests that are handled per second. The second is the amount of
 Megabytes received per second and the third is the average time it takes for a
 request to return a response. The fourth characteristic is the storage space the
-cache directory takes up on the proxy server. The last two characteristcs
+cache directory takes up on the proxy server. The last two characteristics
 involve the traffic between the proxy server and the storage server. That
 traffic is measured in the amount of requests and the amount of bytes sent.
 These are simply measured by parsing the log files on the storage server.
@@ -742,12 +743,12 @@ for a test run, so more useful tests can be executed in the same time.
 
 
 \section{Results}
-The results of the different measurements are shown seperatly for the three
-different cache conditions. The transfer speed and latancy measurements are
+The results of the different measurements are shown separately for the three
+different cache conditions. The transfer speed and latency measurements are
 plotted against the amount of concurrent connections. For the cache usage and
 internal traffic measurements this is not the case, since the amount of
 connections have no effect on these statistics. Not only the plots are shown,
-but the important imformation that can be gathered from the plots is noted as
+but the important information that can be gathered from the plots is noted as
 well.
 
 \subsection{Cold cache}
@@ -758,7 +759,7 @@ and~\ref{fig:first_time_requests_per_second}, that show the transfer speed
 measurements, a couple of things should be noticed:
 \begin{enumerate}
     \item
-        The \cdn type setups perform best in almost all of the the transfer
+        The \cdn type setups perform best in almost all of the transfer
         speed measurements.
 
     \item
@@ -866,7 +867,7 @@ and~\ref{fig:first_time_internal_requests} show these things:
         requests.
 
     \item
-        The amount of requets for \hds and \hls than the amount of requests for
+        The amount of requests for \hds and \hls than the amount of requests for
         \dash and \iss is higher when looking at the \ipp and \lt type setups,
         but it is lower when looking at the \cdn type setups.
 
@@ -1023,7 +1024,7 @@ figure~\ref{fig:after_other_requests_per_second}:
 
 
 \subsubsection{Cache usage}
-First, to reiterate, the bars represententing requesting content after itself
+First, to reiterate, the bars that represent requesting content after itself
 are empty not because they are zero, but because these are the results shown in
 the previous subsection. The other bars show this however:
 
@@ -1094,7 +1095,7 @@ this:
 
 \chapter{Discussion}
 This chapter tries to explain and relate the many results gathered from the
-experiments described in the previous chapter. It also suggets opportunities for
+experiments described in the previous chapter. It also suggests opportunities for
 future research subjects.
 
 \section{Explanation of the results}
