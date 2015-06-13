@@ -361,3 +361,363 @@ connections: 50
 run_type: second_time
 
 run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T09:01:03.247
+elapsed time: 3.2091100215912
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000086,"requests":334,"distribution":{"99.999%":99880,"99%":26547,"50%":7768,"90%":17055},"bytes":129896098,"latency":{"max":99880,"stdev":7680.0021374109,"min":1027,"mean":9372.3562874251}}
+internal_bytes: 129926526
+internal_requests: 334
+cache_usage: 16436
+connections: 1
+test_time:2015-06-12T09:01:27.767
+elapsed time: 3.1917159557343
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000084,"requests":334,"distribution":{"99.999%":89521,"99%":26389,"50%":7822,"90%":16999},"bytes":129896098,"latency":{"max":89521,"stdev":7298.9217173058,"min":1190,"mean":9325.751497006}}
+internal_bytes: 129926526
+internal_requests: 334
+cache_usage: 16436
+connections: 1
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T09:04:21.198
+elapsed time: 2.9061779975891
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000066,"requests":334,"distribution":{"99.999%":101963,"99%":45444,"50%":15292,"90%":31130},"bytes":129896103,"latency":{"max":101963,"stdev":11711.362966228,"min":1503,"mean":17146.655688623}}
+internal_bytes: 129926545
+internal_requests: 334
+cache_usage: 16436
+connections: 2
+test_time:2015-06-12T09:04:45.712
+elapsed time: 2.9070520401001
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000112,"requests":334,"distribution":{"99.999%":119782,"99%":46234,"50%":15256,"90%":32686},"bytes":129896103,"latency":{"max":119782,"stdev":11852.440499525,"min":2801,"mean":17156.862275449}}
+internal_bytes: 129926545
+internal_requests: 334
+cache_usage: 16436
+connections: 2
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T09:07:39.166
+elapsed time: 2.9069690704346
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000113,"requests":334,"distribution":{"99.999%":281800,"99%":178660,"50%":34203,"90%":76938},"bytes":129896113,"latency":{"max":281800,"stdev":34902.916896052,"min":4826,"mean":43179.80239521}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 5
+test_time:2015-06-12T09:08:03.673
+elapsed time: 2.8410458564758
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000099,"requests":334,"distribution":{"99.999%":284434,"99%":166744,"50%":33166,"90%":76825},"bytes":129896113,"latency":{"max":284434,"stdev":32278.306497713,"min":5922,"mean":42205.284431138}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 5
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T09:10:57.090
+elapsed time: 3.0021119117737
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000085,"requests":334,"distribution":{"99.999%":534905,"99%":373712,"50%":74265,"90%":143451},"bytes":129896113,"latency":{"max":534905,"stdev":64753.763945777,"min":4596,"mean":88736.655688623}}
+internal_bytes: 129926508
+internal_requests: 334
+cache_usage: 16436
+connections: 10
+test_time:2015-06-12T09:11:21.636
+elapsed time: 3.0614800453186
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000085,"requests":334,"distribution":{"99.999%":584545,"99%":375884,"50%":71361,"90%":159567},"bytes":129896113,"latency":{"max":584545,"stdev":74458.90609452,"min":3705,"mean":90446.568862275}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 10
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T09:14:15.151
+elapsed time: 3.1022770404816
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000092,"requests":334,"distribution":{"99.999%":693294,"99%":623345,"50%":199989,"90%":372027},"bytes":129896113,"latency":{"max":693294,"stdev":107477.42889895,"min":4710,"mean":228873.44610778}}
+internal_bytes: 129926508
+internal_requests: 334
+cache_usage: 16436
+connections: 25
+test_time:2015-06-12T09:14:39.677
+elapsed time: 3.1407759189606
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000083,"requests":334,"distribution":{"99.999%":1041476,"99%":751319,"50%":208898,"90%":366682},"bytes":129896113,"latency":{"max":1041476,"stdev":120194.08258362,"min":6415,"mean":230556.88622754}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 25
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T09:17:31.364
+elapsed time: 3.3114631175995
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000102,"requests":334,"distribution":{"99.999%":1790431,"99%":1151392,"50%":443822,"90%":671394},"bytes":129896113,"latency":{"max":1790431,"stdev":195647.26222338,"min":11347,"mean":478748.95209581}}
+internal_bytes: 129926508
+internal_requests: 334
+cache_usage: 16436
+connections: 50
+test_time:2015-06-12T09:17:55.927
+elapsed time: 3.2589709758759
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000085,"requests":334,"distribution":{"99.999%":1272003,"99%":996371,"50%":435320,"90%":669919},"bytes":129896113,"latency":{"max":1272003,"stdev":170357.34734301,"min":10178,"mean":462970.37125749}}
+internal_bytes: 129926509
+internal_requests: 334
+cache_usage: 16436
+connections: 50
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T15:27:30.170
+elapsed time: 3.2233920097351
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000099,"requests":334,"distribution":{"99.999%":92381,"99%":26299,"50%":7438,"90%":17065},"bytes":129896098,"latency":{"max":92381,"stdev":7482.9630567835,"min":1030,"mean":9421.3173652695}}
+internal_bytes: 129926545
+internal_requests: 334
+cache_usage: 16436
+connections: 1
+test_time:2015-06-12T15:27:54.676
+elapsed time: 3.2273659706116
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000084,"requests":334,"distribution":{"99.999%":100582,"99%":26210,"50%":7802,"90%":17421},"bytes":129896098,"latency":{"max":100582,"stdev":7799.3391487242,"min":1237,"mean":9433.1796407186}}
+internal_bytes: 129926526
+internal_requests: 334
+cache_usage: 16436
+connections: 1
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T15:30:48.089
+elapsed time: 2.8931460380554
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000111,"requests":334,"distribution":{"99.999%":129864,"99%":49100,"50%":14759,"90%":31349},"bytes":129896103,"latency":{"max":129864,"stdev":12398.287114951,"min":1158,"mean":17074.925149701}}
+internal_bytes: 129926545
+internal_requests: 334
+cache_usage: 16436
+connections: 2
+test_time:2015-06-12T15:31:12.590
+elapsed time: 2.961452960968
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000095,"requests":334,"distribution":{"99.999%":127874,"99%":55386,"50%":15778,"90%":31104},"bytes":129896103,"latency":{"max":127874,"stdev":12099.279501778,"min":2151,"mean":17473.017964072}}
+internal_bytes: 129926526
+internal_requests: 334
+cache_usage: 16436
+connections: 2
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T15:34:05.998
+elapsed time: 2.8524339199066
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000098,"requests":334,"distribution":{"99.999%":190679,"99%":121819,"50%":35801,"90%":72055},"bytes":129896113,"latency":{"max":190679,"stdev":25679.624183458,"min":5188,"mean":42407.853293413}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 5
+test_time:2015-06-12T15:34:30.491
+elapsed time: 2.7836649417877
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000080,"requests":334,"distribution":{"99.999%":295881,"99%":235429,"50%":30066,"90%":71255},"bytes":129896113,"latency":{"max":295881,"stdev":38734.857013171,"min":3195,"mean":41366.083832335}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 5
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T15:37:23.838
+elapsed time: 2.9533629417419
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000083,"requests":334,"distribution":{"99.999%":408583,"99%":334808,"50%":72334,"90%":156271},"bytes":129896113,"latency":{"max":408583,"stdev":60669.183645462,"min":6488,"mean":87890.251497006}}
+internal_bytes: 129926508
+internal_requests: 334
+cache_usage: 16436
+connections: 10
+test_time:2015-06-12T15:37:48.344
+elapsed time: 2.9262139797211
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000112,"requests":334,"distribution":{"99.999%":397839,"99%":326772,"50%":70964,"90%":143467},"bytes":129896113,"latency":{"max":397839,"stdev":58450.299637143,"min":17997,"mean":87046.77245509}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 10
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T15:40:41.699
+elapsed time: 3.199257850647
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000084,"requests":334,"distribution":{"99.999%":1029343,"99%":771063,"50%":202204,"90%":420102},"bytes":129896113,"latency":{"max":1029343,"stdev":141823.58014343,"min":5577,"mean":233848.30538922}}
+internal_bytes: 129926508
+internal_requests: 334
+cache_usage: 16436
+connections: 25
+test_time:2015-06-12T15:41:06.185
+elapsed time: 3.2001249790192
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000102,"requests":334,"distribution":{"99.999%":1127647,"99%":797164,"50%":201872,"90%":408594},"bytes":129896113,"latency":{"max":1127647,"stdev":130757.26807205,"min":8216,"mean":234062.67664671}}
+internal_bytes: 129926514
+internal_requests: 334
+cache_usage: 16436
+connections: 25
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T15:43:59.600
+elapsed time: 3.1254880428314
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000111,"requests":334,"distribution":{"99.999%":1569092,"99%":1143715,"50%":391738,"90%":706933},"bytes":129896113,"latency":{"max":1569092,"stdev":213324.26595298,"min":11299,"mean":449555.76646707}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 50
+test_time:2015-06-12T15:44:24.103
+elapsed time: 3.1444630622864
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000087,"requests":334,"distribution":{"99.999%":1367927,"99%":1271360,"50%":392662,"90%":709391},"bytes":129896113,"latency":{"max":1367927,"stdev":212674.22270421,"min":11238,"mean":450564.24850299}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 50
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T21:54:17.442
+elapsed time: 3.2252080440521
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000085,"requests":334,"distribution":{"99.999%":104459,"99%":27552,"50%":7720,"90%":17395},"bytes":129896098,"latency":{"max":104459,"stdev":7865.7642060547,"min":1028,"mean":9423.9640718563}}
+internal_bytes: 129926526
+internal_requests: 334
+cache_usage: 16436
+connections: 1
+test_time:2015-06-12T21:54:41.948
+elapsed time: 3.2215638160706
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000100,"requests":334,"distribution":{"99.999%":97919,"99%":26480,"50%":7842,"90%":17084},"bytes":129896098,"latency":{"max":97919,"stdev":7625.0670529459,"min":1189,"mean":9409.1077844311}}
+internal_bytes: 129926526
+internal_requests: 334
+cache_usage: 16436
+connections: 1
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T21:57:35.239
+elapsed time: 2.9243249893188
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000084,"requests":334,"distribution":{"99.999%":123514,"99%":58940,"50%":14944,"90%":32115},"bytes":129896103,"latency":{"max":123514,"stdev":13411.220261494,"min":1242,"mean":17256.377245509}}
+internal_bytes: 129926545
+internal_requests: 334
+cache_usage: 16436
+connections: 2
+test_time:2015-06-12T21:57:59.730
+elapsed time: 2.9919078350067
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000101,"requests":334,"distribution":{"99.999%":118374,"99%":53579,"50%":15214,"90%":33507},"bytes":129896103,"latency":{"max":118374,"stdev":12910.44615041,"min":1561,"mean":17668.071856287}}
+internal_bytes: 129926526
+internal_requests: 334
+cache_usage: 16436
+connections: 2
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T22:00:53.054
+elapsed time: 2.908536195755
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000111,"requests":334,"distribution":{"99.999%":272285,"99%":199498,"50%":32087,"90%":95307},"bytes":129896113,"latency":{"max":272285,"stdev":38343.148832115,"min":6499,"mean":43245.69760479}}
+internal_bytes: 129926526
+internal_requests: 334
+cache_usage: 16436
+connections: 5
+test_time:2015-06-12T22:01:17.538
+elapsed time: 2.8440930843353
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000083,"requests":334,"distribution":{"99.999%":357926,"99%":175911,"50%":35496,"90%":67070},"bytes":129896113,"latency":{"max":357926,"stdev":31575.824765518,"min":6753,"mean":42274.194610778}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 5
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T22:04:10.867
+elapsed time: 2.9914290904999
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000086,"requests":334,"distribution":{"99.999%":693527,"99%":353347,"50%":78073,"90%":134481},"bytes":129896113,"latency":{"max":693527,"stdev":63082.78160658,"min":4437,"mean":88911.51497006}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 10
+test_time:2015-06-12T22:04:35.364
+elapsed time: 3.0279819965363
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000083,"requests":334,"distribution":{"99.999%":604923,"99%":425167,"50%":71202,"90%":165204},"bytes":129896113,"latency":{"max":604923,"stdev":71881.273808238,"min":4185,"mean":90116.72754491}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 10
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T22:07:28.529
+elapsed time: 3.2187490463257
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000086,"requests":334,"distribution":{"99.999%":1397764,"99%":625894,"50%":211416,"90%":372658},"bytes":129896113,"latency":{"max":1397764,"stdev":127083.87747229,"min":4728,"mean":237631.39520958}}
+internal_bytes: 129926509
+internal_requests: 334
+cache_usage: 16436
+connections: 25
+test_time:2015-06-12T22:07:53.022
+elapsed time: 3.1617732048035
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000100,"requests":334,"distribution":{"99.999%":1154312,"99%":754732,"50%":204645,"90%":352848},"bytes":129896113,"latency":{"max":1154312,"stdev":130512.84112763,"min":10272,"mean":232072.75449102}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 25
+
+run_type: second_time
+
+run_type: after_other
+
+run_type: first_time
+test_time:2015-06-12T22:10:46.274
+elapsed time: 2.9743220806122
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000097,"requests":334,"distribution":{"99.999%":1394860,"99%":1089414,"50%":376320,"90%":687638},"bytes":129896113,"latency":{"max":1394860,"stdev":207595.07150961,"min":25373,"mean":424606.55988024}}
+internal_bytes: 129926507
+internal_requests: 334
+cache_usage: 16436
+connections: 50
+test_time:2015-06-12T22:11:10.782
+elapsed time: 2.9965279102325
+summary: {"total_errors":0,"errors":{"write":0,"read":0,"status":0,"timeout":0,"connect":0},"duration":20000083,"requests":334,"distribution":{"99.999%":1209464,"99%":1012372,"50%":406649,"90%":669861},"bytes":129896113,"latency":{"max":1209464,"stdev":185221.971775,"min":11621,"mean":431626.77245509}}
+internal_bytes: 129926510
+internal_requests: 334
+cache_usage: 16436
+connections: 50
+
+run_type: second_time
+
+run_type: after_other
