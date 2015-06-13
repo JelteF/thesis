@@ -738,10 +738,20 @@ for a test run, so more useful tests can be executed in the same time.
 
 
 \section{Results}
+The results of the different measurements are shown seperatly for the three
+different cache conditions. The transfer speed and latancy measurements are
+plotted against the amount of concurrent connections. For the cache usage and
+internal traffic measurements this is not the case, since the amount of
+connections have no effect on these statistics. Not only the plots are shown,
+but the important imformation that can be gathered from the plots is noted as
+well.
+
 \subsection{Cold cache}
+
 \subsubsection{Transfer speed measurements}
-In the figures \ref{fig:first_time_mbps} and
-\ref{fig:first_time_requests_per_second} a couple of things should be noticed.
+In the figures~\ref{fig:first_time_mbps}
+and~\ref{fig:first_time_requests_per_second}, that show the transfer speed
+measurements, a couple of things should be noticed:
 \begin{enumerate}
     \item
         The \cdn type setups perform best in almost all of the the transfer
@@ -767,6 +777,11 @@ In the figures \ref{fig:first_time_mbps} and
         however.
 
     \item
+        The maximum reached by the caching \lt setups is almost as the same as
+        the maximum from the \cdn type setups, although it is reached only with
+        more concurrent connections.
+
+    \item
         Most setups perform similarly for the different formats when comparing
         MB/s, but when comparing requests per second they perform worse for \hds
         and \hls than for \dash and \iss.
@@ -776,39 +791,195 @@ In the figures \ref{fig:first_time_mbps} and
 \input{plots/first_time_mbps.tex}
 \input{plots/first_time_requests_per_second.tex}
 \subsubsection{Latency}
-In figure 1 can be seen how lat
-When looking at the graphs for the latency it can be seen that larger differences
-start to occur when the amount of connections increase.
+In figure~\ref{fig:first_time_latency_mean} is shown what the difference in
+latency is and how the latency is influenced by increasing the connections. The
+y axis is displayed with a log scale to better show the differences with a small
+amount of concurrent connections. The things to notice here are:
+\begin{enumerate}
+    \item
+        The \ipp setup again performs the worst and the \cdn type setups perform
+        the best.
+
+    \item
+        With one connection the \cdn setups outperform all the other setups.
+
+    \item
+        With enough concurrent connections the caching \lt setups again perform
+        about as good as the \cdn type setups.
+
+
+
+\end{enumerate}
+
 \input{plots/first_time_latency_mean.tex}
-\subsubsection{Server measurements}
+
+\subsubsection{Cache usage}
+The cache usage measurements in figure~\ref{fig:first_time_cache_usage} show a
+only a couple of important things:
+\begin{enumerate}
+    \item
+        The setups that use no caching still use a small amount of storage for
+        cache.
+
+    \item
+        The \lt-single setup and the \cdn setup use about the same amount of
+        cache.
+
+    \item
+        The \lt-double setup uses almost double the amount of cache as the
+        \lt-single and \cdn setup.
+\end{enumerate}
+
 \input{plots/first_time_cache_usage.tex}
+
+\subsubsection{Internal traffic}
+The internal traffic statistics in figure~\ref{fig:first_time_internal_mb}
+and~\ref{fig:first_time_internal_requests} show these things:
+\begin{enumerate}
+    \item
+        The \ipp and \lt-nocache perform exactly the same as do the \cdn type
+        setups and the caching \lt setups do this as well.
+
+    \item
+        In both statistics, the \ipp and \lt-nocache perform worst.
+
+    \item
+        When comparing the \cdn type setups and the caching \lt setups perform
+        about the same when comparing the amount of MB that is internally sent.
+
+    \item
+        The \ipp and \lt-nocache setups send more than double the amount of
+        internal requests the caching \lt setups send.
+
+    \item
+        The caching \lt setups send quite a bit more internal requests than the
+        \cdn type setups. For \dash and \iss videos they send about double the
+        amount of requests and for \hds and \hls about three times the amount of
+        requests.
+
+    \item
+        The amount of requets for \hds and \hls than the amount of requests for
+        \dash and \iss is higher when looking at the \ipp and \lt type setups,
+        but it is lower when looking at the \cdn type setups.
+
+
+\end{enumerate}
+
 \input{plots/first_time_internal_mb.tex}
 \input{plots/first_time_internal_requests.tex}
 \clearpage
 
 \subsection{Cache filled with the same format}
-\subsubsection{Client measurements}
+Apart from explaining what the plots show, this section will also compare them
+to the plots of equivalent date gathered with a cold cache.
+
+\subsubsection{Transfer speed measurements}
+The figures~\ref{fig:second_time_mbps}
+and~\ref{fig:second_time_requests_per_second}, that show the transfer speed
+statistics, show this information:
+\begin{enumerate}
+    \item
+        The \lt-double and the \cdn setup perform the roughly the same in all
+        cases.
+
+    \item
+        \dash and \iss perform roughly the same and \hds and \hls perform mostly
+        the same as well for all setups.
+
+    \item
+        When increasing the amount of connections the \lt-double and \cdn setup
+        first perform better, but at some point the performance will drop
+        drastically again.
+
+    \item
+        The \lt-single setup performs significantly worse, especially with a low
+        amount of concurrent connections.
+
+    \item
+        All setups perform better than the same setups with a cold cache,
+        although \lt-single only performs slightly better compared to the gains
+        that are achieved by the \lt-double and \cdn setups.
+
+\end{enumerate}
 \input{plots/second_time_mbps.tex}
 \input{plots/second_time_requests_per_second.tex}
+
+\subsubsection{Latency}
+All the observations that were made for the transfer speeds also hold true for
+latency. The only difference is that with two connections the confidence
+intervals for \cdn and \lt-double are exceptionally large for some of the
+formats.
 \input{plots/second_time_latency_mean.tex}
-\subsubsection{Server measurements}
+
+\subsubsection{Cache usage}
+The only thing to gather from figure~\ref{fig:second_time_cache_usage} is that
+the cache usage is exactly the same as the cache usage with a cold cache.
 \input{plots/second_time_cache_usage.tex}
+
+\subsubsection{Internal traffic}
+The figures~\ref{fig:second_time_internal_mb}
+and~\ref{fig:second_time_internal_requests} show quite clearly that no internal
+requests are sent for any of the caching setups.
 \input{plots/second_time_internal_mb.tex}
 \input{plots/second_time_internal_requests.tex}
 
+
+
 \subsection{Cache filled with another format}
-\subsubsection{Client measurements}
+This section will show the statistics when running the different setups after
+the cache has been filled with the video in another format.
+Important to note that following plots are a bit different from the previous
+ones. These plots not only compare the performance of the setups for the
+different video formats, but they also compare that to the video format that was
+loaded in the cache.
+
+\subsubsection{Transfer speed measurements}
+The figures~\ref{fig:after_other_mbps}
+and~\ref{fig:after_other_requests_per_second} show a couple of things again:
+\begin{enumerate}
+    \item
+        The amount of requests per second are quite a lot lower for \hds and
+        \hls. This was also the case when requesting videos with a cold cache.
+
+    \item
+        When comparing received MB/s it seems that the order in which two
+        formats are requested does not matter much. Complementary plots are
+        very similar, for instance requesting \dash after \iss performs about as
+        well as requesting \iss after \dash
+
+    \item
+        The \lt setups perform better0
+\end{enumerate}
 \input{plots/after_other_mbps.tex}
 \input{plots/after_other_requests_per_second.tex}
+
+\subsubsection{Latency}
 \input{plots/after_other_latency_mean.tex}
+
 \subsubsection{Server measurements}
 \input{plots/after_other_cache_usage.tex}
+
+\subsubsection{Internal traffic}
 \input{plots/after_other_internal_mb.tex}
 \input{plots/after_other_internal_requests.tex}
 
 
+
+
+
+
+
+
 \chapter{Discussion}
 \section{Future Work}
+
+
+
+
+
+
+
+
 \chapter{Conclusions}
 
 

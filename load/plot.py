@@ -127,6 +127,8 @@ run_type_labels = {
     'after_other': 'the cache filled with another format',
 }
 
+video_type_order = ['DASH', 'ISS', 'HDS', 'HLS']
+
 col_wrap = 2
 for run_type, g in df.groupby('run_type'):
     extra_kwargs = {'size': 2}
@@ -138,13 +140,14 @@ for run_type, g in df.groupby('run_type'):
         bar_order = transmux_cache_order + ['CDN']
     elif run_type == 'after_other':
         extra_kwargs['col'] = 'after'
+        extra_kwargs['col_order'] = video_type_order
         bar_order = transmux_cache_order
         bar_title_format = 'Requested {col_var} {col_name}'
         point_title_format = 'Requested {row_name} {col_var} {col_name}'
 
     plot_vals = ['mbps', 'internal_mb', 'internal_requests',
                  'requests_per_second', 'cache_usage', 'latency_mean']
-    plot_vals = ['latency_mean']
+    # plot_vals = ['latency_mean']
     for prop in plot_vals:
         print(run_type, prop)
         if prop in ['mbps', 'requests_per_second', 'latency_mean']:
@@ -154,6 +157,7 @@ for run_type, g in df.groupby('run_type'):
                 vid_type_key = 'row'
                 col_wrap = None
             extra_kwargs[vid_type_key] = 'video_type'
+            extra_kwargs[vid_type_key + '_order'] = video_type_order
 
             p = sns.factorplot('connections', prop, 'Server setup',
                                kind='point', data=g, sharey=True,
@@ -172,6 +176,7 @@ for run_type, g in df.groupby('run_type'):
             saveplot()
 
             del extra_kwargs[vid_type_key]
+            del extra_kwargs[vid_type_key + '_order']
             col_wrap = 2
 
         else:
@@ -182,6 +187,7 @@ for run_type, g in df.groupby('run_type'):
 
             p = sns.factorplot('video_type', prop, 'Server setup', kind='bar',
                                data=g, sharey=True, sharex=False,
+                               x_order=video_type_order,
                                hue_order=bar_order, palette=palette,
                                col_wrap=col_wrap,
                                aspect=aspect,
