@@ -20,6 +20,8 @@
 \usepackage{nameref}
 \usepackage{cleveref}
 \usepackage[binary-units]{siunitx}
+\usepackage{placeins}
+\usepackage{float}
 
 \makeglossaries{}
 
@@ -737,6 +739,8 @@ for a test run, so more useful tests can be executed in the same time.
 
 
 
+
+
 \section{Results}
 The results of the different measurements are shown seperatly for the three
 different cache conditions. The transfer speed and latancy measurements are
@@ -790,6 +794,9 @@ measurements, a couple of things should be noticed:
 
 \input{plots/first_time_mbps.tex}
 \input{plots/first_time_requests_per_second.tex}
+\FloatBarrier
+
+
 \subsubsection{Latency}
 In figure~\ref{fig:first_time_latency_mean} is shown what the difference in
 latency is and how the latency is influenced by increasing the connections. The
@@ -831,6 +838,7 @@ only a couple of important things:
 \end{enumerate}
 
 \input{plots/first_time_cache_usage.tex}
+\FloatBarrier
 
 \subsubsection{Internal traffic}
 The internal traffic statistics in figure~\ref{fig:first_time_internal_mb}
@@ -867,11 +875,13 @@ and~\ref{fig:first_time_internal_requests} show these things:
 
 \input{plots/first_time_internal_mb.tex}
 \input{plots/first_time_internal_requests.tex}
-\clearpage
+
+\FloatBarrier
 
 \subsection{Cache filled with the same format}
 Apart from explaining what the plots show, this section will also compare them
 to the plots of equivalent date gathered with a cold cache.
+
 
 \subsubsection{Transfer speed measurements}
 The figures~\ref{fig:second_time_mbps}
@@ -903,13 +913,15 @@ statistics, show this information:
 \end{enumerate}
 \input{plots/second_time_mbps.tex}
 \input{plots/second_time_requests_per_second.tex}
+\FloatBarrier
 
 \subsubsection{Latency}
 All the observations that were made for the transfer speeds also hold true for
-latency. The only difference is that with two connections the confidence
-intervals for \cdn and \lt-double are exceptionally large for some of the
-formats.
+latency, which can be seen in figure~\ref{fig:second_time_latency_mean}. The
+only difference is that with two connections the confidence intervals for \cdn
+and \lt-double are exceptionally large for some of the formats.
 \input{plots/second_time_latency_mean.tex}
+\FloatBarrier
 
 \subsubsection{Cache usage}
 The only thing to gather from figure~\ref{fig:second_time_cache_usage} is that
@@ -919,50 +931,160 @@ the cache usage is exactly the same as the cache usage with a cold cache.
 \subsubsection{Internal traffic}
 The figures~\ref{fig:second_time_internal_mb}
 and~\ref{fig:second_time_internal_requests} show quite clearly that no internal
-requests are sent for any of the caching setups.
+requests are sent for any of the setups.
 \input{plots/second_time_internal_mb.tex}
 \input{plots/second_time_internal_requests.tex}
 
 
-
+\FloatBarrier
 \subsection{Cache filled with another format}
 This section will show the statistics when running the different setups after
 the cache has been filled with the video in another format.
 Important to note that following plots are a bit different from the previous
 ones. These plots not only compare the performance of the setups for the
 different video formats, but they also compare that to the video format that was
-loaded in the cache.
+loaded in the cache. To plot this out in a nice and easy way there are also
+plots that supposedly show a format being requested after itself. These plots
+are left empty however, since this would result in the same data as with a cache
+filled with the same format.
+
 
 \subsubsection{Transfer speed measurements}
-The figures~\ref{fig:after_other_mbps}
-and~\ref{fig:after_other_requests_per_second} show a couple of things again:
+In the figures~\ref{fig:after_other_mbps}
+and~\ref{fig:after_other_requests_per_second}, the diagonals are left empty
+because as mentioned before, since this would show data that has already been
+shown. However, in the other plots some interesting things can be noticed:
 \begin{enumerate}
     \item
         The amount of requests per second are quite a lot lower for \hds and
         \hls. This was also the case when requesting videos with a cold cache.
 
     \item
-        When comparing received MB/s it seems that the order in which two
-        formats are requested does not matter much. Complementary plots are
-        very similar, for instance requesting \dash after \iss performs about as
-        well as requesting \iss after \dash
+        The \lt-double setup performs better than the \lt-single in all of the
+        cases. The \cdn setup performs roughly the same however.
 
     \item
-        The \lt setups perform better0
+        Both the \lt setups perform better than the \cdn setup in all of the
+        cases. They also perform better than with a cold cache.
+
+    \item
+        When comparing received MB/s for the \lt setups it seems that the order
+        in which two formats are requested does not matter much. Complementary
+        plots are very similar, for instance requesting \dash after \iss
+        performs about as well as requesting \iss after \dash
+
+    \item
+        When comparing received MB/s requesting \hls after \hds, \hds after
+        \hls, \dash after \iss and \iss after \dash all perform roughly the same
+        for the \lt setups. And any of the other orders perform roughly the same
+        as well. The first set of these perform best for both the \lt setups.
+
+    \item
+        When using five concurrent connections all the setups reach a maximum in
+        both performance measures.
+
 \end{enumerate}
 \input{plots/after_other_mbps.tex}
 \input{plots/after_other_requests_per_second.tex}
+\FloatBarrier
 
 \subsubsection{Latency}
-\input{plots/after_other_latency_mean.tex}
+The latency plot in figure~\ref{fig:after_other_latency_mean} mostly shows the
+same characteristics as the requests per second plot in
+figure~\ref{fig:after_other_requests_per_second}:
+\begin{enumerate}
+    \item
+        Again the \lt-double performs better than the \lt-single, which then
+        outperforms the \cdn setup again.
 
-\subsubsection{Server measurements}
+    \item
+        The latency for the \cdn setup is roughly the same as it was when
+        requesting the same format with a cold cache.
+
+    \item
+        The \lt setups perform better than they did when the cache was cold.
+
+    \item
+        \hds and \hls perform worse than \iss and \dash.
+
+    \item
+        The requesting orders that perform best are again \iss after \dash and
+        \dash after \iss.
+
+    \item
+        The requesting orders that perform worse are \hls and \hds after \dash
+        or \iss.
+
+\end{enumerate}
+
+\input{plots/after_other_latency_mean.tex}
+\FloatBarrier
+
+
+
+\subsubsection{Cache usage}
+First, to reiterate, the bars represententing requesting content after itself
+are empty not because they are zero, but because these are the results shown in
+the previous subsection. The other bars show this however:
+
+\begin{enumerate}
+    \item The cache usage for the \lt-single setup is roughly the same as it was
+        with a cold cache. For the \lt-double setup the cache usage increased by
+        about half and for the \cdn setup it almost doubled.
+
+    \item The \lt-single setup uses the least amount of cache in all cases. The
+        \cdn setup uses about two times as much and the \lt-double setup about
+        three times as much.
+
+    \item In a some of the cases the cache usage of the \lt-single setup is a
+        bit more than the cache usage when requesting the same format with a
+        cold cache. These cases are \hds and \hls after \dash and \iss and the
+        other way around. When requesting \dash after \iss or \hls after \hds or
+        both the other way around the cache usage stays the same.
+
+\end{enumerate}
 \input{plots/after_other_cache_usage.tex}
+\FloatBarrier
 
 \subsubsection{Internal traffic}
+The information that can be gathered from the internal traffic statistics is
+this:
+\begin{enumerate}
+    \item
+        The amount internal traffic with the \cdn setup is the same as it was
+        for the same format with a cold cache.
+
+    \item
+        There is no difference in the amount of internal traffic between the
+        two \lt setups.
+
+    \item
+        With the \lt setups when requesting \dash after \iss, \iss after \dash or \hds after \hls no
+        internal data is sent.
+
+    \item With the \lt setups when requesting \hls after \hds only a very small
+        amount of requests is sent internally.
+
+    \item With the \lt setups when requesting \hds or \hls after \dash or \iss about 150 internal
+        requests are sent. When \dash or \iss are requested after \hds or \hls
+        about 180 internal requests are sent. The amount of data that is sent in
+        all these cases is all roughly the same.
+
+    \item
+        In the cases mentioned in the previous item the amount of requests for
+        the \lt setups is about half of that of the \cdn setup in the same
+        cases. The amount of data sent internally with the \lt setups is a
+        little more than a tenth of the data sent internally using the \cdn
+        setup.
+
+\end{enumerate}
+
 \input{plots/after_other_internal_mb.tex}
 \input{plots/after_other_internal_requests.tex}
 
+
+
+\FloatBarrier
 
 
 
@@ -971,6 +1093,20 @@ and~\ref{fig:after_other_requests_per_second} show a couple of things again:
 
 
 \chapter{Discussion}
+This chapter tries to explain and relate the many results gathered from the
+experiments described in the previous chapter. It also suggets opportunities for
+future research subjects.
+
+\section{Explanation of the results}
+To explain the results, they are once again split into the different cache
+conditions described in the previous chapter.
+
+\subsection{Cold cache}
+
+\subsection{Cache filled with the same format}
+
+\subsection{Cache filled with another format}
+
 \section{Future Work}
 
 

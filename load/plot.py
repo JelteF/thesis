@@ -99,9 +99,13 @@ def saveplot():
     plt.savefig(filename + '.pdf')
 
     plt.close()
+    if prop in point_plots and run_type == 'after_other':
+        width = r'\textwidth'
+    else:
+        width = None
 
-    fig = Figure()
-    fig.add_image(filename + '.pdf')
+    fig = Figure(position='h')
+    fig.add_image(filename + '.pdf', width=width)
     fig.add_caption(labels[prop] + ' with ' + run_type_labels[run_type])
     fig.append(r'\label{fig:' + filename.split('/')[-1] + '}')
     fig.generate_tex(filename)
@@ -129,6 +133,8 @@ run_type_labels = {
 
 video_type_order = ['DASH', 'ISS', 'HDS', 'HLS']
 
+point_plots = ['mbps', 'requests_per_second', 'latency_mean']
+
 col_wrap = 2
 for run_type, g in df.groupby('run_type'):
     extra_kwargs = {'size': 2}
@@ -150,7 +156,7 @@ for run_type, g in df.groupby('run_type'):
     # plot_vals = ['latency_mean']
     for prop in plot_vals:
         print(run_type, prop)
-        if prop in ['mbps', 'requests_per_second', 'latency_mean']:
+        if prop in point_plots:
             if 'col' not in extra_kwargs:
                 vid_type_key = 'col'
             else:
