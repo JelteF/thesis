@@ -147,7 +147,7 @@ for run_type, g in df.groupby('run_type'):
     elif run_type == 'after_other':
         extra_kwargs['col'] = 'after'
         extra_kwargs['col_order'] = video_type_order
-        bar_order = transmux_cache_order
+        bar_order = transmux_cache_order + ['CDN']
         bar_title_format = 'Requested {col_var} {col_name}'
         point_title_format = 'Requested {row_name} {col_var} {col_name}'
 
