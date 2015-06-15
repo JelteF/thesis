@@ -178,6 +178,9 @@ for run_type, g in df.groupby('run_type'):
             if prop == 'latency_mean':
                 for ax in p.fig.get_axes():
                     ax.set_yscale('log')
+                    ax.set_ylim(ymin=1)
+            else:
+                p.set(ylim=(0, None))
 
             saveplot()
 
@@ -201,5 +204,6 @@ for run_type, g in df.groupby('run_type'):
             p.set_titles(bar_title_format)
             p.set_xlabels('Requested video format')
             p.set_ylabels(labels[prop])
+            p.set(ylim=(0, None))
             saveplot()
             col_wrap = 2
