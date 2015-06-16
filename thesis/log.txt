@@ -1,0 +1,23 @@
+332 "GET /video/tears-of-steel/fmp4/tears-of-steel.ism HTTP/1.1" [-]
+184 "GET /video/tears-of-steel/fmp4/tears-of-steel-1200k-bp.ismv HTTP/1.1" [bytes=112729239-112794774]
+184 "GET /video/tears-of-steel/fmp4/tears-of-steel-1200k-bp.ismv HTTP/1.1" [bytes=0-4095]
+148 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=16983917-17049452]
+148 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=0-4095]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-400k-bp.ismv HTTP/1.1" [bytes=37367189-37432724]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-400k-bp.ismv HTTP/1.1" [bytes=0-4095]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9989376-10100427]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9987520-9989567]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9875258-9987519]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9873402-9875449]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9760133-9873401]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9758277-9760324]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9643585-9758276]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9641729-9643776]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9527980-9641728]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9526124-9528171]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=948043-1063772]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=946187-948234]
+  1 "GET /video/tears-of-steel/fmp4/tears-of-steel-128k.isma HTTP/1.1" [bytes=9411579-9526123]
+    ...
+    ...
+    ...

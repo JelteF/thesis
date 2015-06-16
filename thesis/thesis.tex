@@ -22,6 +22,9 @@
 \usepackage[binary-units]{siunitx}
 \usepackage{placeins}
 \usepackage{float}
+\usepackage[toc]{appendix}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
 
 \makeglossaries{}
 
@@ -692,10 +695,10 @@ and the storage server is throttled down to allow a maximum of
 
 
 \subsection{The different setups}
-The VMs are six different setups that will be tested in a variety of tests.
-These setups can be split into old setups and new setups and control setups.
-The old setups consist of of the \cdn and \ipp setup, described in
-\nameref{ch:problem}. The new setups consist of the two flavors of the \lt
+The VMs contain six differently configured setups that will be tested in a
+variety of tests.  These setups can be split into old setups and new setups and
+control setups. The old setups consist of of the \cdn and \ipp setup, described
+in \nameref{ch:problem}. The new setups consist of the two flavors of the \lt
 setup. The one that only caches the responses to the range requests will be
 called \lt-single and the one that also caches the responses to the client
 \lt-double. The control setups are setups that are purely there to test the
@@ -762,9 +765,9 @@ downloading the same video but in another format than the one that is requested.
 The tests for the first and the last situation simply try to download the video
 once, as fast as possible. The tests for the second situation try to download
 the video as often as possible in a 30 second time frame. The reason this
-difference exists, is the first and last situation both change to the second
-situation when the video has been downloaded once, since the cache has become
-warm from downloading the video in that format.
+difference exists, is that the first and last situation both change to the
+second situation when the video has been downloaded once, since the cache has
+become warm from downloading the video in that format.
 
 Since the different cache conditions have no impact on the setups without
 caching, the \ipp, the \cdn-nocache and the \lt-nocache setup have only been
@@ -1126,6 +1129,7 @@ this:
 
 
 
+\addtocontents{toc}{\protect\newpage}
 
 
 \chapter{Discussion}
@@ -1141,7 +1145,7 @@ explain the results in an easy order.
 \subsection{DASH and ISS versus HLS and HDS}\label{sec:audiovs}
 A red line through all the measurements is that \hls and \hds perform
 quite similar and \dash and \iss do this as well. Even when all of the four
-formats perform pretty similar, the pairs of formats perform even similar.
+formats perform pretty similar, the pairs of formats perform similarly.
 This similarity or difference can easily be explained by the type of files the
 different formats use. \dash and \iss use
 separate files for audio and video, while \hls and \hds combine those two. This
@@ -1172,24 +1176,28 @@ that is exactly the same. However, since every segment is only requested once,
 the \cdn setup only builds the cache, but it is not able to use the stored data
 yet. This is why internal traffic statistics should not be influenced by this
 caching. The same holds true when comparing \lt-single \lt-double, since all
-that is difference between those setups is that the \lt-double setup caches its
+that differs between those setups is that the \lt-double setup caches its
 response to the client, which is again different for every request. As a last
 pair, the \ipp and the \lt-nocache, perform the same as well. This is most
 likely caused by the fact that these setups are almost identical, except that
 one runs on Nginx directly and the other on Apache, which is proxied through
 Nginx.
 
-% TODO: Add a log count snippet somewhere
 The more interesting information lies in the fact that the \lt-nocache does not
 perform the same as the other \lt setups, in contrast to the \cdn and the
-\cdn-nocache setup. This means that the subrequest caching employed by the to
+\cdn-nocache setup. This means that the subrequest caching employed by the two
 caching \lt setups has an advantage even when the clients requests are all
 different, which means cache hits occur. This means that some of the range
 requests that get spawned by the \ipp directive are the same for different
-segments. When looking at the logs for one of these setups, it quickly becomes
-clear that it always requests byte ranges at the beginning and the end of the
-video file. These sections most likely contain data about the video that is
-necessary to construct the different formats.
+segments. When looking at the logs when requesting the \iss format, it quickly
+becomes clear that, at least for this format, there are a couple of requests
+that are done very often, see appendix~\ref{ap:log} for the log. It shows that
+the video manifest is requested very often as well as the start and end of the
+video and audio files. The manifest file contains information about the video
+and audio files and the begining and end of the video and audio files contain
+some of the metadata. This is why it is very probable that these requests
+contain data that is necessary for the \usp software to generate the \iss
+response and that this something similar is happening for the other formats.
 
 What is also interesting is that, while the differences in requests are quite
 large between the different pairs, the differences in sent MB are quite small.
@@ -1317,11 +1325,6 @@ looking at the amount of internal requests that still get sent, about 150 for
 amount of data sent internally is so small, compared to the amount of requests,
 since audio is pretty small when compared to video.
 
-This
-would explain why the MB/request ratio is so low and why the different all this
-and why they only occur in these orders, since the length of the audio segments
-would only be different in these cases.
-
 The one thing that is not explained by this is is the very small amount of
 requests that needs to be sent when requesting \hls after \hds. It is not
 directly clear what causes this. One thing that could be the cause is the large
@@ -1438,6 +1441,15 @@ traditional \cdn setup in this aspect.
 \printbibliography[heading=bibintoc]{}
 
 \printglossaries{}
+\begin{appendices}
+    \chapter{Range requests done for the ISS format}\label{ap:log}
+    This is a list of the range requests that are generated by the \ipplong
+    directive when requesting the video used during testing. The first column
+    contains the amount of times the specific request was generated and the
+    second column describes the request, showing first the URL and then the
+    range.
+    \VerbatimInput[fontsize=\footnotesize]{log.txt}
+\end{appendices}
 
 
 \end{document}
