@@ -1394,9 +1394,6 @@ setups.
 
 
 
-
-
-
 \chapter{Conclusion}
 Streaming video has become a large part of the internet. Currently a well
 known server setup for streaming video is by using a \cdn, which caches popular
@@ -1410,17 +1407,17 @@ conversion has taken place.
 
 To compare the different setups, their performance was measured under three
 different cache conditions. One where the cache was empty, one where the cache
-was filled by requesting the same format as the one that was tested and one
-where it was filled by requesting a different format. Both new setups perform a
-little bit worse than or equal to the \cdn setup when the cache is cold.
-However, when the cache is filled with a different format they outperformed the
-\cdn setup in speed and latency by as much as four to seven times under heavy
-load. The internal traffic between the storage server and the proxy server is
-also a lot lower in this case and the setup that only caches the source mp4 used
-about half storage for cache the \cdn. The last condition was when the cache is
+was filled by requesting the same format as the one in that test and one where
+it was filled by requesting a different format. Both new setups perform a little
+bit worse than or equal to the \cdn setup when the cache is cold.  However, when
+the cache is filled with a different format they outperformed the \cdn setup in
+speed and latency by as much as four to seven times, when under heavy load. The
+internal traffic between the storage server and the proxy server is also a lot
+lower in this case and the setup that only caches the source mp4 used about half
+storage for cache the \cdn. The last condition was the one where the cache was
 filled with the same format, here both setups perform better than they did with
-a cold cache, but only the setup that caches twice performs speed and latency
-wise on par with the \cdn setup.
+a cold cache, but only the setup that caches twice performs, speed and latency
+wise, on par with the \cdn setup.
 
 All in all, the new setups are valuable additions to currently known setups. The
 setup that caches twice, when comparing to the \cdn setup, is faster or as
@@ -1428,10 +1425,11 @@ fast at serving content and generates a lot less internal traffic. The only
 negative aspect is that this setup uses more storage for cache. The version that
 caches once still has the internal traffic advantages that the other setup has,
 but it performs worse than the \cdn in speed, when requesting the same format
-multiple times, which is not uncommon. However, it can serve multiple formats
-with less cache usage than the \cdn setup. This means that depending on the
-main requirement, speed or cache usage, a fitting setup can be chosen. Which
-could make hosting videos cheaper, faster and more environment friendly.
+multiple times. However, it can serve multiple formats using half the amount of
+cache the \cdn setup uses. This means that depending on the main requirement,
+speed or cache usage, one of the new setups can be chosen to outperform the
+traditional \cdn setup in this aspect.
+
 
 
 
