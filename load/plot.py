@@ -8,8 +8,10 @@ from pylatex import Figure
 
 sns.set_style('whitegrid', rc={'lines.solid_capstyle': 'butt'})
 sns.set_context("paper", rc={"lines.linewidth": 0.55})
-sns.set_palette("Paired")
-palette = sns.color_palette("Paired")
+pal_large = sns.color_palette("Paired")
+pal_large = pal_large[4:] + pal_large[:4]
+pal_small = pal_large[2:]
+pal_small.pop(2)
 
 BASE_PATH = os.path.abspath('data_100mbit')
 dirs = os.listdir(BASE_PATH)
@@ -141,15 +143,18 @@ for run_type, g in df.groupby('run_type'):
     point_title_format = 'Requested {col_name}'
     if run_type == 'first_time':
         bar_order = setup_order[2:] + setup_order[:2]
+        palette = pal_large
 
     elif run_type == 'second_time':
         bar_order = transmux_cache_order + ['CDN']
+        palette = pal_small
     elif run_type == 'after_other':
         extra_kwargs['col'] = 'after'
         extra_kwargs['col_order'] = video_type_order
         bar_order = transmux_cache_order + ['CDN']
         bar_title_format = 'Requested {col_var} {col_name}'
         point_title_format = 'Requested {row_name} {col_var} {col_name}'
+        palette = pal_small
 
     plot_vals = ['mbps', 'internal_mb', 'internal_requests',
                  'requests_per_second', 'cache_usage', 'latency_mean']
