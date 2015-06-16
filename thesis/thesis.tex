@@ -58,6 +58,21 @@
 % \pagenumbering{gobble}
 
 \begin{abstract}
+    With the growth of the internet, usage has shifted from sending textual
+    messages to using it to stream video. Because of the different devices and
+    players used to watch video streams, multiple different streaming formats
+    are used to view the same video. Many known server setups already exist,
+    trying to serve these different formats fast and resource efficient. Most
+    use some form of proxy servers to reduce the load on the storage backend.
+    Some use these proxy servers for caching and some use them for on the fly
+    conversion. None of the setups however, utilise the power of caching and on
+    the fly conversion on the same server. Creating a setup that combines both,
+    leads to a setup with before unseen capabilities. Videos can be served
+    directly from the proxy server in formats that have never been requests from
+    the server before. Compared to other setups this lowers internal traffic
+    and reduces load on the storage server. All of which results in faster,
+    cheaper and more efficient video streaming.
+
 \end{abstract}
 
 
@@ -1361,7 +1376,7 @@ causes this weird but beneficial behaviour.
 Some of the results and findings in this thesis present possibilities for future
 research. First of all, the unexpected performance differences between the
 caching \lt setups that occurred just when caching the files. Apart from the
-natural difference when being able to server from cache. Two other options for
+natural difference when being able to serve from cache. Two other options for
 future research are based on the shortcomings found when creating an
 implementation. The first of these is improving the current suboptimal methods of
 caching range requests. For instance by creating the theoretical version
@@ -1369,7 +1384,11 @@ described in section~\ref{sec:cachingrange}. Something else that could be
 improved in future research would be the \ipplong directive. In its current
 blocking state it limits Nginx its performance and it would be interesting to
 see that changed, so no second HTTP server would have to be run to implement the
-\lt setup.
+\lt setup. A last and logical direction for future research is the testing of
+the two caching \lt setups at a large scale, with lots of servers and lots of
+different videos. It could be that there are some issues that only occur when
+deploying at a large scale, which could require some extra tweaking of the
+setups.
 
 
 
@@ -1380,9 +1399,42 @@ see that changed, so no second HTTP server would have to be run to implement the
 
 \chapter{Conclusion}
 Streaming video has become a large part of the internet. Currently a well
-known server setup for streaming video is by using a \cdn. This thesis looked
-into the possibility of using the proxy servers deployed in a \cdn, not only for
-serving static content, but on the fly conversion of videos.
+known server setup for streaming video is by using a \cdn, which caches popular
+videos for quick access. One of the problems with this approach is that requires
+caching of the videos in every format that is supported. This thesis
+investigated the possibility of instead caching the source mp4 of the different
+formats which could then be converted to the each format, when requested.
+To accomplish this two different setups have been developed, one which caches
+only the source mp4 and another which also caches the different formats after
+conversion has taken place.
+
+To compare the different setups, their performance was measured under three
+different cache conditions. One where the cache was empty, one where the cache
+was filled by requesting the same format as the one that was tested and one
+where it was filled by requesting a different format. Both new setups perform a
+little bit worse than or equal to the \cdn setup when the cache is cold.
+However, when the cache is filled with a different format they outperformed the
+\cdn setup in speed and latency by as much as four to seven times under heavy
+load. The internal traffic between the storage server and the proxy server is
+also a lot lower in this case and the setup that only caches the source mp4 used
+about half storage for cache the \cdn. The last condition was when the cache is
+filled with the same format, here both setups perform better than they did with
+a cold cache, but only the setup that caches twice performs speed and latency
+wise on par with the \cdn setup.
+
+All in all, the new setups are valuable additions to currently known setups. The
+setup that caches twice, when comparing to the \cdn setup, is faster or as
+fast at serving content and generates a lot less internal traffic. The only
+negative aspect is that this setup uses more storage for cache. The version that
+caches once still has the internal traffic advantages that the other setup has,
+but it performs worse than the \cdn in speed, when requesting the same format
+multiple times, which is not uncommon. However, it can serve multiple formats
+with less cache usage than the \cdn setup. This means that depending on the
+main requirement, speed or cache usage, a fitting setup can be chosen. Which
+could make hosting videos cheaper, faster and more environment friendly.
+
+
+
 
 
 \printbibliography[heading=bibintoc]{}
