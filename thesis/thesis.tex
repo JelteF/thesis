@@ -33,6 +33,7 @@
 \expandafter\newcommand\csname #1\endcsname{\gls{#1}\xspace}
 \expandafter\newcommand\csname #1up\endcsname{\Gls{#1}\xspace}
 \expandafter\newcommand\csname #1long\endcsname{\acrlong{#1}\xspace}
+\expandafter\newcommand\csname #1full\endcsname{\acrfull{#1}\xspace}
 }
 
 
@@ -63,20 +64,21 @@
 
 \begin{abstract}
     With the growth of the internet, usage has shifted from sending textual
-    messages to using it to stream video. Because of the different devices and
-    players used to watch video streams, multiple different streaming formats
-    are used to view the same video. Many known server setups already exist,
-    trying to serve these different formats fast and resource efficient. Most
-    use some form of proxy servers to reduce the load on the storage back end.
-    Some use these proxy servers as a caching layer or a content delivery
-    network (CDN), some others use them for on the fly conversion. None of the
-    setups however, utilise the power of caching and on the fly conversion on
-    the same server. Creating a setup that combines both, leads to a setup with
-    before unseen capabilities. Videos can be served directly from the proxy
-    server in formats that have never been requested from the server before.
-    Compared to other setups this lowers internal traffic and reduces load on
-    the storage server. All of which results in faster, cheaper and more
-    efficient video streaming.
+    messages to streaming video. Lots of the different devices and
+    players are used to watch these video streams. However, not all of those
+    support the same streaming formats and that is why multiple different
+    streaming formats are used to view the same video. Many known server setups
+    already try to tackle the problem of serving these different formats fast
+    and resource efficient. Most make use of proxy servers to reduce the load on
+    the storage back end.  Some use these proxy servers as a caching layer or a
+    content delivery network (CDN), some others use them for on the fly
+    conversion. None of the setups however, utilise the power of caching and on
+    the fly conversion on the same server. Creating a setup that combines both,
+    leads to a setup with before unseen capabilities. Videos can be served
+    directly from the proxy server, in formats that have never been requested
+    from the server before.  Compared to other setups this lowers internal
+    traffic and reduces load on the storage server. All of which results in
+    faster, cheaper and more efficient video streaming.
 
 \end{abstract}
 
@@ -490,23 +492,24 @@ since they cause network traffic between the proxy server and the storage
 server, which introduces latency.
 
 The responses the proxy server sends to the client might also be useful to
-cache. In the \gls{cdn} setup these responses were mostly cached because of
+cache. In the \cdn setup these responses were mostly cached because of
 network latency. However, when already caching the range requests in the
-\gls{ipp} setup, network latency shouldn't be an issue since the responses can
-be generated on the fly from the cached range requests. This generating however
-is CPU intensive, so caching the result of this conversion should reduce the CPU
-load. Caching the converted segments still has the storage disadvantage it had
-with the \gls{cdn} setup. The same segments are essentially cached multiple
-times and this is even worse when also caching the range requests, since that
-means segments are cached one extra time in comparison to the \gls{cdn} setup.
+\ipp setup, network latency should not be an issue, since the responses can
+be generated on the fly from the cached range requests. Caching the
+result of this conversion should reduce the CPU load on the proxy server, since
+the segment does does not need to be generated again. Caching the converted
+segments still has the storage disadvantage it had with the \cdn setup. The same
+segments are essentially cached multiple times and this is even worse when also
+caching the range requests, since that means segments are cached one extra time
+in comparison to the \gls{cdn} setup.
 
 
 \subsection{The decision}
 Currently it is unclear what the effect of caching each type of response has on
-the performance of the setup. This is why the final implementation will come in two
-flavors. A setup where all of the previously described responses are cached and
-one where only the range requests are cached. A third flavor would be one where
-only the responses to the client are cached, but since this flavor would
+the performance of the setup. This is why the final implementation will come in
+two flavors. A setup where all of the previously described responses are cached
+and one where only the range requests are cached. A third flavor would be one
+where only the responses to the client are cached, but since this flavor would
 basically be the same as the \cdn setup it is not necessary when also testing
 against that setup.
 
@@ -642,7 +645,7 @@ return it to the client.
 The outcome of the initial tests of this setup were as expected. As it turns out
 however, in its current form the setup has one big problem. When testing this
 setup with more concurrent connections than the amount of processes that
-Nginx is defined to use it results in deadlock. The reason for this is that the
+Nginx is configured to use it results in deadlock. The reason for this is that the
 \ipplong directive supplied by \usp spawns the range requests in a blocking way,
 instead of in the non blocking way that Nginx normally spawns requests. This
 causes the threads that spawn them to wait until they get a response from the
@@ -839,7 +842,7 @@ First, the data of the cold cache tests will be shown.
 
 \subsubsection{Transfer speed measurements}
 In the figures~\ref{fig:first_time_mbps}
-and~\ref{fig:first_time_requests_per_second}, that show the transfer speed
+and~\ref{fig:first_time_requests_per_second}, which show the transfer speed
 measurements, a couple of things should be noticed:
 \begin{enumerate}
     \item
@@ -847,11 +850,11 @@ measurements, a couple of things should be noticed:
         speed measurements.
 
     \item
-        All setups eventually reach a maximum transfer speed when the amount of
-        concurrent connections is increased.
+        All setups reach a maximum transfer speed when the amount of concurrent
+        connections is increased.
 
     \item
-        The \cdn type setups already reach a maximum in transfer speed already
+        The \cdn type setups already reach a maximum in transfer speed
         after two connections.
 
     \item
@@ -860,10 +863,10 @@ measurements, a couple of things should be noticed:
 
     \item
         Some setups behave quite similarly to others. The \cdn type setups perform
-        roughly the same and the caching \lt setups do this as well. The \ipp
-        and the \lt-nocache setup share the maximum they reach and also perform
-        quite the same with one connection. They differ in between the setups
-        however.
+        roughly the same; the caching \lt setups do this as well. The \ipp
+        and the \lt-nocache setup reach the same maximum and they also perform
+        quite the same when using one connection. However, with two or five
+        connections they perform quite differently.
 
     \item
         The maximum reached by the caching \lt setups is almost as the same as
@@ -872,8 +875,8 @@ measurements, a couple of things should be noticed:
 
     \item
         Most setups perform similarly for the different formats when comparing
-        MB/s, but when comparing requests per second they perform worse for \hds
-        and \hls than for \dash and \iss.
+        MB/s, but when comparing requests per second the performance for \hds
+        and \hls is worse that the performance for \dash and \iss.
 
 \end{enumerate}
 
@@ -883,16 +886,16 @@ measurements, a couple of things should be noticed:
 
 
 \subsubsection{Latency}
-In figure~\ref{fig:first_time_latency_mean} is shown what the difference in
-latency is and how the latency is influenced by increasing the connections.
-Important to note is that in this case the Y axis also uses a logarithmic scale,
-this has two reasons. The first one is that this way the relative difference can
-be seen better. The second one is that linear trends can be spotted better this
-way.
+Figure~\ref{fig:first_time_latency_mean} shows the difference in
+latency and how the latency is influenced by increasing the connections.
+Important to note is that in this case plot the Y axis also uses a logarithmic
+scale, this has two reasons. First of all, this way the relative difference can
+be seen better when looking at the lower connections. The second reason is that
+linear trends can be spotted better this way.
 \begin{enumerate}
     \item
-        The \ipp setup again performs the worst and the \cdn type setups perform
-        the best.
+        The worst and best performing setups are again respectively, the \ipp
+        setup and the \cdn type setups.
 
     \item
         With one connection the \cdn setups outperform all the other setups.
@@ -902,7 +905,7 @@ way.
         about as good as the \cdn type setups.
 
     \item
-        The latency increases linearly with the amount of connections.
+        The latency seems to increases linearly with the amount of connections.
 
 
 
@@ -923,7 +926,7 @@ only a couple of important things:
         cache.
 
     \item
-        The \lt-double setup uses almost double the amount of cache as the
+        The \lt-double setup uses almost double as much cache as the
         \lt-single and \cdn setup.
 \end{enumerate}
 
@@ -935,25 +938,25 @@ The internal traffic statistics in figure~\ref{fig:first_time_internal_mb}
 and~\ref{fig:first_time_internal_requests} show these things:
 \begin{enumerate}
     \item
-        The \ipp and \lt-nocache perform the same, as do the \cdn type setups
-        and the caching \lt setups do this as well.
+        The \ipp and \lt-nocache setup perform the same; the \cdn type setups
+        do this too, just as the caching \lt setups.
 
     \item
-        In both statistics, the \ipp and \lt-nocache perform worst.
+        In both statistics, the \ipp and \lt-nocache setup perform worst.
 
     \item
-        When comparing the \cdn type setups and the caching \lt setups perform
-        about the same when comparing the amount of MB that is internally sent.
+        The \cdn type setups and the caching \lt setups perform about the same
+        when comparing the amount of MB that is sent internally.
 
     \item
-        The \ipp and \lt-nocache setups send more than double the amount of
-        internal requests the caching \lt setups send.
+        The \ipp and \lt-nocache setups send more than twice as many internal
+        requests as the caching \lt setups send.
 
     \item
         The caching \lt setups send quite a bit more internal requests than the
-        \cdn type setups. For \dash and \iss videos they send about double the
-        amount of requests and for \hds and \hls about three times the amount of
-        requests.
+        \cdn type setups. When compared to the \cdn type setups, the caching \lt
+        setups send about double the amount of requests for \dash and \iss and
+        about three times the amount of requests for \hds and \hls.
 
     \item
         The amount of requests for \hds and \hls is higher than the amount of
@@ -969,8 +972,8 @@ and~\ref{fig:first_time_internal_requests} show these things:
 \FloatBarrier
 
 \subsection{Cache filled with the same format}
-Apart from explaining what the plots show, this section will also compare them
-to the plots of equivalent date gathered with a cold cache.
+Apart from explaining what the plots in this section show, this section will
+also compare the plots to the equivalent cold cache plots.
 
 
 \subsubsection{Transfer speed measurements}
@@ -979,12 +982,11 @@ and~\ref{fig:second_time_requests_per_second}, that show the transfer speed
 statistics, show this information:
 \begin{enumerate}
     \item
-        The \lt-double and the \cdn setup perform the roughly the same in all
-        cases.
+        The \lt-double and the \cdn setup perform roughly the same in all cases.
 
     \item
-        \dash and \iss perform roughly the same and \hds and \hls perform mostly
-        the same as well for all setups.
+        \dash and \iss perform roughly the same for all setups and \hds and \hls
+        perform mostly the same as well.
 
     \item
         When increasing the amount of connections the \lt-double and \cdn setup
@@ -996,9 +998,10 @@ statistics, show this information:
         amount of concurrent connections.
 
     \item
-        All setups perform better than the same setups with a cold cache,
-        although \lt-single only performs slightly better compared to the gains
-        that are achieved by the \lt-double and \cdn setups.
+        All setups perform better with a filled cache than they did with a cold
+        cache, although performance gains achieved by the \lt-single setup are
+        much smaller than those that are achieved by the \lt-double and \cdn
+        setups.
 
 \end{enumerate}
 \input{plots/second_time_mbps.tex}
@@ -1028,46 +1031,51 @@ requests are sent for any of the setups.
 
 \FloatBarrier
 \subsection{Cache filled with another format}
-This section will show the statistics when running the different setups after
-the cache has been filled with the video in another format.
-Important to note that following plots are a bit different from the previous
-ones. These plots not only compare the performance of the setups for the
-different video formats, but they also compare that to the video format that was
-loaded in the cache. To plot this out in a nice and easy way there are also
+This section will show the performance of the different setups when running them
+after the cache has been filled with the video in another format. It is important to
+note that the following plots are a bit different from the previous ones. These
+plots compare the performance of the setups for the different video
+formats like before, but they also compare it to the different formats that were
+loaded in the cache. To plot this in a nice and easy way there are also
 plots that supposedly show a format being requested after itself. These plots
-are left empty however, since this would result in the same data as with a cache
-filled with the same format.
+are left empty however, since this would mean the cache was filled with the same
+format instead of another format.
+Lastly, to make it easier to specify what format was in the cache and what
+format was requested, this will further be called the requesting order. When a
+line says that \dash was requested after \iss, it means that \iss was already in
+the cache and \dash was requested.
 
 
 \subsubsection{Transfer speed measurements}
 In the figures~\ref{fig:after_other_mbps}
-and~\ref{fig:after_other_requests_per_second}, the diagonals are left empty
-because as mentioned before, since this would show data that has already been
-shown. However, in the other plots some interesting things can be noticed:
+and~\ref{fig:after_other_requests_per_second}, the diagonals are left empty,
+since they would show the data shown in the previous subsection. In the other
+subplots some interesting things can be noticed:
 \begin{enumerate}
     \item
-        The amount of requests per second are quite a lot lower for \hds and
-        \hls. This was also the case when requesting videos with a cold cache.
+        The amount of requests per second are a lot lower for \hds and \hls.
+        This was also the case when requesting videos with a cold cache.
 
     \item
-        The \lt-double setup performs better than the \lt-single in all of the
-        cases. The \cdn setup performs roughly the same however.
+        In all of the cases, the \lt setups perform better than they did with a
+        cold cache. The \cdn setup performs roughly the same however.
 
     \item
         Both the \lt setups perform better than the \cdn setup in all of the
-        cases. They also perform better than with a cold cache.
+        cases.
 
     \item
-        When comparing received MB/s for the \lt setups it seems that the order
-        in which two formats are requested does not matter much. Complementary
+        When comparing received MB/s for the \lt setups it seems that the
+        requesting order of two formats does not matter much. Complementary
         plots are very similar, for instance requesting \dash after \iss
         performs about as well as requesting \iss after \dash
 
     \item
-        When comparing received MB/s requesting \hls after \hds, \hds after
-        \hls, \dash after \iss and \iss after \dash all perform roughly the same
-        for the \lt setups. And any of the other orders perform roughly the same
-        as well. The first set of these perform best for both the \lt setups.
+        When again comparing received MB/s for the \lt setups, it shows that
+        requesting \hls after \hds, \dash after \iss and both of these the other
+        way around, all perform roughly the same. And any of the other
+        requesting orders perform roughly the same as well. The first set of
+        these perform best for both the \lt setups.
 
     \item
         When using five concurrent connections all the setups reach a maximum in
@@ -1084,8 +1092,8 @@ same characteristics as the requests per second plot in
 figure~\ref{fig:after_other_requests_per_second}:
 \begin{enumerate}
     \item
-        Again the \lt-double performs better than the \lt-single, which then
-        outperforms the \cdn setup again.
+        Again the \lt-double setup performs better than the \lt-single setup,
+        which then outperforms the \cdn setup again.
 
     \item
         The latency for the \cdn setup is roughly the same as it was when
@@ -1098,12 +1106,11 @@ figure~\ref{fig:after_other_requests_per_second}:
         \hds and \hls perform worse than \iss and \dash.
 
     \item
-        The tests where \dash was already in the cache and \iss was requested,
-        or the other way around, perform best
+        The tests where \dash was requested after \iss, or \iss after \dash,
+        perform best.
 
     \item
-        The tests where \dash or \iss were already in the cache and \hls or \hds
-        was requested perform worst.
+        The tests where \hls or \hds were requested after \dash or \iss perform worst.
 
 \end{enumerate}
 
@@ -1114,19 +1121,21 @@ figure~\ref{fig:after_other_requests_per_second}:
 
 \subsubsection{Cache usage}
 First, to reiterate, the bars that represent requesting content after itself
-are empty not because they are zero, but because these are the results shown in
-the previous subsection. The other bars show this however:
+are empty not because they are zero, but because they would show the results
+shown in the previous subsection. The other bars show this however:
 
 \begin{enumerate}
     \item The cache usage for the \lt-single setup is roughly the same as it was
         with a cold cache. For the \lt-double setup the cache usage increased by
         about half and for the \cdn setup it almost doubled.
 
-    \item The \lt-single setup uses the least amount of cache in all cases. The
-        \cdn setup uses about two times as much and the \lt-double setup about
-        three times as much.
+    \item The \lt-single setup uses the least amount of cache in all cases.
 
-    \item In a some of the cases the \lt-single setup uses a bit more cache than
+    \item
+        The \cdn and \lt-double setups use respectively, about two and three
+        times the amount of cache that the \lt single setup uses.
+
+    \item In some of the cases the \lt-single setup uses a bit more cache than
         it did when requesting the same format with a cold cache. These cases
         are \hds and \hls after \dash and \iss and the other way around.  When
         requesting \dash after \iss or \hls after \hds or both the other way
@@ -1141,8 +1150,8 @@ The information that can be gathered from the internal traffic statistics is
 this:
 \begin{enumerate}
     \item
-        The amount internal traffic with the \cdn setup is the same as it was
-        for the same format with a cold cache.
+        The amount of internal traffic generated by the \cdn setup is about the
+        same as it was for the same format with a cold cache.
 
     \item
         There is no difference in the amount of internal traffic between the
@@ -1155,19 +1164,20 @@ this:
     \item Looking only at the \lt setups, when requesting \hls after \hds only a
         very small amount of requests is sent internally.
 
-    \item When requesting \hds or \hls after \dash or \iss, with the \lt setups,
-        about 150 internal requests are sent. When \dash or \iss are requested
-        after \hds or \hls about 180 internal requests are sent.  The amount of
-        data that is sent in all these cases is all roughly the same.
+    \item Looking only at the \lt setups again, when requesting \hds or \hls after
+        \dash or \iss about 150 internal requests are sent. When \dash or \iss
+        are requested after \hds or \hls about 180 internal requests are sent.
+        The amount of data that is sent in all these cases is all roughly the
+        same.
 
     \item
         Comparing the \lt setups with the \cdn setup in the cases mentioned in
         the previous item. When \hds or \hls are requested, the amount of
-        requests is about the same for both type of setups and when requesting
+        requests is about the same for both types of setups and when requesting
         \dash or \iss, the amount of requests for the \lt setups is about half
         of that of the \cdn setup. When comparing the amount of data sent
-        internally, the \lt setups send a little less than a sixth of the data
-        internally than the \cdn setup does.
+        internally, the \lt setups send about six times less
+        bytes than the amount of bytes that the \cdn setup sends.
 
 \end{enumerate}
 
@@ -1287,7 +1297,7 @@ cache usage.
 \subsection{Transfer speed and latency with a cold cache}
 One important observation from the transfer speed plots is that all the
 different setups reach a maximum. This maximum is at about \Mbps{12} for the
-caching \lt and the \cdn setups; and it is at about \Mbps{10} for the
+caching \lt and the \cdn setups, and it is at about \Mbps{10} for the
 \ipp and \lt-nocache setup. These to maxima are mostly caused by the bandwidth
 restriction of \mbps{100} on internal traffic. This can easily be shown for the
 first set of setups by showing that the maximum is almost equal to the bandwidth
@@ -1352,9 +1362,11 @@ connections that all finished so quickly.
 For the results where the cache is filled with another format than
 requested, data is different depending on which format is requested and which
 format was already in the cache. To make it easier to specify what was in the
-cache and what was requested, this will be called the requesting order. When a
+cache and what was requested, the same terminology will be used that was
+described in the previous chapter. To reiterate, when a
 line says that \dash was requested after \iss, it means that \iss was already in
-the cache and \dash was requested.
+the cache and \dash was requested. This order of requests will be called a
+requesting order.
 
 When looking at the results for this cache condition, the internal traffic
 measurements explain most of the other results as well. Which is why the
@@ -1389,7 +1401,7 @@ download 184 combined audio/video files. Because of this it is very likely that
 different audio ranges are requested by the \ipplong directive, because the full
 audio file is split in a different amount of segments. These different requested
 ranges should cause cache misses, since they are not exactly the same as
-previous ranges; and that in turn means they have to be requested from the
+previous ranges, and that in turn means they have to be requested from the
 storage. This same argument could be made for the video segments, were it not
 the case that the amount of video and combined audio/video files are exactly the
 same for all formats, namely 184.  Which is why the video ranges needed for
@@ -1481,45 +1493,49 @@ of the setups.
 
 \chapter{Conclusion}
 Streaming video has become a large part of the internet. Currently a well known
-server setup for streaming video is by using a \cdn, which caches popular videos
+server setup for streaming video is a \cdnfull, which caches popular videos
 for quick access. One of the problems with this approach is that it requires
-caching of the videos in every format that is supported. This thesis
+caching of the videos in every streaming format that is supported. This thesis
 investigated the possibility of caching the original video file instead of the
 different formats, which could then be converted to each format when requested.
 To accomplish this, two different setups have been developed, one which caches
-only the original video file and another which also caches the different formats
+only the original video file and another, which also caches the different formats
 after conversion has taken place.
 
-To compare the different setups, their performance was measured under three
-different cache conditions. One where the cache was empty, one where the cache
-was filled by requesting the same format as the one in that test and one where
-it was filled by requesting a different format. Both new setups perform a little
-bit worse than, or equal to, the \cdn setup, when the cache is cold.  However, when
-the cache is filled with a different format they outperformed the \cdn setup in
-speed and latency by as much as four to seven times, when under heavy load. The
-internal traffic between the storage server and the proxy server is also a lot
-lower in this case and the setup that only caches the original video file, used
-about half as much storage for cache as the \cdn setup. The last
-condition was the one where the cache was filled with the same format, here both
-setups perform better than they did with a cold cache, but only the setup that
-caches twice performs, speed and latency wise, on par with the \cdn setup. A
-last important difference between the new setups and the \cdn setup is where
-they convert the original video files. The \cdn setup requires the storage
-server to convert the original video file to the different formats. The new
-setups convert the video on the proxy servers. The advantage of doing this on
-the proxy servers is that cheap services can used that only provide file hosting
-and no processing power, like Amazon S3.
+To compare the different setups, their performance was tested under three
+different cache conditions. For the first condition the cache was simply
+left empty. For the second condition the cache was filled before the actual test
+started by requesting the same format that would be requested during the test.
+The last cache condition was almost the same as the second, but instead of
+filling the cache in advance by requesting the same format, one of the other
+formats was requested.  Both new setups performed a little bit worse than, or
+equal to, the \cdn setup, when the cache was cold. However, when the cache was
+filled with a different format they outperformed the \cdn setup in speed and
+latency by as much as four to seven times. The internal traffic between the
+storage server and the proxy server is also a lot lower in this case and the new
+setup that only caches the original video file, used about half as much storage
+for cache as the \cdn setup. Finally, during the tests where the cache was
+filled with the same format, both setups perform better than they did with
+an empty cache. However, only the new setup that also caches the formats after
+conversion performs, speed and latency
+wise, on par with the \cdn setup. A last important difference between the new
+setups and the \cdn setup is where they convert the original video files. The
+\cdn setup requires the storage server to convert the original video file to the
+different formats. The new setups convert the video on the proxy servers. The
+advantage of doing the conversion on the proxy servers is that the video storage
+can be handled by cheap dedicated storage services that only provide file
+hosting and no processing power, such as Amazon S3.
 
-All in all, the new setups are valuable additions to currently known setups. The
-setup that caches twice, when comparing to the \cdn setup, is faster or as
-fast at serving content and generates a lot less internal traffic. The only
-negative aspect is that this setup uses more storage for cache. The version that
-caches once still has the internal traffic advantages that the other setup has,
-but it performs worse than the \cdn in speed, when requesting the same format
-multiple times. However, it can serve multiple formats using half the amount of
-cache the \cdn setup uses. This means that depending on the main requirement,
-speed or cache usage, one of the new setups can be chosen to outperform the
-traditional \cdn setup in this aspect.
+All in all, the new setups are valuable additions to currently known setups.
+The new setup that caches most serves content faster than, or as fast as, the
+\cdn setup and it also generates a lot less internal traffic.  The only negative
+aspect is that this setup uses more storage for cache than the \cdn setup. The
+version that caches only the original video file still has the internal traffic
+advantages that the other setup has, but it performs worse than the \cdn in
+speed, when requesting the same format multiple times. However, it can serve
+multiple formats using half the amount of cache the \cdn setup uses. This means
+that depending on the main requirement, speed or cache usage, one of the new
+setups can be chosen to outperform the traditional \cdn setup in this aspect.
 
 
 
