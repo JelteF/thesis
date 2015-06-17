@@ -62,7 +62,9 @@
 	\begin{textblock*}{2cm}(3cm,2cm)
 		\vspace*{26cm}\hspace*{1em}
 	\end{textblock*}
+    \pagenumbering{gobble}
 	\cleardoublepage
+    \pagenumbering{arabic}
 }
 
 

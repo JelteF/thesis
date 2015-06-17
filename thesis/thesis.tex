@@ -7,24 +7,25 @@
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
 \usepackage{url}
+\usepackage{varioref} % Fancy references
 \usepackage[style=ieee]{biblatex}
 \addbibresource{thesis.bib}
 \usepackage{lmodern}
 %Enable for final compilation
 %\usepackage[stretch=10]{microtype}
 \usepackage{graphicx}
-\usepackage{varioref} % Fancy references
-% \usepackage{caption} % Fixes hyperref to figure
+\usepackage{caption} % Fixes hyperref to figure
 \usepackage[toc,acronym,xindy]{glossaries}
 \usepackage{xspace}
 \usepackage{nameref}
-\usepackage{cleveref}
 \usepackage[binary-units]{siunitx}
 \usepackage{placeins}
 \usepackage{float}
 \usepackage[toc]{appendix}
 \usepackage{verbatim}
 \usepackage{fancyvrb}
+\usepackage{booktabs}
+\usepackage{tabulary}
 
 \makeglossaries{}
 
@@ -66,15 +67,16 @@
     players used to watch video streams, multiple different streaming formats
     are used to view the same video. Many known server setups already exist,
     trying to serve these different formats fast and resource efficient. Most
-    use some form of proxy servers to reduce the load on the storage backend.
-    Some use these proxy servers for caching and some use them for on the fly
-    conversion. None of the setups however, utilise the power of caching and on
-    the fly conversion on the same server. Creating a setup that combines both,
-    leads to a setup with before unseen capabilities. Videos can be served
-    directly from the proxy server in formats that have never been requests from
-    the server before. Compared to other setups this lowers internal traffic
-    and reduces load on the storage server. All of which results in faster,
-    cheaper and more efficient video streaming.
+    use some form of proxy servers to reduce the load on the storage back end.
+    Some use these proxy servers as a caching layer or a content delivery
+    network (CDN), some others use them for on the fly conversion. None of the
+    setups however, utilise the power of caching and on the fly conversion on
+    the same server. Creating a setup that combines both, leads to a setup with
+    before unseen capabilities. Videos can be served directly from the proxy
+    server in formats that have never been requested from the server before.
+    Compared to other setups this lowers internal traffic and reduces load on
+    the storage server. All of which results in faster, cheaper and more
+    efficient video streaming.
 
 \end{abstract}
 
@@ -95,7 +97,7 @@ Lots of amateur videos are shared using YouTube, movies and TV shows can be
 watched easily using Netflix and even live TV is being moved to the internet,
 for instance by the BBC iPlayer.
 
-This way of video streaming is not limited to normal computers. It is done on on
+This way of video streaming is not limited to normal computers. It is done on
 lots of different devices, like smartphones, tablets, set-top boxes,
 media centers or Smart TVs. Especially on mobile devices the network conditions
 can suddenly change drastically, for instance when changing the network
@@ -133,14 +135,17 @@ multiple times.
 They do this by supplying modules for a set of popular HTTP servers, Apache,
 Nginx, IIS and Lighttpd. The way their module solves the problem of storing the
 video multiple times is by only storing the original video file and converting
-that on the fly to the requested format. At the moment four different \gls{abs}
-formats are supported by the \gls{usp} software. \Gls{iss}, which is developed
-by Microsoft and is used in Silverlight based players~\autocites{iss}{iss2}.
-\Gls{hds}, which is developed by Adobe and is used in Flash based players
-\autocite{hds}.  \Gls{hls}, which is developed by Apple and used on the iPhone,
-iPad and Apple TVs~\autocite{hls}. The last format is \gls{dash}, which is
-developed as an ISO standard and is used in \textsc{HTML5} video
-players~\autocites{dash}{dash2}.
+that on the fly to the requested format. This converting is also called
+transmuxing or trans-multiplexing, since it does not re-encode the video, but
+rather extracts the video stream and saves that in another
+format~\autocite{transmux}.  At the
+moment four different \gls{abs} formats are supported by the \gls{usp} software.
+\Gls{iss}, which is developed by Microsoft and is used in Silverlight based
+players~\autocites{iss}{iss2}.  \Gls{hds}, which is developed by Adobe and is
+used in Flash based players \autocite{hds}.  \Gls{hls}, which is developed by
+Apple and used on the iPhone, iPad and Apple TVs~\autocite{hls}. The last format
+is \gls{dash}, which is developed as an ISO standard and it is, for instance,
+used in \textsc{HTML5} video players~\autocites{dash}{dash2}.
 
 
 \section{Traditional setups}
@@ -219,7 +224,7 @@ just for illustration purposes, in practice any of the HTTP servers supported by
 \section{The single server setup}
 This setup was already briefly explained in the introduction and it is the most
 simple setup that will be covered. In this setup a client requests a segment
-directly from the storage server. Apache will then locate the the video file
+directly from the storage server. Apache will then locate the video file
 that contains the requested segment. It will then read the parts of the file
 that are necessary to create the segment in the requested format. From these
 parts, it will then create the segment and send it back to the client. After the
@@ -322,12 +327,12 @@ schematic overview of this setup see figure~\vref{fig:ismproxy}.
 
 This setup shares some of the advantages of the \gls{cdn} setup. It can easily
 be used to mitigate the storage overloading issue. By just adding more proxy
-servers the CPU intensive conversion work can be shared by multiple servers. All
-that the storage server has to do is serve the byte ranges that the proxy
-servers need, which is not nearly as intensive as the conversion. The latency
-issue however, is still present. Since for every request of a client still needs
-to reach the location of the storage server, it does not matter that they are
-converted to range requests, they still need reach the storage eventually.
+servers the conversion work can be done by multiple servers. All that the
+storage server has to do is serve the byte ranges that the proxy servers need.
+The latency issue however, is still present. Since for every request of a client
+still needs to reach the location of the storage server, it does not matter that
+they are converted to range requests, they still need reach the storage
+eventually.
 
 The issue with internal requests is again present and it is much worse than with
 the \gls{cdn} setup. The first reason for this is that no caching takes place,
@@ -395,17 +400,21 @@ of those aspects are important for the proposed setup.
 There are a couple of general differences between Apache and Nginx that have
 already been thoroughly explored in a multitude of
 resources~\autocites{nginx1}{nginx2}{apachevsnginx}{nginxperformancescale}.
-Their core architecture is very different. Apache spawns a new thread for each
-connection, while Nginx dispatches the requests to already existing threads.
-This means that Nginx can handle a lot more concurrent requests than Apache with
-the same resources, since spawning threads is quite expensive resource wise.
-Their take on dynamic content is also quite different. Apache uses modules that
-can be easily loaded into Apache itself to handle dynamic content.  Nginx just
+These resources cover the differences very well and all that will be described
+here is a simplified summary of the differences. The core architecture of both
+servers is very different. Nginx uses an event loop to handle lots of requests
+in one process, while Apache mostly spawns more threads or processes to handle
+more requests. This means that with the same resources, Nginx can handle a lot
+more concurrent requests than Apache, since spawning threads and processes is
+quite expensive resource wise. Their take on dynamic content is also quite
+different. Apache uses modules that can be easily loaded into Apache by changing
+configuration files, these modules are, for instance, used to handle dynamic
+content.  Nginx can also use modules, but they need to be added to Nginx at
+compile time, which makes it more of a hassle.  That is why Nginx normally just
 receives the requests and sends them to other applications if content needs to
-be dynamically generated, in some setups Apache is even one of those other
+be dynamically generated. In some setups Apache is even one of those other
 applications. These differences are why Apache shines as an application server,
-but Nginx is usually a good choice for serving as a static file server or as a
-reverse proxy.
+but Nginx is usually a good choice for a static file server or a reverse proxy.
 
 
 \subsection{USP integration}
@@ -413,20 +422,19 @@ While USP supports both servers fully, because of the architecture of both
 servers it is easier to create a working setup with Apache. Apache can load
 modules for dynamic functionality easily, so this is used by the \gls{usp}
 software~\autocite{uspapache}. Just download and install the module
-and enable it by adding some lines to the server configuration files. Nginx however is
-not designed to just load modules on the fly. For dynamic content it normally
-just contacts an external application. However, it is possible to add new
-functionality to Nginx itself by including a module at compile time. This is
-what needs to be done to install the \gls{usp} software for Nginx. This means
-it is not possible to just use the Nginx supplied by the Linux distribution of
-choice. This all makes it quite clear that the installation process for Apache
+and enable it by adding some lines to the server configuration files. However,
+since Nginx is not designed to just load modules on the fly, the \usp module for
+Nginx needs to be added at compile time~\autocite{uspnginx}.  This means it is
+not possible to just use the Nginx version supplied by the Linux distribution of
+choice.  This all makes it quite clear that the installation process for Apache
 is quite a bit easier than the one for Nginx.
+
 
 
 \subsection{Caching}
 Since the proposed setup depends heavily on caching in the reverse proxy, it is
 important that the server application does this well. Both Nginx and Apache have
-good caching support~\autocites{nginxcache}{apachecache}. There is a key
+caching support~\hbox{\autocites{nginxcache}{apachecache}}. There is a key
 difference however, this is the better cache locking support in Nginx. Cache
 locking is a mechanism that can be used to reduce load on the storage server.
 Normally if a request comes in for some content and there is no cache for it,
@@ -586,14 +594,15 @@ ranger might be preferable over the second approach.
 
 
 \chapter{Implementation}
-The implementation of the \gls{lt} setup consists of configuration files for the
-HTTP servers running on the proxy server and the storage server. What it
-implements, stating it very simply, is a version of the \gls{ipp} setup with
-caching enabled. This chapter will explain at a high level how the
-implementation works. The implementation described is the flavor that caches all
-types of responses, not just the range requests. The reason for this is that the
-other flavor can simply be achieved by disabling the caching of the responses to
-the client.
+The newly developed setup will be called the \lt setup, because it transmuxes
+the video in the storage instead of in the cache. The implementation of the \lt
+setup consists of configuration files for the HTTP servers running on the proxy
+server and the storage server. What it implements, stating it very simply, is a
+version of the \gls{ipp} setup with caching enabled. This chapter will explain
+at a high level how the implementation works. The implementation described is
+the flavor that caches all types of responses, not just the range requests. The
+reason for this is that the other flavor can simply be achieved by disabling the
+caching of the responses to the client.
 
 
 \section{Initial implementation}\label{sec:initimplement}
@@ -680,11 +689,12 @@ To create the proposed setup a client, a proxy server and a storage server are
 needed. This could be have been done by using actual physical servers for every
 type of machine. However, to make the development process easier the different
 machines where simulated using virtual machines. VirtualBox was used to create
-the VMs. One VM was used as the proxy and a second one was used as the storage
-server. The host operating system was used as the client. Since the machines
-have to communicate with each other, a separate network interface was set up to
-allow communication. The VMs have the same virtual hardware, they are both
-allowed to use \SI{2}{\giga\byte} of RAM and one CPU core.
+the VMs. One VM was used as the proxy server and a second one was used as the
+storage server. The host operating system was used as the client. Since the
+machines have to communicate with each other, a separate network interface was
+set up to allow communication. Both VMs have been set up with the same virtual
+hardware, they are both allowed to use \SI{2}{\giga\byte} of RAM and one CPU
+core.
 
 \subsubsection{Comcast}
 Since the VMs will be running on the same machine there are almost no network
@@ -697,72 +707,103 @@ and the storage server is throttled down to allow a maximum of
 
 
 \subsection{The different setups}
-The VMs contain six differently configured setups that will be tested in a
-variety of tests.  These setups can be split into old setups and new setups and
-control setups. The old setups consist of of the \cdn and \ipp setup, described
-in \nameref{ch:problem}. The new setups consist of the two flavors of the \lt
-setup. The one that only caches the responses to the range requests will be
-called \lt-single and the one that also caches the responses to the client
-\lt-double. The control setups are setups that are purely there to test the
-effect of the actual caching the \lt and the \cdn setups. These setups have all
-caching disabled, but the rest is the same and they will respectively be called
-\lt-nocache \cdn-nocache.
+The VMs contain six differently configured setups that will be tested by a
+variety of tests.  These setups can be split into old setups, new setups and
+control setups. The old setups consist of the \cdn and \ipp setup, described
+in the chapter \nameref{ch:problem}. The new setups consist of the two flavors,
+of the newly implemented \ltlong setup. The flavor that only caches the responses
+to the range requests will be called \lt-single and the flavor that also caches the
+responses to the client will be called \lt-double. The control setups are setups
+that are purely there to test the effect of the actual caching in the \lt and
+the \cdn setups. These setups have all caching disabled, but the rest is the
+same and they will respectively be called \lt-nocache and \cdn-nocache. A simple
+overview of the setups can be found in table~\ref{tab:setups}.
+
+\begin{table}[b]
+    \center
+    \begin{tabulary}{\textwidth}{llLLl}
+        \toprule
+        \bfseries{Name} &  Type & What is cached & Which server converts the original video
+        file & Figure\\
+        \midrule
+        \cdn & Old & Converted segments & The storage server &\ref{fig:cdn}\\
+        \cdn-nocache & Control & Nothing & The storage server &\ref{fig:cdn}\\
+        \ipp & Old & Nothing & The proxy server &\ref{fig:ismproxy}\\
+        \lt-single & New & Byte ranges of the original video & The proxy server
+        & \ref{fig:latetrans}\\
+        \lt-double & New & Byte ranges of the original video and converted
+        segments that are sent to the client & The proxy server &\ref{fig:latetrans}\\
+        \lt-nocache & Control & Nothing & The proxy server &\ref{fig:latetrans}\\
+        \bottomrule
+
+    \end{tabulary}
+    \caption{An overview of  the characteristics of the different setups}\label{tab:setups}
+\end{table}
 
 
 \subsection{The tests}
-The performance of each setup will be measured when downloading all the
-segments of a whole video in the highest quality available in all the formats
-supported by the \usp software. All the segments of the video in a specific
-format will be referred to from now on as ``the video"
+The performance of each setup is measured when downloading all the segments of a
+whole video, in the highest quality available and in all the formats supported
+by the \usp software. All the segments of the video in a specific format will be
+referred to from now on as ``the video''.
 
 \subsubsection{Generating requests}
-Since only one client is used, it is necessary that it generates a significant
-amount of requests in a short time so it can be measured how the different
-setups perform under different loads. Wrk is a HTTP benchmarking tool that will
-be used to do this~\autocite{wrk}. It can be supplied with an URL, a duration
-and the amount of concurrent connections. It will then fire requests for the
-duration provided to that URL and afterwards it will output statistics about
+It is also interesting to measure how the different setups perform under
+different loads. Because only one client is used, it is necessary that that
+client is able to generate a significant amount of requests in a short period of
+time. Otherwise the differences in performance under heavy load cannot be
+measured.  Wrk is a HTTP benchmarking tool that will be used to do
+this~\autocite{wrk}. It can be supplied with an URL, a duration and the amount
+of concurrent connections. It will then send requests to that URL, for the
+provided duration and with the specified amount of concurrent connections.
+Afterwards it will output statistics about the network performance. The
+different tests are, in this case, run with 1, 2, 5, 10, 25 and 50 concurrent
+connections.
 
-Wrk also provides a scripting interface that allows for more complicated logic
-for the requests to be sent. This interface is used by the testing setup to fire
+Wrk also provides a Lua scripting interface, which allows for more complicated logic
+to be used when sending and receiving requests. This interface is used by the testing setup to fire
 requests for all the segments of the video. This is done by looping over the
-contents of a file that contain all the URLs for the different segments of the
+contents of a file that contains all the URLs for the different segments of the
 video in a specific format. The files for the different formats have been
 generated by letting a player play the video from start to end and saving the
 requests. The player used for this was the Unified Capture tool created by \usp,
-which impersonates a player to save an online video to a file.
+which impersonates a player to save an online video to a
+file~\autocite{uspcapture}.
 
 \subsubsection{Different requests for different formats}\label{sec:filediff}
-Because the different \abs formats differ quite a bit in some aspects they also
-need different amounts of different types of files to play the whole
-video. There are four different types of files used by the formats. There are
+Because the different \abs formats differ quite a bit in some aspects, they also
+need different amounts, of different types of files, to play the whole
+video. There are four different types of files, used by the formats. There are
 playlist files, these tell the player what further files to request to actually
 play the video. Furthermore there are video files, audio files and combined
-video and audio files. Both \dash and \iss use separate video and audio files.
-For our specific video both request 184 video files and 147 audio files. \hds
-and \hls use files that contain both the video and audio for a segment, both use
-184 of these. Some differences also exist in the amount of playlist files, \iss
-and \hds need only one to play the video, \dash uses three and \hls uses five.
-This information is not necessarily useful to set up the tests themselves, but
-it might be useful when interpreting the results.
+audio/video files. Both \dash and \iss use separate video and audio files.
+For our specific video, both request 184 video files and 147 audio files. \hds
+and \hls use files that combine the video and audio into one file, for each
+segment, both formats use 184 of these files. Some differences also exist in the
+amount of playlist files, \iss and \hds only need one to play the video, \dash
+uses three and \hls uses five.  This information is not necessarily useful to
+set up the tests themselves, but it might be useful when interpreting the
+results.
 
 \subsubsection{Measuring performance}
 Performance of a setup will be measured by a six kinds of characteristics. The
 first three characteristics are simply measured by wrk. The first of these is
 the amount of requests that are handled per second. The second is the amount of
 Megabytes received per second and the third is the average time it takes for a
-request to return a response. The fourth characteristic is the storage space the
-cache directory takes up on the proxy server. The last two characteristics
-involve the traffic between the proxy server and the storage server. That
-traffic is measured in the amount of requests and the amount of bytes sent.
-These are simply measured by parsing the log files on the storage server.
+request to return a response. The fourth characteristic is the storage space
+that the cache directory takes up on the proxy server. The last two
+characteristics involve the traffic between the proxy server and the storage
+server. That traffic is measured in the amount of requests and the amount of
+bytes sent.  These are simply measured by parsing the log files on the storage
+server.
 
 \subsubsection{Cache conditions}
-Performance tests will be executed on the different setups in three different
-cache conditions. The first one is where the cache is cold. The second one is
-where the cache is already warm from downloading the video in the same format
-that is getting requested. The last one is where the cache is warm from
-downloading the same video but in another format than the one that is requested.
+Performance tests will be executed on the different setups with three different
+cache conditions. The first one is where the cache is empty, also called cold.
+The second one is where the cache is already warm, from downloading the video in
+the same format that is getting requested. The last one is where the cache is
+also warm from downloading the same video, but in another format than the one
+that is requested.
 
 The tests for the first and the last situation simply try to download the video
 once, as fast as possible. The tests for the second situation try to download
@@ -771,7 +812,7 @@ difference exists, is that the first and last situation both change to the
 second situation when the video has been downloaded once, since the cache has
 become warm from downloading the video in that format.
 
-Since the different cache conditions have no impact on the setups without
+Since the different cache conditions should have no impact on the setups without
 caching, the \ipp, the \cdn-nocache and the \lt-nocache setup have only been
 executed for the first situation. This is done to reduce the time that is needed
 for a test run, so more useful tests can be executed in the same time.
@@ -783,13 +824,18 @@ for a test run, so more useful tests can be executed in the same time.
 \section{Results}
 The results of the different measurements are shown separately for the three
 different cache conditions. The transfer speed and latency measurements are
-plotted against the amount of concurrent connections. For the cache usage and
-internal traffic measurements this is not the case, since the amount of
-connections have no effect on these statistics. Not only the plots are shown,
-but the important information that can be gathered from the plots is noted as
-well.
+plotted against the amount of concurrent connections. Important to note is that
+the concurrent connections will be plotted on a logarithmic scale, since the
+values used increase almost exponentially and this scale will make sure the data
+points are spread more equally. For the cache usage and internal traffic
+measurements this is not the case, since the amount of connections have no
+effect on these statistics. In all plots the confidence intervals for each data
+point is plotted as well, if these cannot be seen it means that they are very
+small. Not only the plots are shown, but the important information that can be
+gathered from the plots is noted as well.
 
 \subsection{Cold cache}
+First, the data of the cold cache tests will be shown.
 
 \subsubsection{Transfer speed measurements}
 In the figures~\ref{fig:first_time_mbps}
@@ -839,8 +885,10 @@ measurements, a couple of things should be noticed:
 \subsubsection{Latency}
 In figure~\ref{fig:first_time_latency_mean} is shown what the difference in
 latency is and how the latency is influenced by increasing the connections.
-The y axis uses a log scale so the relative difference can be seen better. The x
-axis also uses a log scale so linear trends can still be spotted easily.
+Important to note is that in this case the Y axis also uses a logarithmic scale,
+this has two reasons. The first one is that this way the relative difference can
+be seen better. The second one is that linear trends can be spotted better this
+way.
 \begin{enumerate}
     \item
         The \ipp setup again performs the worst and the \cdn type setups perform
@@ -1167,9 +1215,9 @@ looking at received MB/s, the formats \hls and \hds perform about half as good a
 \dash and \iss when looking at requests per second. This can only mean that the
 requests for \hds and \hls are, on average, about twice as large as the requests
 for \dash and \iss. Which in turn can be easily explained by separate requests
-for audio, since audio files are much smaller than video files and wolud thus
-lower the average request size when requested seperately. Comparing the formats
-base on latency is also unfar, since \hls and \hds have to do more work for a
+for audio, since audio files are much smaller than video files and would thus
+lower the average request size when requested separately. Comparing the formats
+base on latency is also unfair, since \hls and \hds have to do more work for a
 request it is not really fair to compare them against \dash and \iss. While the
 comparing measurements for requests per second and latency is clearly not fair
 when comparing different formats, it can still be very useful to compare the
@@ -1213,9 +1261,9 @@ large between the different pairs, the differences in sent MB are quite small.
 There is no difference between the \cdn setups and the caching \lt setups, this
 is likely caused by the fact that both have to request the entire video from the
 storage. When comparing the \ipp and \lt-single setups to the other setups,
-there is a large difference in amount of requests, but a relativly small
-difference in amount of data. This indicates that appart from the actual video
-data needed to fullfill the requests, a large amount of small requests is sent
+there is a large difference in amount of requests, but a relatively small
+difference in amount of data. This indicates that apart from the actual video
+data needed to fulfill the requests, a large amount of small requests is sent
 as well.  Which can be easily explained by the findings from the previous
 paragraph, since the requests that were done multiple times, were all not very
 large.
@@ -1237,12 +1285,12 @@ formats that these setups cache them in, which easily explains the increase in
 cache usage.
 
 \subsection{Transfer speed and latency with a cold cache}
-One important observation from the transfer speed plots is that that all the
+One important observation from the transfer speed plots is that all the
 different setups reach a maximum. This maximum is at about \Mbps{12} for the
 caching \lt and the \cdn setups; and it is at about \Mbps{10} for the
-\ipp and \lt-nocache setup. These to maxima are mostly caused by the bandwith
+\ipp and \lt-nocache setup. These to maxima are mostly caused by the bandwidth
 restriction of \mbps{100} on internal traffic. This can easily be shown for the
-first set of setups by showing that the maximum is almost equal to the bandwith
+first set of setups by showing that the maximum is almost equal to the bandwidth
 limitation, $\mbps{100} = \Mbps{12.5} \approx
 \Mbps{12}$. The lower maximum shown for the other set of setups can than be
 explained by the higher amount of internal traffic for those setups, shown in
@@ -1351,7 +1399,7 @@ and \iss and about 180 for \hds and \hls.  This would also explain why the
 amount of data sent internally is so small, compared to the amount of requests,
 since audio is pretty small when compared to video.
 
-The one thing that is not explained by this is is the very small amount of
+The one thing that is not explained by this is, is the very small amount of
 requests that needs to be sent when requesting \hls after \hds. It is not
 directly clear what causes this. One thing that could be the cause is the large
 amount of playlist files \hls uses. It could very well be the case that one or
@@ -1432,29 +1480,35 @@ of the setups.
 
 
 \chapter{Conclusion}
-Streaming video has become a large part of the internet. Currently a well
-known server setup for streaming video is by using a \cdn, which caches popular
-videos for quick access. One of the problems with this approach is that requires
+Streaming video has become a large part of the internet. Currently a well known
+server setup for streaming video is by using a \cdn, which caches popular videos
+for quick access. One of the problems with this approach is that it requires
 caching of the videos in every format that is supported. This thesis
 investigated the possibility of caching the original video file instead of the
-different formats, which could then be converted to each format when
-requested.  To accomplish this two different setups have been developed, one
-which caches only the original video file and another which also caches the
-different formats after conversion has taken place.
+different formats, which could then be converted to each format when requested.
+To accomplish this, two different setups have been developed, one which caches
+only the original video file and another which also caches the different formats
+after conversion has taken place.
 
 To compare the different setups, their performance was measured under three
 different cache conditions. One where the cache was empty, one where the cache
 was filled by requesting the same format as the one in that test and one where
 it was filled by requesting a different format. Both new setups perform a little
-bit worse than or equal to the \cdn setup when the cache is cold.  However, when
+bit worse than, or equal to, the \cdn setup, when the cache is cold.  However, when
 the cache is filled with a different format they outperformed the \cdn setup in
 speed and latency by as much as four to seven times, when under heavy load. The
 internal traffic between the storage server and the proxy server is also a lot
 lower in this case and the setup that only caches the original video file, used
-about half the amount of storage for cache than the \cdn setup did. The last
+about half as much storage for cache as the \cdn setup. The last
 condition was the one where the cache was filled with the same format, here both
 setups perform better than they did with a cold cache, but only the setup that
-caches twice performs, speed and latency wise, on par with the \cdn setup.
+caches twice performs, speed and latency wise, on par with the \cdn setup. A
+last important difference between the new setups and the \cdn setup is where
+they convert the original video files. The \cdn setup requires the storage
+server to convert the original video file to the different formats. The new
+setups convert the video on the proxy servers. The advantage of doing this on
+the proxy servers is that cheap services can used that only provide file hosting
+and no processing power, like Amazon S3.
 
 All in all, the new setups are valuable additions to currently known setups. The
 setup that caches twice, when comparing to the \cdn setup, is faster or as
