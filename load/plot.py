@@ -182,27 +182,28 @@ for run_type, g in df.groupby('run_type'):
             p.set_xlabels('Concurrent connections')
             p.set_ylabels(labels[prop])
 
+            nums = [1, 2, 5, 10, 25, 50]
+            np_nums = np.array(nums).reshape((6, 1))
+            for ax in p.fig.get_axes():
+                for line in ax.get_lines():
+                    l = []
+                    for x in line.get_xdata():
+                        l.append(nums[int(x)])
+                    line.set_xdata(l)
+
+                for path in ax.get_children():
+                    if isinstance(path, PathCollection):
+                        offsets = path.get_offsets()
+
+                        offsets[:, :1] = np_nums
+                        path.set_offsets(offsets)
+
+                ax.set_xscale('log')
+                ax.set_xlim(xmin=0.5, xmax=100)
+
             if prop == 'latency_mean':
-                nums = [1, 2, 5, 10, 25, 50]
-                np_nums = np.array(nums).reshape((6, 1))
 
                 for ax in p.fig.get_axes():
-                    for line in ax.get_lines():
-                        l = []
-                        for x in line.get_xdata():
-                            l.append(nums[int(x)])
-                        line.set_xdata(l)
-
-                    for path in ax.get_children():
-                        if isinstance(path, PathCollection):
-                            offsets = path.get_offsets()
-
-                            offsets[:, :1] = np_nums
-                            path.set_offsets(offsets)
-
-                    ax.set_xscale('log')
-                    ax.set_xlim(xmin=0.5, xmax=100)
-
                     ax.set_yscale('log')
                     ax.set_ylim(ymin=1)
 
