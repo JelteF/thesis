@@ -1,0 +1,22 @@
+\begin{tikzpicture}[ ]
+
+    \clientnode
+
+    \node[block, below=3cm of cl] (ng) {Nginx};
+    \node[right=3cm of ng] (ng_desc) {Caches received response};
+    \node[block, below=3cm of ng] (ap) {Apache};
+    \node[right=3cm of ap] (ap_desc) {Converts stored mp4 to segment};
+
+
+    \contwithlabel{ng}{cache}{Proxy server}{-0.3,0.6}{1.5,-0.6}
+    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}
+
+    \graph [use existing nodes] {
+        cl ->[\reqseg] ng ->[\reqseg] ap;
+        ng --[dotted] ng_desc;
+        ap --[dotted] ap_desc;
+    };
+
+
+
+\end{tikzpicture}

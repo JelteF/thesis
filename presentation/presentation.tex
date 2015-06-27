@@ -1,0 +1,168 @@
+\documentclass[xcolor=svgnames,handout]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+\usepackage{amsmath,amsfonts,graphicx}
+\usepackage{beamerleanprogress}
+\input{tikz_preamble.tex}
+\usepackage{tikzscale}
+
+\usepackage{booktabs}
+\usepackage{tabulary}
+
+\title[Late Transmuxing\hspace{2em}]{Late Transmuxing:\\Improving caching in video streaming}
+
+\author[Jelte Fennema]{Jelte Fennema\\\footnotesize{Supervised by: Dirk Griffioen}}
+
+\date{\today}
+
+\institute{University of Amsterdam}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+      \item Streaming video is a large part of the Internet
+      \item Different devices require different formats
+      \item Storage is expensive
+      \item Network traffic is slow
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Unified Streaming}
+  \begin{itemize}
+      \item Company specialized in video streaming software
+      \item Solves the storage problem through on the fly transmuxing
+  \end{itemize}
+\end{frame}
+
+\section{Traditional setups}
+
+\begin{frame}{Single server setup}
+    \begin{figure}
+
+        \resizebox{\textwidth}{!}{%
+            \input{singleserver.tex}
+        }
+    \end{figure}
+\end{frame}
+\begin{frame}{Characteristics of the single server setup}
+    \begin{itemize}
+        \item Easy to set up
+
+        \item Lots of latency
+
+        \item Server is easily overloaded
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{CDN setup}
+    \begin{figure}
+
+        \resizebox{\textwidth}{!}{%
+            \input{cdn.tex}
+        }
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Properties of the CDN setup}
+  \begin{itemize}
+  \item Harder to set up
+  \item No storage server overloading
+  \item Latency can be mitigated
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{IsmProxyPass setup}
+    \begin{figure}
+
+        \resizebox{\textwidth}{!}{%
+            \input{ismproxy.tex}
+        }
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Properties of the IsmProxyPass setup}
+  \begin{itemize}
+  \item Also hard to setup
+  \item No storage server overloading
+  \item Lots of latency
+  \item Dumb storage can be used (e.g. Amazon S3)
+  \end{itemize}
+\end{frame}
+
+
+\section{Implementation}
+
+\begin{frame}{Late Transmuxing setup}
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item A combination of the CDN and the IsmProxyPass setup
+    \end{itemize}
+\end{frame}
+
+\section{Experiments}
+\begin{frame}{Experiments}
+    \begin{itemize}
+        \item Virtual machines are used as different servers
+        \item Bandwidth throttling using Comcast
+        \item Generating load with wrk
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Used setups}
+    \begin{itemize}
+        \item IsmProxyPass (IPP)
+        \item CDN
+        \item Late transmuxing with one cache (LT-single)
+        \item Late transmuxing with two caches (LT-double)
+        \item CDN without caching (CDN-nocache)
+        \item Late transmuxing without caching (LT-nocache)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Performance metrics}
+    \begin{itemize}
+        \item Throughput, measured in MB/s and requests/s
+        \item Latency
+        \item Internal traffic, measured in bytes and number of requests
+        \item Cache usage
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Testing conditions}
+    \begin{itemize}
+        \item Empty cache
+        \item Cache filled with
+    \end{itemize}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+      \item A useful addition to current setups
+      \item Choice between cache usage and speed
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Questions}
+    Any questions?
+
+
+\end{frame}
+
+\end{document}
+
