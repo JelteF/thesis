@@ -1,7 +1,7 @@
 \usepackage{tikz}
 \usepackage{xparse}
 \usetikzlibrary{calc}
-\usetikzlibrary{graphdrawing,graphs,arrows.meta,shapes.misc,chains,positioning,shapes,quotes,automata,bending,fit}
+\usetikzlibrary{graphdrawing,graphs,arrows.meta,shapes.misc,chains,positioning,shapes,quotes,automata,bending,fit,overlay-beamer-styles}
 \usepackage{tkz-graph}
 
 \hyphenation{ism-proxy-pass}
@@ -21,22 +21,30 @@
 \newcommand{\labelpos}[1]{($(#1.north east) - (0.2, 0)$) }
 \newcommand{\rectlabel}[3]{\node[#3] at \labelpos{#1} {#2}}
 \newcommand{\container}[6]{\draw[#6] ($(#1.north west)+(#4)$) rectangle ($(#2.south east)+(#5)$) node[fitting node] (#3) {}}
-\DeclareDocumentCommand{\contwithlabelmore}{m m m m m m O{container} O{label}}{
-    \container{#1}{#2}{#3}{#5}{#6}{#7};
-    \rectlabel{#3}{#4}{#8};
+\DeclareDocumentCommand{\contwithlabelmore}{m m m m m m m O{container} O{label}}{
+    \onslide<#7->{
+        \container{#1}{#2}{#3}{#5}{#6}{#8};
+        \rectlabel{#3}{#4}{#9};
+    }
 }
-\newcommand{\contwithlabel}[5]{
-    \container{#1}{#1}{#2}{#4}{#5}{container};
-    \rectlabel{#2}{#3}{label};
+\newcommand{\contwithlabel}[6]{
+    \onslide<#6->{
+        \container{#1}{#1}{#2}{#4}{#5}{container};
+        \rectlabel{#2}{#3}{label};
+    }
 }
 
-\newcommand{\nodewithdesc}[5]{
-    \node[block, #2] (#1) {#4};
-    \node[#3 #1] (#1_desc) {#5};
+\newcommand{\nodewithdesc}[7]{
+    \onslide<#6->{
+        \node[block, #2] (#1) {#4};
+    }
 
-    \graph [use existing nodes] {
-        #1 --[dotted] #1_desc;
-    };
+    \onslide<#7->{
+        \node[#3 #1] (#1_desc) {#5};
+        \graph [use existing nodes] {
+            #1 --[dotted] #1_desc;
+        };
+    }
 }
 
 \newcommand{\containercolor}{red}

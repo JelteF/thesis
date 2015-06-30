@@ -2,21 +2,27 @@
 
     \clientnode
 
-    \node[block, below=3cm of cl] (ng) {Nginx};
-    \node[right=3cm of ng] (ng_desc) {Caches received response};
-    \node[block, below=3cm of ng] (ap) {Apache};
-    \node[right=3cm of ap] (ap_desc) {Converts stored mp4 to segment};
+    \pause
+    \onslide<3->{
+        \node[block, below=3cm of cl] (ng) {Nginx};
+    }
 
 
-    \contwithlabel{ng}{cache}{Proxy server}{-0.3,0.6}{1.5,-0.6}
-    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}
+    \contwithlabel{ng}{cache}{Proxy server}{-0.3,0.6}{1.5,-0.6}{2}
+    \onslide<5->{
+        \node[block, below=3cm of ng] (ap) {Apache};
+        \node[right=3cm of ap] (ap_desc) {Converts stored mp4 to segment};
+    }
+    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}{4}
 
+    \onslide<6->{
+        \node[right=3cm of ng] (ng_desc) {Caches received response};
+    }
     \graph [use existing nodes] {
-        cl ->[\reqseg] ng ->[\reqseg] ap;
-        ng --[dotted] ng_desc;
-        ap --[dotted] ap_desc;
+        cl ->[\reqseg] ng ->[\reqseg, visible on=<4->] ap;
+        ng --[dotted, visible on=<6->] ng_desc;
+        ap --[dotted, visible on=<5->] ap_desc;
     };
 
-
-
+    \onslide<1->
 \end{tikzpicture}

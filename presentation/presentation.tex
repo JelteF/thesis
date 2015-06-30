@@ -1,4 +1,4 @@
-\documentclass[xcolor=svgnames,handout]{beamer}
+\documentclass[xcolor=svgnames]{beamer}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -103,6 +103,13 @@
 \section{Implementation}
 
 \begin{frame}{Late Transmuxing setup}
+    \begin{figure}
+
+        \resizebox*{!}{\dimexpr\textheight-2\baselineskip\relax}{%
+            \input{latetrans.tex}
+        }
+    \end{figure}
+
 \end{frame}
 
 \begin{frame}
@@ -144,7 +151,10 @@
 \begin{frame}{Testing conditions}
     \begin{itemize}
         \item Empty cache
-        \item Cache filled with
+        \item Cache filled by downloading another format
+        \item Cache filled by downloading the same format
+        \item One full download for the first two conditions
+        \item As much downloads as possible in 30 seconds for the last condition
     \end{itemize}
 \end{frame}
 
@@ -165,4 +175,3 @@
 \end{frame}
 
 \end{document}
-

@@ -2,15 +2,16 @@
     \clientnode
     \pause
 
-    \node[block, below=3cm of cl] (ap) {Apache};
-    \node[right=3cm of ap] (ap_desc) {Converts stored mp4 to segment};
+    \nodewithdesc{ap}{below=3cm of cl}{right=3cm of}{Apache}{Converts stored mp4 to
+    segment}{3}{3};
 
 
-    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}
+    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}{2}
 
     \graph [use existing nodes] {
         cl ->[\reqseg] ap;
-        ap --[dotted] ap_desc;
     };
+
+    \onslide<1->
 
 \end{tikzpicture}
