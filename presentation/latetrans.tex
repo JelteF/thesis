@@ -3,22 +3,23 @@
     \clientnode
     \pause
 
-    \nodewithdesc{sp}{below=2cm of cl}{right=7cm of}{Segment proxy}{Caches segment}{3}{10}
+    \nodewithdesc{sp}{below=2cm of cl}{right=7cm of}{Segment proxy}{Cachet
+    het uiteindelijke segment}{3}{10}
 
     \nodewithdesc{ismp}{below right=1cm and 3cm of sp}{right=1.768cm
-    of}{IsmProxyPass}{Creates segment from range requests}{5}{9}
+    of}{IsmProxyPass}{Maakt het segment van range requests}{5}{9}
     \nodewithdesc{rp}{below left=1cm and 3cm of ismp}{right=7cm of}{Range request
-    proxy}{Caches byte range responses}{6}{8}
+    proxy}{Cachet byte range responses}{6}{8}
 
-    \nodewithdesc{ap}{below=3cm of rp}{right=3cm of}{Apache}{Returns the
-    requested bytes of the mp4}{7}{7};
+    \nodewithdesc{ap}{below=3cm of rp}{right=3cm of}{Apache}{Geeft de
+    opgevraagde bytes van de mp4 terug}{7}{7};
 
     \contwithlabelmore{sp}{rp}{ng_cont}{Nginx}{-0.3,0.6}{0.5,-0.6}{3}
     \contwithlabel{ismp}{ap_cont}{Apache}{-0.3,0.6}{1,-0.6}{4}
 
     \contwithlabel{ng_cont}{cache}{Proxy server}{-0.3,0.6}{6,-0.6}{2}
 
-    \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}{6}
+    \contwithlabel{ap}{storage}{Opslag server}{-0.3,0.6}{2,-0.6}{6}
 
     \graph [use existing nodes] {
         cl ->[\reqseg,pos=0.2] sp ->[\reqseg, pos=0.2, visible on=<4->] ismp ->[align=left,

@@ -16,36 +16,35 @@
 
 \title[Late Transmuxing\hspace{2em}]{Late Transmuxing:\\Improving caching in video streaming}
 
-\author[Jelte Fennema]{Jelte Fennema\\\footnotesize{Supervised by: Dirk Griffioen}}
+\author[Jelte Fennema]{Jelte Fennema\\\footnotesize{Begeleider: Dirk Griffioen}}
 
 \date{\today}
 
-\institute{University of Amsterdam}
+\institute{Universiteit van Amsterdam\and Unified Streaming}
 
 
 \begin{document}
 
 \maketitle
 
-\section{Introduction}
+\section{Introductie}
 
-\begin{frame}{Introduction}
+\begin{frame}{Introductie}
   \begin{itemize}
-      \item A large part of the Internet
-      \item Different formats for different devices
-      \item Storage is expensive
-      \item Network traffic is slow
+      \item Een groot gedeelte van het internet
+      \item Verschillende formaten en verschillende apparaten
+      \item Opslag is duur
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Unified Streaming}
   \begin{itemize}
-      \item Company specialized in video streaming software
-      \item Solves the storage problem through on the fly transmuxing
+      \item Unified Streaming is gespecialiseerd in video streaming software
+      \item On the fly transmuxing
   \end{itemize}
 \end{frame}
 
-\section{Traditional setups}
+\section{Traditionele setups}
 
 \begin{frame}{Single server setup}
     \begin{figure}
@@ -55,13 +54,13 @@
         }
     \end{figure}
 \end{frame}
-\begin{frame}{Characteristics of the single server setup}
+\begin{frame}{Eigenschappen van de single server setup}
     \begin{itemize}
-        \item Easy to set up
+        \item Makkelijk op te zetten
 
-        \item Lots of latency
+        \item Veel latency
 
-        \item Server is easily overloaded
+        \item Server wordt makkelijk overbelast
 
     \end{itemize}
 \end{frame}
@@ -69,47 +68,47 @@
 \begin{frame}{CDN setup}
     \begin{figure}
 
-        \resizebox{\textwidth}{!}{%
+        \resizebox*{!}{\dimexpr\textheight-2\baselineskip\relax}{%
             \input{cdn.tex}
         }
     \end{figure}
 \end{frame}
 
-\begin{frame}{Properties of the CDN setup}
+\begin{frame}{Eigenschappen van de CDN setup}
   \begin{itemize}
-  \item Harder to set up
-  \item No storage server overloading
-  \item Latency can be mitigated
-  \item Stores all the different formats in the cache
+  \item Moeilijker op te zetten
+  \item Geen server overbelasting
+  \item Latency kan worden verminderd
+  \item Slaat alle formaten op in cache
   \end{itemize}
 \end{frame}
 
 \begin{frame}{IsmProxyPass setup}
     \begin{figure}
 
-        \resizebox{\textwidth}{!}{%
+        \resizebox*{!}{\dimexpr\textheight-2\baselineskip\relax}{%
             \input{ismproxy.tex}
         }
     \end{figure}
 \end{frame}
 
-\begin{frame}{Properties of the IsmProxyPass setup}
+\begin{frame}{Eigenschappen van de IsmProxyPass setup}
   \begin{itemize}
-  \item Also hard to setup
-  \item No storage server overloading
-  \item Lots of latency
-  \item Dumb storage can be used (e.g. Amazon S3)
+  \item Ook moeilijk op te zetten
+  \item Geen server overbelasting
+  \item Veel latency
+  \item Domme opslag kan worden gebruikt (e.g. Amazon S3)
   \end{itemize}
 \end{frame}
 
 
-\section{Developed setup}
+\section{Ontwikkelde setup}
 
-\begin{frame}{Developed setup}
+\begin{frame}{Ontwikkelde setup}
     \begin{itemize}
-        \item A combination of the CDN and the IsmProxyPass setup
-        \item Less internal traffic
-        \item More efficient cache usage
+        \item Een combinatie van de CDN en de IsmProxyPass setup
+        \item Minder intern verkeer
+        \item Efficiënter gebruik van cache
     \end{itemize}
 \end{frame}
 
@@ -124,59 +123,63 @@
 \end{frame}
 
 
-\section{Experiments}
-\begin{frame}{Experiments}
-    \begin{itemize}
-        \item Virtual machines are used as different servers
-        \item Bandwidth throttling using Comcast
-        \item Generating load with wrk
-    \end{itemize}
-\end{frame}
+\section{Experimenten}
+% \begin{frame}{Experimenten}
+%     \begin{itemize}
+%         \item Virtual machines worden gebruikt voor de verschillende servers
+%         \item Bandbreedte beperken met Comcast
+%         \item wrk
+%     \end{itemize}
+% \end{frame}
 
-\begin{frame}{Used setups}
+\begin{frame}{Experimenten}
     \begin{itemize}
-        \item Old setups
+        \item Oude setups
             \begin{itemize}
                 \item IsmProxyPass (IPP)
                 \item CDN
             \end{itemize}
+            \pause
 
         \item New setups
             \begin{itemize}
-                \item Late transmuxing with one cache (LT-single)
-                \item Late transmuxing with two caches (LT-double)
+                \item Late transmuxing met één cache (LT-single)
+                \item Late transmuxing met twee caches (LT-double)
             \end{itemize}
-        \item Control setups
+            \pause
+
+        \item Controle setups
             \begin{itemize}
-                \item CDN without caching (CDN-nocache)
-                \item Late transmuxing without caching (LT-nocache)
+                \item CDN zonder caching (CDN-nocache)
+                \item Late transmuxing zonder caching (LT-nocache)
             \end{itemize}
+
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Performance metrics}
     \begin{itemize}
-        \item Throughput, measured in MB/s and requests/s
+        \item Throughput, gemeten in MB/s en requests/s
         \item Latency
-        \item Internal traffic, measured in bytes and number of requests
-        \item Cache usage
+        \item Intern verkeer, gemeten in bytes en aantal requests
+        \item Cache gebruik
     \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Testing conditions}
+\begin{frame}{Cache staat}
     \begin{itemize}
-        \item Empty cache
-        \item Cache filled by downloading another format
-        \item Cache filled by downloading the same format
-        \item One full download for the first two conditions
-        \item As much downloads as possible in 30 seconds for the last condition
+        \item Lege cache
+        \item Cache gevuld door een ander formaat te downloaden
+        \item Cache gevuld door hetzelfde formaat te downloaden\pause
+        \item Één volledige download bij de eerste twee
+        \item Zoveel mogelijk downloads bij de laatste
     \end{itemize}
 \end{frame}
 
-\section{Results}
+\section{Resultaten}
 \newcommand{\frameplot}[3]{%
-    \begin{frame}{Results when testing with #1}
+    \begin{frame}{Resultaten met een #1}
         \input{plots/#2_#3.tex}
     \end{frame}
 }
@@ -190,31 +193,30 @@
     \frameplot{#1}{#2}{latency_mean}
 }
 
-\plotframes{an empty cache}{first_time}
-\plotframes{a cache filled with the same format}{second_time}
-\plotframes{a cache filled with another format}{after_other}
+\plotframes{lege cache}{first_time}
+\plotframes{cache gevuld met hetzelfde formaat}{second_time}
+\plotframes{cache gevuld met een ander formaat}{after_other}
 
-\begin{frame}{Summary of the results}
+\begin{frame}{Samenvatting van de resultaten}
     \begin{itemize}
         \item Stuff
     \end{itemize}
 \end{frame}
 
 
-\section{Conclusion}
+\section{Conclusie}
 
-\begin{frame}{Conclusion}
+\begin{frame}{Conclusie}
   \begin{itemize}
-      \item A useful addition to current setups
-      \item Choice between cache usage and speed
-      \item Can be used with dumb storage and is a solid improvement over the
-          IsmProxyPass setup
+      \item Een nuttige toevoeging aan de huidige setups
+      \item Keuze tussen snelheid en cache gebruik
+      \item Kan gebruikt worden met domme opslag
   \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Questions}
-    Any questions?
+\begin{frame}{Vragen}
+    Zijn er nog vragen?
 
 
 \end{frame}

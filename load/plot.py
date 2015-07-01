@@ -105,13 +105,13 @@ def saveplot():
 
     plt.close()
 
-    fig = Figure(position='h')
+    fig = Figure()
     fig.append(r'\centering')
     img_opts = Options(keepaspectratio='true', height=r'0.8\textheight',
                        width=r'\textwidth')
     fig.append(Command('includegraphics', options=img_opts,
                        arguments=filename + '.pdf'))
-    fig.add_caption(labels[prop] + ' with ' + run_type_labels[run_type])
+    fig.add_caption(labels[prop] + ' met ' + run_type_labels[run_type])
     fig.append(r'\label{fig:' + filename.split('/')[-1] + '}')
     fig.generate_tex(filename)
 
@@ -122,18 +122,18 @@ setup_order = ['CDN-nocache', 'CDN', 'IPP', 'LT-nocache', 'LT-single',
 transmux_cache_order = setup_order[-2:]
 
 labels = {
-    'mbps': 'Received MB/s',
-    'internal_mb': 'Internally sent MB',
-    'internal_requests': 'Amount of internal requests',
-    'requests_per_second': 'Handled requests per second',
-    'cache_usage': 'Cache usage in MB',
-    'latency_mean': 'Average latency in ms',
+    'mbps': 'Ontvangen MB/s',
+    'internal_mb': 'Intern gestuurde MB',
+    'internal_requests': 'Aantal interne requests',
+    'requests_per_second': 'Aantal requests per seconde',
+    'cache_usage': 'Cache gebruik in MB',
+    'latency_mean': 'Gemiddelde latency in ms',
 }
 
 run_type_labels = {
-    'first_time': 'a cold cache',
-    'second_time': 'the cache filled with the same format',
-    'after_other': 'the cache filled with another format',
+    'first_time': 'een lege cache',
+    'second_time': 'een cache gevuld met hetzelfde formaat',
+    'after_other': 'een cache gevuld met een ander formaat',
 }
 
 video_type_order = ['DASH', 'ISS', 'HDS', 'HLS']
@@ -143,7 +143,7 @@ point_plots = ['mbps', 'requests_per_second', 'latency_mean']
 col_wrap = 2
 for run_type, g in df.groupby('run_type'):
     extra_kwargs = {'size': 2}
-    point_title_format = 'Requested {col_name}'
+    point_title_format = '{col_name} opgevraagd'
     if run_type == 'first_time':
         bar_order = setup_order[2:] + setup_order[:2]
         palette = pal_large
@@ -155,8 +155,8 @@ for run_type, g in df.groupby('run_type'):
         extra_kwargs['col'] = 'after'
         extra_kwargs['col_order'] = video_type_order
         bar_order = transmux_cache_order + ['CDN']
-        bar_title_format = 'Requested {col_var} {col_name}'
-        point_title_format = 'Requested {row_name} {col_var} {col_name}'
+        bar_title_format = 'Opgevraagd na {col_name}'
+        point_title_format = '{row_name} opgevraagd na {col_name}'
         palette = pal_small
 
     plot_vals = ['mbps', 'internal_mb', 'internal_requests',
@@ -180,7 +180,7 @@ for run_type, g in df.groupby('run_type'):
                                **extra_kwargs)
 
             p.set_titles(point_title_format)
-            p.set_xlabels('Concurrent connections')
+            p.set_xlabels('Gelijktijdige connecties')
             p.set_ylabels(labels[prop])
 
             nums = [1, 2, 5, 10, 25, 50]
@@ -231,7 +231,7 @@ for run_type, g in df.groupby('run_type'):
                                aspect=aspect,
                                **extra_kwargs)
             p.set_titles(bar_title_format)
-            p.set_xlabels('Requested video format')
+            p.set_xlabels('Opgevraagde video formaat')
             p.set_ylabels(labels[prop])
             p.set(ylim=(0, None))
             saveplot()

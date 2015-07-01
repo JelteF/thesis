@@ -10,13 +10,13 @@
 
     \onslide<5->{
         \node[block, below=3cm of ng] (ap) {Apache};
-        \node[right=3cm of ap] (ap_desc) {Returns the requested bytes of the mp4};
+        \node[right=3cm of ap] (ap_desc) {Geeft de bytes van de mp4 terug};
     }
 
     \contwithlabel{ap}{storage}{Storage server}{-0.3,0.6}{2,-0.6}{4}
 
     \onslide<6->{
-        \node[right=3cm of ng] (ng_desc) {Creates segment from range requests};
+        \node[right=3cm of ng] (ng_desc) {Maakt het segment van range requests};
     }
     \graph [use existing nodes] {
         cl ->[\reqseg] ng ->[\reqrange, visible on=<4->] ap;

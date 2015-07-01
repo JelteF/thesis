@@ -6,14 +6,15 @@
 
 \hyphenation{ism-proxy-pass}
 
-\newcommand{\reqseg}{"Request for segment"}
-\newcommand{\reqrange}{"Requests for byte ranges needed to generate segment"}
-\newcommand{\reqrangeone}{Requests for byte ranges}
-\newcommand{\reqrangetwo}{needed to generate segment}
+\newcommand{\reqseg}{"Request voor het segment"}
+\newcommand{\reqrange}{"Requests voor byte ranges waarmee het segment gemaakt
+kan worden"}
+\newcommand{\reqrangeone}{Requests voor byte ranges waarmee}
+\newcommand{\reqrangetwo}{het segment gemaakt kan worden}
 
 \newcommand{\clientnode}{
     \node[block] (cl) {Client};
-    \node[right=3cm of cl] (cl_desc) {Wants to play segment with a video player};
+    \node[right=3cm of cl] (cl_desc) {Wil een video segment afspelen};
     \graph [use existing nodes] {
         cl --[dotted] cl_desc;
     };
