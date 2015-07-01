@@ -7,6 +7,7 @@ import pandas as pd
 from matplotlib.collections import PathCollection
 import numpy as np
 from pylatex import Figure
+from pylatex.base_classes import Options, Command
 
 sns.set_style('whitegrid', rc={'lines.solid_capstyle': 'butt'})
 sns.set_context("paper", rc={"lines.linewidth": 0.55})
@@ -103,13 +104,13 @@ def saveplot():
     plt.savefig(filename + '.pdf')
 
     plt.close()
-    if prop in point_plots and run_type == 'after_other':
-        width = r'\textwidth'
-    else:
-        width = None
 
     fig = Figure(position='h')
-    fig.add_image(filename + '.pdf', width=width)
+    fig.append(r'\centering')
+    img_opts = Options(keepaspectratio='true', height=r'0.8\textheight',
+                       width=r'\textwidth')
+    fig.append(Command('includegraphics', options=img_opts,
+                       arguments=filename + '.pdf'))
     fig.add_caption(labels[prop] + ' with ' + run_type_labels[run_type])
     fig.append(r'\label{fig:' + filename.split('/')[-1] + '}')
     fig.generate_tex(filename)

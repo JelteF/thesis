@@ -1,4 +1,4 @@
-\documentclass[xcolor=svgnames,handout]{beamer}
+\documentclass[xcolor=svgnames]{beamer}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -11,6 +11,8 @@
 
 \usepackage{booktabs}
 \usepackage{tabulary}
+\usepackage{caption}
+\setbeamerfont{caption}{size=\scriptsize}
 
 \title[Late Transmuxing\hspace{2em}]{Late Transmuxing:\\Improving caching in video streaming}
 
@@ -29,8 +31,8 @@
 
 \begin{frame}{Introduction}
   \begin{itemize}
-      \item Streaming video is a large part of the Internet
-      \item Different devices require different formats
+      \item A large part of the Internet
+      \item Different formats for different devices
       \item Storage is expensive
       \item Network traffic is slow
   \end{itemize}
@@ -173,21 +175,24 @@
 \end{frame}
 
 \section{Results}
-\begin{frame}{Results when testing with an empty cache}
-    \input{plots/first_time_cache_usage.tex}
-\end{frame}
+\newcommand{\frameplot}[3]{%
+    \begin{frame}{Results when testing with #1}
+        \input{plots/#2_#3.tex}
+    \end{frame}
+}
 
-\begin{frame}{Results when testing with an empty cache}
-    \input{plots/first_time_internal_requests.tex}
-\end{frame}
+\newcommand{\plotframes}[2]{%
+    \frameplot{#1}{#2}{cache_usage}
+    \frameplot{#1}{#2}{internal_requests}
+    \frameplot{#1}{#2}{internal_mb}
+    \frameplot{#1}{#2}{mbps}
+    \frameplot{#1}{#2}{requests_per_second}
+    \frameplot{#1}{#2}{latency_mean}
+}
 
-\begin{frame}{Results when testing with an empty cache}
-    \input{plots/first_time_internal_requests.tex}
-\end{frame}
-
-\begin{frame}{Results when testing with an empty cache}
-    \input{plots/first_time_mbps.tex}
-\end{frame}
+\plotframes{an empty cache}{first_time}
+\plotframes{a cache filled with the same format}{second_time}
+\plotframes{a cache filled with another format}{after_other}
 
 \begin{frame}{Summary of the results}
     \begin{itemize}
