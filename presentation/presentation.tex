@@ -1,4 +1,4 @@
-\documentclass[xcolor=svgnames]{beamer}
+\documentclass[xcolor=svgnames,handout]{beamer}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -78,6 +78,7 @@
   \item Harder to set up
   \item No storage server overloading
   \item Latency can be mitigated
+  \item Stores all the different formats in the cache
   \end{itemize}
 \end{frame}
 
@@ -100,7 +101,15 @@
 \end{frame}
 
 
-\section{Implementation}
+\section{Developed setup}
+
+\begin{frame}{Developed setup}
+    \begin{itemize}
+        \item A combination of the CDN and the IsmProxyPass setup
+        \item Less internal traffic
+        \item More efficient cache usage
+    \end{itemize}
+\end{frame}
 
 \begin{frame}{Late Transmuxing setup}
     \begin{figure}
@@ -112,11 +121,6 @@
 
 \end{frame}
 
-\begin{frame}
-    \begin{itemize}
-        \item A combination of the CDN and the IsmProxyPass setup
-    \end{itemize}
-\end{frame}
 
 \section{Experiments}
 \begin{frame}{Experiments}
@@ -129,12 +133,22 @@
 
 \begin{frame}{Used setups}
     \begin{itemize}
-        \item IsmProxyPass (IPP)
-        \item CDN
-        \item Late transmuxing with one cache (LT-single)
-        \item Late transmuxing with two caches (LT-double)
-        \item CDN without caching (CDN-nocache)
-        \item Late transmuxing without caching (LT-nocache)
+        \item Old setups
+            \begin{itemize}
+                \item IsmProxyPass (IPP)
+                \item CDN
+            \end{itemize}
+
+        \item New setups
+            \begin{itemize}
+                \item Late transmuxing with one cache (LT-single)
+                \item Late transmuxing with two caches (LT-double)
+            \end{itemize}
+        \item Control setups
+            \begin{itemize}
+                \item CDN without caching (CDN-nocache)
+                \item Late transmuxing without caching (LT-nocache)
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -158,12 +172,38 @@
     \end{itemize}
 \end{frame}
 
+\section{Results}
+\begin{frame}{Results when testing with an empty cache}
+    \input{plots/first_time_cache_usage.tex}
+\end{frame}
+
+\begin{frame}{Results when testing with an empty cache}
+    \input{plots/first_time_internal_requests.tex}
+\end{frame}
+
+\begin{frame}{Results when testing with an empty cache}
+    \input{plots/first_time_internal_requests.tex}
+\end{frame}
+
+\begin{frame}{Results when testing with an empty cache}
+    \input{plots/first_time_mbps.tex}
+\end{frame}
+
+\begin{frame}{Summary of the results}
+    \begin{itemize}
+        \item Stuff
+    \end{itemize}
+\end{frame}
+
+
 \section{Conclusion}
 
 \begin{frame}{Conclusion}
   \begin{itemize}
       \item A useful addition to current setups
       \item Choice between cache usage and speed
+      \item Can be used with dumb storage and is a solid improvement over the
+          IsmProxyPass setup
   \end{itemize}
 \end{frame}
 
